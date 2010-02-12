@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">BodyB</string><string name="start_program">Start Program</string>
+<string name="continue_program">Continue Program</string>
+<string name="excercise_log">Excercise Log</string>
+<string name="download_programs">Download Programs</string>
+<string name="download_excercises">Download Excercises</string>
+<string name="by_category">By Category</string>
+<string name="by_rating">By rating</string>
+<string name="by_group">By Group</string>
+<string name="select_program">Select Program</string>
+<string name="select_day">Select Day</string>
+<string name="done">Done</string>
+<string name="times">Times</string>
+<string name="weight">Weight</string>
+<string name="name">Name</string>
+<string name="type">Type</string>
+<string name="description">Description</string>
+<string name="group">Group</string>
+<string name="save">Save</string>
+<string name="add_group">Add Group</string>
+<string name="add_excercise">Add Excercise</string>
+<string name="select_set">Select Set</string>
+<string name="select_group">Select Group</string>
+<string name="delete_group">Delete Group</string>
+<string name="with_weight">With Weight</string>
+<string name="own_weight">Own Weight</string>
+<string name="add_set">Add Set</string>
+<string name="delete_set">Delete Set</string>
+<string name="add_remove_excercises">Add/Remove Excercises</string>
+</resources>

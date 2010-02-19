@@ -44,5 +44,15 @@ public class BodyB extends Activity {
             }
         });
         
+        Button btnDownloadPrograms = (Button) findViewById(R.id.button_download_programs);
+        btnDownloadPrograms.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BodyB.this, Expandable2.class);
+                startActivity(i); 
+                finish();
+            }
+        });
+        
     }
 }

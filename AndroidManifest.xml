@@ -18,6 +18,8 @@
     <activity android:label="@string/app_name" android:name=".ExcerciseEdit"></activity>
     <activity android:label="@string/app_name" android:name=".SetsList"></activity>
     <activity android:label="@string/app_name" android:name=".SetEdit"></activity>
+        <activity android:label="@string/app_name" android:name=".Expandable"></activity>
+        <activity android:label="@string/app_name" android:name=".Expandable2"></activity>
 </application>
     <uses-sdk android:minSdkVersion="7" />
 

@@ -41,4 +41,8 @@
 <string name="add_exercise_to_set">Add Exercise To Set</string>
 <string name="remove_from_set">Remove From Set</string>
 <string name="exercise_removed_from_set">Exercise removed from set</string>
+<string name="add_entry">Add Entry</string>
+<string name="log_entry_edited">Log Entry Edited</string>
+<string name="edit_log_entry">Edit Log Entry</string>
+<string name="delete_log_entry">Delete Log Entry</string>
 </resources>

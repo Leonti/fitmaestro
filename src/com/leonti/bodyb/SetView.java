@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -116,5 +117,13 @@ public class SetView extends ListActivity {
         }
 		return super.onContextItemSelected(item);
 	}
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Intent i = new Intent(this, LogEntries.class);
+        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
+        startActivityForResult(i, 5);      
+    }
     
 }

@@ -49,10 +49,10 @@ public class ExcercisesDbAdapter {
     
     private static final String LOG_CREATE =
 		"create table log (_id integer primary key autoincrement, "
-                + "excercise_id integer, weight decimal(10,2), times integer, "
+                + "exercise_id integer, weight decimal(10,2), times integer, "
                 + "program_id integer, day integer, done timestamp default current_timestamp); ";
     
-    private static final String DATABASE_NAME = "data6";
+    private static final String DATABASE_NAME = "data7";
     private static final String DATABASE_GROUPS_TABLE = "groups";
     private static final String DATABASE_EXERCISES_TABLE = "exercises";
     private static final String DATABASE_SETS_TABLE = "sets";
@@ -297,9 +297,9 @@ public class ExcercisesDbAdapter {
     // end of SETS
     
     // LOG methods    
-    public long createLogEntry(long excercise_id, float weight, int times, int program_id, int day) {
+    public long createLogEntry(long exercise_id, float weight, int times, int program_id, int day) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_EXERCISEID, excercise_id);
+        initialValues.put(KEY_EXERCISEID, exercise_id);
         initialValues.put(KEY_WEIGHT, weight);
         initialValues.put(KEY_TIMES, times);
         initialValues.put(KEY_PROGRAMID, program_id);
@@ -327,15 +327,25 @@ public class ExcercisesDbAdapter {
         return mCursor;
 
     }
+    
+    public Cursor fetchLogEntriesForExercise(long exerciseId, long donestart, long doneend) throws SQLException {
 
-    public boolean updateLogEntry(long rowId, long excercise_id, float weight, int times, int program_id, int day) {
+        Cursor mCursor =
+                mDb.query(true, DATABASE_LOG_TABLE, new String[] {KEY_ROWID, KEY_EXERCISEID,
+                		KEY_WEIGHT, KEY_TIMES, KEY_PROGRAMID,
+                		KEY_DAY, KEY_DONE}, KEY_EXERCISEID + "=" + exerciseId + " AND " + donestart + " < " + KEY_DONE + " < " + doneend, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    public boolean updateLogEntry(long rowId, float weight, int times) {
         ContentValues args = new ContentValues();
-        args.put(KEY_EXERCISEID, excercise_id);
         args.put(KEY_WEIGHT, weight);
         args.put(KEY_TIMES, times);
-        args.put(KEY_PROGRAMID, program_id);
-        args.put(KEY_DAY, day);
-
         return mDb.update(DATABASE_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     // end of LOG

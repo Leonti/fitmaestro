@@ -15,6 +15,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 
@@ -24,6 +26,7 @@ public class SetsList extends ListActivity {
     private static final int ACTIVITY_EDIT=1;
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
+    private static final int EDIT_ID = Menu.FIRST + 2;
 
     /** The index of the title column */
     private static final int COLUMN_INDEX_TITLE = 1;
@@ -78,41 +81,51 @@ public class SetsList extends ListActivity {
         startActivityForResult(i, ACTIVITY_CREATE);
     }
     
+    private void editSet(long id) {
+        Intent i = new Intent(this, SetEdit.class);
+        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
+        startActivityForResult(i, ACTIVITY_EDIT);
+    }
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, 
                                     Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         fillData();
+        
+        switch(requestCode) {
+        case ACTIVITY_EDIT:
+        	Toast.makeText(this, R.string.set_edited, Toast.LENGTH_SHORT).show();
+        	break;
+        }
     }
     
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, 
     		ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info;
-        try {
-             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        } catch (ClassCastException e) {
-            Log.e(TAG, "bad menuInfo", e);
-            return;
-        }
+        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-        Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
-        if (cursor == null) {
-            // For some reason the requested item isn't available, do nothing
-            return;
-        }
-        menu.setHeaderTitle(cursor.getString(COLUMN_INDEX_TITLE));
-        menu.add(0, DELETE_ID, 0, R.string.delete_set);
+        String title = ((TextView) info.targetView).getText().toString();
+
+        menu.setHeaderTitle(title);
+        menu.add(0, EDIT_ID, 0, R.string.edit_set);
+        menu.add(0, DELETE_ID, 1, R.string.delete_set);
     }
     
     @Override
 	public boolean onContextItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+
+    	switch(item.getItemId()) {
         case DELETE_ID:
-            AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-            mDbHelper.deleteSet(info.id);
+             mDbHelper.deleteSet(info.id);
             fillData();
             return true;
+        
+        case EDIT_ID:
+        	editSet(info.id);
+        	return true;
         }
 		return super.onContextItemSelected(item);
 	}
@@ -120,9 +133,10 @@ public class SetsList extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Intent i = new Intent(this, SetEdit.class);
+        Intent i = new Intent(this, SetView.class);
         i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-        startActivityForResult(i, ACTIVITY_EDIT);        
+        startActivityForResult(i, 5);      
     }
+    
 
 }

@@ -38,7 +38,6 @@ public class ExcerciseEdit extends Activity {
         mGroup = (Spinner) findViewById(R.id.spinner_group);
       
         Button saveButton = (Button) findViewById(R.id.button_save);
-        Button addGroupButton = (Button) findViewById(R.id.button_add_group);
         
         mRowId = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_ROWID) 
                 : null;
@@ -57,16 +56,7 @@ public class ExcerciseEdit extends Activity {
                 finish();
             }         
         });
-        
-        addGroupButton.setOnClickListener(new View.OnClickListener() {
-        	@Override
-            public void onClick(View view) {
-                Intent i = new Intent(ExcerciseEdit.this, GroupEdit.class);
-                startActivityForResult(i, ACTIVITY_GROUP_CREATE);
-            }         
-        });
-        
-        
+               
     }
     
     private void populateFields() {
@@ -120,7 +110,6 @@ public class ExcerciseEdit extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, 
                                     Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        fillSpinner();
     }
     
     @Override
@@ -146,14 +135,15 @@ public class ExcerciseEdit extends Activity {
         String desc = mDescText.getText().toString();
         int type = mType.isChecked()?1:0;
         long group_id = mGroup.getSelectedItemId();
-        
-
-        
+               
         if (mRowId == null) {
-            
-            long id = mDbHelper.createExcercise(title, desc, type, group_id, 0);
-            if (id > 0) {
-                mRowId = id;
+        	
+        	// create exercise only if title is not empty
+            if(title.length() > 0){
+            	long id = mDbHelper.createExcercise(title, desc, type, group_id, 0);
+            	if (id > 0) {
+            		mRowId = id;
+            	}
             }
         } else {
             mDbHelper.updateExcercise(mRowId, title, desc, type, group_id, 0);

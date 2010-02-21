@@ -60,10 +60,10 @@ public class SetEdit extends Activity {
             mDescText.setText(set.getString(
                     set.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_DESC)));
             
-            fillExcercises();
+          //  fillExcercises();
         }
     }
-    
+    /*
     private void fillExcercises(){
     	Cursor ExcercisesCursor = mDbHelper.fetchExcercisesForGroup(1); //for now
         startManagingCursor(ExcercisesCursor);
@@ -73,7 +73,7 @@ public class SetEdit extends Activity {
         	    new SimpleCursorAdapter(this, R.layout.excercise_list_set_row, ExcercisesCursor, from, to);
         ListView exList = (ListView) findViewById(R.id.ex_list);
         exList.setAdapter(adapter);
-    }
+    } */
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -98,10 +98,12 @@ public class SetEdit extends Activity {
         String desc = mDescText.getText().toString();
 
         if (mRowId == null) {
-            long id = mDbHelper.createSet(title, desc, 0);
-            if (id > 0) {
-                mRowId = id;
-            }
+        	if(title.length() > 0){
+        		long id = mDbHelper.createSet(title, desc, 0);
+        		if (id > 0) {
+        			mRowId = id;
+        		}
+        	}
         } else {
             mDbHelper.updateSet(mRowId, title, desc, 0);
         }

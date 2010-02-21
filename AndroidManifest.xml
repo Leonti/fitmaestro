@@ -20,6 +20,8 @@
     <activity android:label="@string/app_name" android:name=".SetEdit"></activity>
         <activity android:label="@string/app_name" android:name=".Expandable"></activity>
         <activity android:label="@string/app_name" android:name=".Expandable2"></activity>
+ <activity android:label="@string/app_name" android:name=".SetView"></activity>
+  <activity android:label="@string/app_name" android:name=".LogEntries"></activity>
 </application>
     <uses-sdk android:minSdkVersion="7" />
 

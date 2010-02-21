@@ -9,6 +9,4 @@
 <TextView android:text="@string/description" android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 <EditText android:text="" android:id="@+id/edit_description" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
 <Button android:text="@string/save" android:id="@+id/button_save" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/add_remove_excercises" android:id="@+id/button_add_remove" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<ListView android:id="@+id/ex_list" android:layout_width="wrap_content" android:layout_height="wrap_content"></ListView>
 </LinearLayout>

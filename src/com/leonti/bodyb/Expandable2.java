@@ -1,25 +1,36 @@
 package com.leonti.bodyb;
 
 
+
 import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
 public class Expandable2 extends ExpandableListActivity {
 	
     private static final int INSERT_GROUP_ID = Menu.FIRST;
-    private static final int DELETE_GROUP_ID = Menu.FIRST + 1;
-    private static final int INSERT_EXERCISE_ID = Menu.FIRST + 2;
-    private static final int DELETE_EXERCISE_ID = Menu.FIRST + 3;
+    private static final int INSERT_EXERCISE_ID = Menu.FIRST + 1;
+    private static final int DELETE_ID = Menu.FIRST + 2;
+    private static final int EDIT_ID = Menu.FIRST + 3;
+
+    private static final int ACTIVITY_GROUP_CREATE=0;
+    private static final int ACTIVITY_GROUP_EDIT=1;
+    private static final int ACTIVITY_EXERCISE_CREATE=2;
+    private static final int ACTIVITY_EXERCISE_EDIT=3;
     
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mGroupsCursor;
@@ -33,6 +44,7 @@ public class Expandable2 extends ExpandableListActivity {
         mDbHelper = new ExcercisesDbAdapter(this);
         mDbHelper.open();
         fillData();
+        registerForContextMenu(getExpandableListView());
     }
     
     private void fillData(){
@@ -79,12 +91,24 @@ public class Expandable2 extends ExpandableListActivity {
     
     private void createGroup() {
         Intent i = new Intent(this, GroupEdit.class);
-        startActivityForResult(i, 0);
+        startActivityForResult(i, ACTIVITY_GROUP_CREATE);
     }
     
     private void createExercise() {
         Intent i = new Intent(this, ExcerciseEdit.class);
-        startActivityForResult(i, 0);
+        startActivityForResult(i, ACTIVITY_GROUP_CREATE);
+    }
+    
+    public void editGroup(long id){
+        Intent i = new Intent(this, GroupEdit.class);
+        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
+        startActivityForResult(i, ACTIVITY_GROUP_EDIT); 
+    }
+    
+    private void editExercise(long id){
+        Intent i = new Intent(this, ExcerciseEdit.class);
+        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
+        startActivityForResult(i, ACTIVITY_EXERCISE_EDIT); 
     }
     
     @Override
@@ -92,6 +116,67 @@ public class Expandable2 extends ExpandableListActivity {
                                     Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         fillData();
+        
+        switch(requestCode) {
+        case ACTIVITY_GROUP_EDIT:
+        	Toast.makeText(this, R.string.group_edited, Toast.LENGTH_SHORT).show();
+        	break;
+        case ACTIVITY_EXERCISE_EDIT:
+        	Toast.makeText(this, R.string.exercise_edited, Toast.LENGTH_SHORT).show();
+            break;
+        }
+    }
+    
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, 
+    		ContextMenuInfo menuInfo) {
+    	ExpandableListContextMenuInfo info;
+
+        info = (ExpandableListContextMenuInfo) menuInfo;
+        String title = ((TextView) info.targetView).getText().toString();
+        menu.setHeaderTitle(title);        
+        int type = ExpandableListView.getPackedPositionType(info.packedPosition);
+        if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+            menu.add(0, EDIT_ID, 0, R.string.edit_exercise);
+            menu.add(0, DELETE_ID, 1, R.string.delete_exercise);
+        } else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+            menu.add(0, EDIT_ID, 0, R.string.edit_group);
+            menu.add(0, DELETE_ID, 1, R.string.delete_group);
+        }
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
+               
+        int type = ExpandableListView.getPackedPositionType(info.packedPosition);
+  
+
+        	if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                switch(item.getItemId()) {
+                case DELETE_ID:
+                	mDbHelper.deleteExcercise(info.id);
+                	fillData(); 
+                	Toast.makeText(this, R.string.exercise_deleted, Toast.LENGTH_SHORT).show();
+                	return true;
+                case EDIT_ID:
+                	editExercise(info.id);
+                	return true;               	
+                }
+        	} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                switch(item.getItemId()) {
+                case DELETE_ID:
+                	mDbHelper.deleteGroup(info.id);
+                	fillData(); 
+                	Toast.makeText(this, R.string.group_deleted, Toast.LENGTH_SHORT).show();
+                	return true;
+                case EDIT_ID:
+                	editGroup(info.id);
+                	return true; 
+                }
+        	}
+        
+        return false;
     }
     
     public class MyExpandableListAdapter extends SimpleCursorTreeAdapter {
@@ -109,7 +194,6 @@ public class Expandable2 extends ExpandableListActivity {
         	startManagingCursor(exercisesCursor);
             return exercisesCursor;
         }
-
     }
     
     @Override
@@ -117,11 +201,12 @@ public class Expandable2 extends ExpandableListActivity {
     groupPosition, int childPosition, long id)
     {
     	Log.i("EX ID: ", String.valueOf(id));
-    	/*
-    CheckedTextView tempView = (CheckedTextView)v.findViewById
-    (android.R.id.text1);
-    tempView.setChecked(!tempView.isChecked()); */
-    return super.onChildClick(parent, v, groupPosition,
-    childPosition, id);
+    	Intent resultIntent = new Intent();
+    	resultIntent.putExtra(ExcercisesDbAdapter.KEY_EXERCISEID, id);
+    	setResult(RESULT_OK, resultIntent);
+    	finish();
+    	
+    	return super.onChildClick(parent, v, groupPosition,
+    			childPosition, id);
     }
 }

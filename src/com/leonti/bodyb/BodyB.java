@@ -1,7 +1,16 @@
 package com.leonti.bodyb;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +28,7 @@ public class BodyB extends Activity {
         btnExcerciseLog.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BodyB.this, Group.class);
+                Intent i = new Intent(BodyB.this, LogChooser.class);
                 startActivity(i); 
             }
         });
@@ -28,8 +37,54 @@ public class BodyB extends Activity {
         btnStartProgram.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                ServerJson Js = new ServerJson();
+                try {
+                	
+            		JSONObject jsonObject = new JSONObject();
+            		jsonObject.put("name", "Leonti"); 
+            		
+            		Map<String,String> mp=new HashMap<String, String>();
+            		mp.put("preved", "medved");
+            		
+            	    ExcercisesDbAdapter mDbHelper = new ExcercisesDbAdapter(BodyB.this);
+                    mDbHelper.open();
+            	    Cursor mSetsCursor = mDbHelper.fetchAllSets();
+
+            	    JSONObject jsonSets = new JSONObject();
+            		mSetsCursor.moveToFirst();
+            		for (int i=0; i<mSetsCursor.getCount(); i++)
+            		{
+        				JSONObject jsonRow = new JSONObject();
+         			   String TitleRaw = mSetsCursor.getString(mSetsCursor.getColumnIndex(ExcercisesDbAdapter.KEY_TITLE));
+         			   jsonRow.put("title", TitleRaw);
+         			   String DescRaw = mSetsCursor.getString(mSetsCursor.getColumnIndex(ExcercisesDbAdapter.KEY_DESC));
+         			   jsonRow.put("desc", DescRaw);
+         			  String IdRaw = mSetsCursor.getString(mSetsCursor.getColumnIndex(ExcercisesDbAdapter.KEY_ROWID));
+         			 jsonRow.put("id", IdRaw);
+         			 jsonSets.put(IdRaw, jsonRow.toString());
+            		    mSetsCursor.moveToNext();
+            		}
+      			   jsonObject.put("sets", jsonSets.toString());
+            		
+            		
+            		
+            		
+            		
+					Js.getServerData(jsonObject);
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                
+                /*
                 Intent i = new Intent(BodyB.this, ExcercisesList.class);
-                startActivity(i); 
+                startActivity(i); */ 
             }
         });
         

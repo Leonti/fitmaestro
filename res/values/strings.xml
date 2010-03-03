@@ -45,4 +45,10 @@
 <string name="log_entry_edited">Log Entry Edited</string>
 <string name="edit_log_entry">Edit Log Entry</string>
 <string name="delete_log_entry">Delete Log Entry</string>
+<string name="time_row">Time: </string>
+<string name="times_row">Times: </string>
+<string name="weight_row">Weight: </string>
+<string name="kg">kg</string>
+<string name="by_set">By Set</string>
+<string name="by_exercise">By Exercise</string>
 </resources>

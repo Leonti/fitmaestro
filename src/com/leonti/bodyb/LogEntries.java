@@ -1,5 +1,12 @@
 package com.leonti.bodyb;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,6 +35,8 @@ public class LogEntries extends ListActivity {
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mLogCursor;
     private Long mExerciseId;
+    DateFormat iso8601Format;
+    String TAG = "LogEntries";
     
 	
     /** Called when the activity is first created. */
@@ -46,18 +55,59 @@ public class LogEntries extends ListActivity {
         
         mDbHelper = new ExcercisesDbAdapter(this);
         mDbHelper.open();
+        iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        
         fillData();
         registerForContextMenu(getListView());
     }
     
     private void fillData() {
-        mLogCursor = mDbHelper.fetchLogEntriesForExercise(mExerciseId, 1, 5);
+
+    	Calendar beginning = Calendar.getInstance();
+    	beginning.set(Calendar.HOUR_OF_DAY, 0);
+    	beginning.set(Calendar.MINUTE, 0);
+    	beginning.set(Calendar.SECOND, 0);
+    	Calendar ending = (Calendar) beginning.clone();
+    	ending.add(Calendar.DAY_OF_YEAR, + 1);
+    	
+    	String begin = iso8601Format.format(beginning.getTime());
+    	String end = iso8601Format.format(ending.getTime());
+    	    	
+        mLogCursor = mDbHelper.fetchLogEntriesForExercise(mExerciseId, begin, end);
         startManagingCursor(mLogCursor);
-        String[] from = new String[]{ExcercisesDbAdapter.KEY_DONE};
-        int[] to = new int[]{R.id.log_entry};
+        String[] from = new String[]{ExcercisesDbAdapter.KEY_WEIGHT, ExcercisesDbAdapter.KEY_TIMES, ExcercisesDbAdapter.KEY_DONE};
+        int[] to = new int[]{R.id.log_entry_weight, R.id.log_entry_times, R.id.log_entry_time};
         SimpleCursorAdapter daylog = 
         	    new SimpleCursorAdapter(this, R.layout.log_entries_list_row, mLogCursor, from, to);
+        daylog.setViewBinder(new MyViewBinder());
         setListAdapter(daylog);
+    }
+    
+    public class MyViewBinder implements SimpleCursorAdapter.ViewBinder
+    {
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex)
+            {            
+              if( columnIndex == cursor.getColumnIndex(ExcercisesDbAdapter.KEY_DONE))
+              {
+                  TextView timeText = (TextView)view;
+                  
+                  try {
+                	Date date = iso8601Format.parse(cursor.getString(columnIndex));
+					long when = date.getTime();
+					int flags = 0;
+					flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+					String finalDateTime = android.text.format.DateUtils.formatDateTime(getBaseContext(),
+							when + TimeZone.getDefault().getOffset(when), flags);
+	                  timeText.setText(finalDateTime);
+				} catch (ParseException e) {
+					Log.e(TAG, "Parsing ISO8601 datetime failed", e);
+				}
+                  return true;
+              }
+              return false;
+            }
     } 
 
     @Override
@@ -85,7 +135,7 @@ public class LogEntries extends ListActivity {
     }
     
     private void editEntry(long id) {
-        Intent i = new Intent(this, SetEdit.class);
+        Intent i = new Intent(this, AddLogEntry.class);
         i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
         startActivityForResult(i, ACTIVITY_EDIT);
     }
@@ -109,9 +159,9 @@ public class LogEntries extends ListActivity {
         AdapterView.AdapterContextMenuInfo info;
         info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-        String title = ((TextView) info.targetView).getText().toString();
+       // String title = ((TextView) info.targetView).getText().toString();
 
-        menu.setHeaderTitle(title);
+        menu.setHeaderTitle("Dyg");
         menu.add(0, EDIT_ID, 0, R.string.edit_log_entry);
         menu.add(0, DELETE_ID, 1, R.string.delete_log_entry);
     }

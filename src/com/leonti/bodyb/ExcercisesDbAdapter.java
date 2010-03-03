@@ -328,14 +328,31 @@ public class ExcercisesDbAdapter {
 
     }
     
-    public Cursor fetchLogEntriesForExercise(long exerciseId, long donestart, long doneend) throws SQLException {
+    public Cursor fetchLogEntriesForExercise(long exerciseId, String donestart, String doneend) throws SQLException {
 
         Cursor mCursor =
                 mDb.query(true, DATABASE_LOG_TABLE, new String[] {KEY_ROWID, KEY_EXERCISEID,
                 		KEY_WEIGHT, KEY_TIMES, KEY_PROGRAMID,
-                		KEY_DAY, KEY_DONE}, KEY_EXERCISEID + "=" + exerciseId + " AND " + donestart + " < " + KEY_DONE + " < " + doneend, null,
+                		KEY_DAY, KEY_DONE}, KEY_EXERCISEID + "=" + exerciseId + " AND '" + donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '" + doneend + "'", null,
                         null, null, null, null);
         if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public Cursor fetchExercisesForDates(String donestart, String doneend) throws SQLException {
+        Cursor mCursor = mDb.rawQuery(
+        	"SELECT " + DATABASE_LOG_TABLE + "." + KEY_ROWID + " AS _id, " + DATABASE_LOG_TABLE+
+        	"." + KEY_EXERCISEID + " AS " + KEY_EXERCISEID + ", "+ DATABASE_EXERCISES_TABLE +
+        	"." + KEY_TITLE + " AS "+ KEY_TITLE + " FROM "+ DATABASE_LOG_TABLE + 
+        	", " + DATABASE_EXERCISES_TABLE + 
+        	" WHERE " + DATABASE_EXERCISES_TABLE + 
+        	"." + KEY_ROWID + " = "+DATABASE_LOG_TABLE+
+        	"." + KEY_EXERCISEID + " AND '" + donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '" + doneend + "' GROUP BY " + KEY_EXERCISEID, null);
+
+    	if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;

@@ -123,7 +123,7 @@ public class SetView extends ListActivity {
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(this, LogEntries.class);
         i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-        startActivityForResult(i, 5);      
+        startActivity(i);      
     }
     
 }

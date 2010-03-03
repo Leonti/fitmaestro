@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class AddLogEntry extends Activity {
 	private EditText mTimesText;
@@ -25,7 +26,7 @@ public class AddLogEntry extends Activity {
        
         mTimesText = (EditText) findViewById(R.id.editText_times);
         mWeightText = (EditText) findViewById(R.id.editText_weight);
-      
+     
         Button saveButton = (Button) findViewById(R.id.button_save);
        
         mRowId = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_ROWID) 
@@ -57,7 +58,18 @@ public class AddLogEntry extends Activity {
      }
     
     private void populateFields() {
-
+    	
+        Cursor exerciseCursor = (Cursor) mDbHelper.fetchExcercise(mExerciseId);
+        startManagingCursor(exerciseCursor);
+        
+        int type = exerciseCursor.getInt(exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
+        if (type == 0){ //own weight
+        	TextView weightLabel = (TextView) findViewById(R.id.text_weight);
+        	mWeightText.setVisibility(View.GONE);
+        	mWeightText.setText("0");
+        	weightLabel.setVisibility(View.GONE);
+        }
+       
         if (mRowId != 0) {
             Cursor logEntry = mDbHelper.fetchLogEntry(mRowId);
             startManagingCursor(logEntry);
@@ -89,14 +101,16 @@ public class AddLogEntry extends Activity {
     private void saveState() {
         String times = mTimesText.getText().toString();
         String weight = mWeightText.getText().toString();
-
-        if (mRowId == 0) {
-            long id = mDbHelper.createLogEntry(mExerciseId, Float.valueOf(weight.trim()) , Integer.parseInt(times.trim()) , 0, 0);
-            if (id > 0) {
-                mRowId = id;
-            }
-        } else {
-            mDbHelper.updateLogEntry(mRowId, Float.valueOf(weight.trim()) , Integer.parseInt(times.trim()));
-        }
+        
+        if(times.length() > 0 && weight.length() > 0){
+	        if (mRowId == 0) {
+	        	long id = mDbHelper.createLogEntry(mExerciseId, Float.valueOf(weight.trim()) , Integer.parseInt(times.trim()) , 0, 0);
+	        	if (id > 0) {
+	        		mRowId = id;
+	        	}
+	        } else {
+	        	mDbHelper.updateLogEntry(mRowId, Float.valueOf(weight.trim()) , Integer.parseInt(times.trim()));
+	        }
+    	}
     }
 }

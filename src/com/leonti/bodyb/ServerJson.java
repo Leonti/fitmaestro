@@ -12,11 +12,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class ServerJson {
+	public static final int SUCCESS = 0;
+	public static final int NO_CONNECTION = 1;
+	public static final int ALREADY_EXISTS = 2;
+	
 	public JSONObject getServerData(JSONObject jsonIn) throws JSONException, ClientProtocolException, IOException {
 
 	    DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -39,4 +44,44 @@ public class ServerJson {
 
 		return jsonResponse;
    }
+	
+	public int registerUser(String email, String password){
+		JSONObject jsonSend = new JSONObject();
+		JSONObject jsonAnswer = new JSONObject();
+		try {
+			jsonSend.put("what", "REGISTER");
+			jsonSend.put("email", email);
+			jsonSend.put("password", password);
+			
+			jsonAnswer = getServerData(jsonSend);
+			String result = jsonAnswer.get("result").toString();
+			
+			if(result.equals("CREATED")){
+				Log.i("EPTEL: ", "Success!!!");
+				return SUCCESS;
+			}
+			if(result.equals("EXISTS")){
+				Log.i("EPTEL: ", "Exists!!!");
+				return ALREADY_EXISTS;
+			}
+			
+			Log.i("EPTEL: ", jsonAnswer.get("result").toString());
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return NO_CONNECTION;
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return NO_CONNECTION;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return NO_CONNECTION;
+		}
+		
+		
+		return NO_CONNECTION;
+	}
 }

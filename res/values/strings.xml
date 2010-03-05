@@ -51,4 +51,14 @@
 <string name="kg">kg</string>
 <string name="by_set">By Set</string>
 <string name="by_exercise">By Exercise</string>
+<string name="email">Email:</string>
+<string name="password">Password:</string>
+<string name="repeatpassword">Repeat Password:</string>
+<string name="register">Register!</string>
+<string name="login">Login</string>
+<string name="password_missmatch">Passwords Do Not Match</string>
+<string name="email_invalid">Email is invalid</string>
+<string name="account_created">Account Created</string>
+<string name="email_registered">This email is already registered</string>
+<string name="no_connection">Server connection problem</string>
 </resources>

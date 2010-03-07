@@ -50,7 +50,7 @@ public class GroupEdit extends Activity {
     
     private void populateFields() {
         if (mRowId != null) {
-            Cursor group = mDbHelper.fetchGroup(mRowId);
+            Cursor group = mDbHelper.fetchGroup(mRowId, 0);
             startManagingCursor(group);
             mTitleText.setText(group.getString(
                         group.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE)));

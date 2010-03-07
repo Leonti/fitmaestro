@@ -28,7 +28,7 @@ public class BodyB extends Activity {
         btnExcerciseLog.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BodyB.this, Register.class);
+                Intent i = new Intent(BodyB.this, Synchronization.class);
                 startActivity(i); 
             }
         });

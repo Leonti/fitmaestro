@@ -113,6 +113,7 @@ public final class R {
         public static final int set_list_row=0x7f030018;
         public static final int setview_list=0x7f030019;
         public static final int setview_list_row=0x7f03001a;
+        public static final int synchronization=0x7f03001b;
     }
     public static final class string {
         public static final int account_created=0x7f04003a;

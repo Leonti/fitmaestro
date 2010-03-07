@@ -25,6 +25,7 @@ public class ExcercisesDbAdapter {
     public static final String KEY_PROGRAMID = "program_id";
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
+    public static final String KEY_UPDATED = "updated";
     
     private static final String TAG = "ExcercisesDbAdapter";
     private DatabaseHelper mDbHelper;
@@ -34,25 +35,61 @@ public class ExcercisesDbAdapter {
      * Database creation sql statement
      */
     private static final String GROUPS_CREATE =
-            "create table groups (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, site_id integer); ";
+            "create table groups (_id integer primary key autoincrement, " //ON UPDATE CURRENT_TIMESTAMP
+                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp); ";
     private static final String EXERCISES_CREATE =
     		"create table exercises (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, ex_type integer, group_id integer, site_id integer); ";
+                    + "title text not null, desc text not null, ex_type integer, group_id integer, site_id integer, updated timestamp default current_timestamp); ";
     private static final String SETS_CREATE =
     		"create table sets (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, site_id integer); ";
+                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp); ";
     
     private static final String SETS_CONNECTOR_CREATE =
 		"create table sets_connector (_id integer primary key autoincrement, "
-                + "set_id integer, exercise_id integer, site_id integer); ";
+                + "set_id integer, exercise_id integer, site_id integer, updated timestamp default current_timestamp); ";
     
     private static final String LOG_CREATE =
 		"create table log (_id integer primary key autoincrement, "
                 + "exercise_id integer, weight decimal(10,2), times integer, "
-                + "program_id integer, day integer, done timestamp default current_timestamp); ";
+                + "program_id integer, day integer, done timestamp default current_timestamp, updated timestamp default current_timestamp); ";
     
-    private static final String DATABASE_NAME = "data7";
+    private static final String GROUPS_TRIGGER =
+    	"CREATE TRIGGER update_group_trigger AFTER UPDATE ON groups "
+    	+ "BEGIN " 
+    	+ "UPDATE groups SET updated = DATETIME('NOW') "
+  + "WHERE rowid = new.rowid; "
+  + "END;";
+    
+    private static final String EXERCISES_TRIGGER =
+    	"CREATE TRIGGER update_exercise_trigger AFTER UPDATE ON exercises "
+    	+ "BEGIN " 
+    	+ "UPDATE exercises SET updated = DATETIME('NOW') "
+  + "WHERE rowid = new.rowid; "
+  + "END;";
+    
+    private static final String SETS_TRIGGER =
+    	"CREATE TRIGGER update_set_trigger AFTER UPDATE ON sets "
+    	+ "BEGIN " 
+    	+ "UPDATE sets SET updated = DATETIME('NOW') "
+  + "WHERE rowid = new.rowid; "
+  + "END;";
+    
+    private static final String SETS_CONNECTOR_TRIGGER =
+    	"CREATE TRIGGER update_sets_connector_trigger AFTER UPDATE ON sets_connector "
+    	+ "BEGIN " 
+    	+ "UPDATE sets_connector SET updated = DATETIME('NOW') "
+  + "WHERE rowid = new.rowid; "
+  + "END;";
+    
+    private static final String LOG_TRIGGER =
+    	"CREATE TRIGGER update_log_trigger AFTER UPDATE ON log "
+    	+ "BEGIN " 
+    	+ "UPDATE log SET updated = DATETIME('NOW') "
+  + "WHERE rowid = new.rowid; "
+  + "END;";
+    
+    
+    private static final String DATABASE_NAME = "data11";
     private static final String DATABASE_GROUPS_TABLE = "groups";
     private static final String DATABASE_EXERCISES_TABLE = "exercises";
     private static final String DATABASE_SETS_TABLE = "sets";
@@ -75,6 +112,12 @@ public class ExcercisesDbAdapter {
             db.execSQL(SETS_CREATE);
             db.execSQL(SETS_CONNECTOR_CREATE);
             db.execSQL(LOG_CREATE);
+            
+            db.execSQL(GROUPS_TRIGGER);
+            db.execSQL(EXERCISES_TRIGGER);            
+            db.execSQL(SETS_TRIGGER);
+            db.execSQL(SETS_CONNECTOR_TRIGGER);
+            db.execSQL(LOG_TRIGGER);
         }
 
         @Override
@@ -84,6 +127,7 @@ public class ExcercisesDbAdapter {
             db.execSQL("DROP TABLE IF EXISTS groups");
             db.execSQL("DROP TABLE IF EXISTS excercises");
             db.execSQL("DROP TABLE IF EXISTS sets");
+            db.execSQL("DROP TABLE IF EXISTS sets_connector");
             db.execSQL("DROP TABLE IF EXISTS log");
             onCreate(db);
         }
@@ -143,18 +187,28 @@ public class ExcercisesDbAdapter {
                 KEY_DESC, KEY_SITEID}, null, null, null, null, null);
     }
 
-    public Cursor fetchGroup(long rowId) throws SQLException {
+    public Cursor fetchGroup(long rowId, long siteId) throws SQLException {
 
+    	// if site_id is present - fetch group using site_id 
+    	String condition = KEY_ROWID + "=" + rowId;
+    	if(siteId != 0){
+    		condition = KEY_SITEID + "=" + siteId;
+    	}
         Cursor mCursor =
-
                 mDb.query(true, DATABASE_GROUPS_TABLE, new String[] {KEY_ROWID,
-                        KEY_TITLE, KEY_DESC, KEY_SITEID}, KEY_ROWID + "=" + rowId, null,
+                        KEY_TITLE, KEY_DESC, KEY_SITEID}, condition, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
 
+    }
+    
+    public Cursor fetchUpdatedGroups(String updated) {
+
+        return mDb.query(DATABASE_GROUPS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
+                KEY_DESC, KEY_SITEID, KEY_UPDATED}, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
     }
 
     public boolean updateGroup(long rowId, String title, String desc, long site_id) {
@@ -208,6 +262,12 @@ public class ExcercisesDbAdapter {
         return mCursor;
 
     }
+    
+    public Cursor fetchUpdatedExercises(String updated) {
+
+        return mDb.query(DATABASE_EXERCISES_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
+                KEY_DESC, KEY_TYPE, KEY_GROUPID, KEY_SITEID, KEY_UPDATED}, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
+    }
 
     public boolean updateExcercise(long rowId, String title, String desc, int type, long group_id, long site_id) {
         ContentValues args = new ContentValues();
@@ -216,6 +276,7 @@ public class ExcercisesDbAdapter {
         args.put(KEY_GROUPID, group_id);
         args.put(KEY_SITEID, site_id);
         args.put(KEY_TYPE, type);
+        args.put(KEY_UPDATED, "CURRENT_TIMESTAMP");
 
         return mDb.update(DATABASE_EXERCISES_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
@@ -263,6 +324,12 @@ public class ExcercisesDbAdapter {
         }
         return mCursor;
 
+    }
+    
+    public Cursor fetchUpdatedSets(String updated) {
+
+        return mDb.query(DATABASE_SETS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
+                KEY_DESC, KEY_SITEID, KEY_UPDATED}, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
     }
 
     public Cursor fetchExercisesForSet(long setId) throws SQLException {
@@ -363,6 +430,7 @@ public class ExcercisesDbAdapter {
         ContentValues args = new ContentValues();
         args.put(KEY_WEIGHT, weight);
         args.put(KEY_TIMES, times);
+        
         return mDb.update(DATABASE_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     // end of LOG

@@ -84,4 +84,37 @@ public class ServerJson {
 		
 		return NO_CONNECTION;
 	}
+
+	
+	public JSONObject getUpdates(String email, String password, String updated, JSONObject sendFirstData){
+		JSONObject jsonSend = new JSONObject();
+		JSONObject jsonAnswer = new JSONObject();
+
+		try {
+			jsonSend.put("what", "STARTUPDATE");
+			jsonSend.put("email", email);
+			jsonSend.put("password", password);
+			jsonSend.put("data", sendFirstData);
+			
+			jsonAnswer = getServerData(jsonSend);
+			String result = jsonAnswer.get("result").toString();
+			
+			if(result.equals("UPDATED")){
+				return jsonAnswer.getJSONObject("data");	
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		return null;
+	}
 }

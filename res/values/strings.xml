@@ -61,4 +61,7 @@
 <string name="account_created">Account Created</string>
 <string name="email_registered">This email is already registered</string>
 <string name="no_connection">Server connection problem</string>
+<string name="login_success">You\'ve logged in succesfully!</string>
+<string name="invalid_credentials">Invalid credentials!</string>
+<string name="synchronize">Synchronization</string>
 </resources>

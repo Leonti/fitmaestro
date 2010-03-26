@@ -36,6 +36,7 @@ public class LogEntries extends ListActivity {
     private Cursor mLogCursor;
     private Long mExerciseId;
     DateFormat iso8601Format;
+    DateFormat iso8601FormatLocal;
     String TAG = "LogEntries";
     
 	
@@ -57,6 +58,7 @@ public class LogEntries extends ListActivity {
         mDbHelper.open();
         iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        iso8601FormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         fillData();
         registerForContextMenu(getListView());
@@ -94,7 +96,7 @@ public class LogEntries extends ListActivity {
                   TextView timeText = (TextView)view;
                   
                   try {
-                	Date date = iso8601Format.parse(cursor.getString(columnIndex));
+                	Date date = iso8601FormatLocal.parse(cursor.getString(columnIndex));
 					long when = date.getTime();
 					int flags = 0;
 					flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;

@@ -1,6 +1,10 @@
 
 package com.leonti.bodyb;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -26,6 +30,9 @@ public class ExcercisesDbAdapter {
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
     public static final String KEY_UPDATED = "updated";
+    public static final String KEY_DELETED = "deleted";
+    public static final String KEY_LASTUPDATED = "last_updated";
+    public static final String KEY_AUTHKEY = "authkey";
     
     private static final String TAG = "ExcercisesDbAdapter";
     private DatabaseHelper mDbHelper;
@@ -36,22 +43,29 @@ public class ExcercisesDbAdapter {
      */
     private static final String GROUPS_CREATE =
             "create table groups (_id integer primary key autoincrement, " //ON UPDATE CURRENT_TIMESTAMP
-                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp); ";
+                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
     private static final String EXERCISES_CREATE =
     		"create table exercises (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, ex_type integer, group_id integer, site_id integer, updated timestamp default current_timestamp); ";
+                    + "title text not null, desc text not null, ex_type integer, group_id integer, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
     private static final String SETS_CREATE =
     		"create table sets (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp); ";
+                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
     
     private static final String SETS_CONNECTOR_CREATE =
 		"create table sets_connector (_id integer primary key autoincrement, "
-                + "set_id integer, exercise_id integer, site_id integer, updated timestamp default current_timestamp); ";
+                + "set_id integer, exercise_id integer, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
     
     private static final String LOG_CREATE =
 		"create table log (_id integer primary key autoincrement, "
                 + "exercise_id integer, weight decimal(10,2), times integer, "
-                + "program_id integer, day integer, done timestamp default current_timestamp, updated timestamp default current_timestamp); ";
+                + "program_id integer, day integer, done timestamp default current_timestamp, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
+
+    private static final String SETTINGS_CREATE =
+		"create table settings (_id integer primary key autoincrement, "
+                + "authkey text not null, last_updated timestamp default current_timestamp); ";
+    
+    private static final String SETTINGS_FILL = 
+    	"insert into settings (authkey) values ('');";
     
     private static final String GROUPS_TRIGGER =
     	"CREATE TRIGGER update_group_trigger AFTER UPDATE ON groups "
@@ -89,12 +103,13 @@ public class ExcercisesDbAdapter {
   + "END;";
     
     
-    private static final String DATABASE_NAME = "data11";
-    private static final String DATABASE_GROUPS_TABLE = "groups";
-    private static final String DATABASE_EXERCISES_TABLE = "exercises";
-    private static final String DATABASE_SETS_TABLE = "sets";
-    private static final String DATABASE_SETS_CONNECTOR_TABLE = "sets_connector";
-    private static final String DATABASE_LOG_TABLE = "log";
+    private static final String DATABASE_NAME = "data17";
+    public static final String DATABASE_GROUPS_TABLE = "groups";
+    public static final String DATABASE_EXERCISES_TABLE = "exercises";
+    public static final String DATABASE_SETS_TABLE = "sets";
+    public static final String DATABASE_SETS_CONNECTOR_TABLE = "sets_connector";
+    public static final String DATABASE_LOG_TABLE = "log";
+    public static final String DATABASE_SETTINGS_TABLE = "settings";
     private static final int DATABASE_VERSION = 2;
 
     private final Context mCtx;
@@ -112,6 +127,8 @@ public class ExcercisesDbAdapter {
             db.execSQL(SETS_CREATE);
             db.execSQL(SETS_CONNECTOR_CREATE);
             db.execSQL(LOG_CREATE);
+            db.execSQL(SETTINGS_CREATE);
+            db.execSQL(SETTINGS_FILL);
             
             db.execSQL(GROUPS_TRIGGER);
             db.execSQL(EXERCISES_TRIGGER);            
@@ -162,7 +179,42 @@ public class ExcercisesDbAdapter {
         mDbHelper.close();
     }
 
+    //all items
+    public long createItem(String table, HashMap<String, String> fields){
+        ContentValues initialValues = new ContentValues();
+        
+		Set<Map.Entry<String, String>> set = fields.entrySet();
 
+		for (Map.Entry<String, String> entry : set) {
+			initialValues.put(entry.getKey(), entry.getValue());
+		}
+		
+    	return mDb.insert(table, null, initialValues);
+    }
+    
+    public boolean updateItem(String table, HashMap<String, String> fields, long rowId){
+        ContentValues args = new ContentValues();
+        
+		Set<Map.Entry<String, String>> set = fields.entrySet();
+
+		for (Map.Entry<String, String> entry : set) {
+			args.put(entry.getKey(), entry.getValue());
+		}
+		
+		return mDb.update(table, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public Cursor fetchItemBySiteId(String table, String siteId) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, table, new String[] {KEY_ROWID}, KEY_SITEID + "=" + siteId, null,
+                        null, null, null, null);
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+    
     // GROUPS methods
     public long createGroup(String title, String desc, long site_id) {
         ContentValues initialValues = new ContentValues();
@@ -178,13 +230,16 @@ public class ExcercisesDbAdapter {
     	// delete exercises for this group first
     	deleteExercisesForGroup(rowId);
     	
-        return mDb.delete(DATABASE_GROUPS_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_GROUPS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
     public Cursor fetchAllGroups() {
 
         return mDb.query(DATABASE_GROUPS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_DESC, KEY_SITEID}, null, null, null, null, null);
+                KEY_DESC, KEY_SITEID}, KEY_DELETED + "=0", null, null, null, null);
     }
 
     public Cursor fetchGroup(long rowId, long siteId) throws SQLException {
@@ -208,7 +263,12 @@ public class ExcercisesDbAdapter {
     public Cursor fetchUpdatedGroups(String updated) {
 
         return mDb.query(DATABASE_GROUPS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_DESC, KEY_SITEID, KEY_UPDATED}, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
+                KEY_DESC, KEY_SITEID, KEY_UPDATED, KEY_DELETED}, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
+    }
+    
+    public Cursor fetchUpdatedItems(String table, String updated) {
+
+        return mDb.query(table, null, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
     }
 
     public boolean updateGroup(long rowId, String title, String desc, long site_id) {
@@ -235,18 +295,24 @@ public class ExcercisesDbAdapter {
 
     public boolean deleteExcercise(long rowId) {
 
-        return mDb.delete(DATABASE_EXERCISES_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_EXERCISES_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
     public boolean deleteExercisesForGroup(long groupId) {
 
-        return mDb.delete(DATABASE_EXERCISES_TABLE, KEY_GROUPID + "=" + groupId, null) > 0;
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_EXERCISES_TABLE, args, KEY_GROUPID + "=" + groupId, null) > 0;
     }
 
     public Cursor fetchExcercisesForGroup(long group_id) {
 
         return mDb.query(DATABASE_EXERCISES_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_DESC, KEY_TYPE, KEY_GROUPID, KEY_SITEID}, KEY_GROUPID + "=" + group_id, null, null, null, null, null);
+                KEY_DESC, KEY_TYPE, KEY_GROUPID, KEY_SITEID}, KEY_GROUPID + "=" + group_id + " AND " + KEY_DELETED + "=0", null, null, null, null, null);
     }
 
     public Cursor fetchExcercise(long rowId) throws SQLException {
@@ -303,13 +369,16 @@ public class ExcercisesDbAdapter {
     
     public boolean deleteSet(long rowId) {
 
-        return mDb.delete(DATABASE_SETS_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_SETS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
     public Cursor fetchAllSets() {
 
         return mDb.query(DATABASE_SETS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_DESC, KEY_SITEID}, null, null, null, null, null);
+                KEY_DESC, KEY_SITEID},  KEY_DELETED + "=0", null, null, null, null);
     }
 
     public Cursor fetchSet(long rowId) throws SQLException {
@@ -340,7 +409,8 @@ public class ExcercisesDbAdapter {
         	" WHERE " + DATABASE_EXERCISES_TABLE + 
         	"." + KEY_ROWID + " = "+DATABASE_SETS_CONNECTOR_TABLE+
         	"." + KEY_EXERCISEID + " AND " + DATABASE_SETS_CONNECTOR_TABLE +
-        	"." + KEY_SETID + " = ?", new String[]{String.valueOf(setId)});
+        	"." + KEY_SETID + " = ?" + " AND " + DATABASE_SETS_CONNECTOR_TABLE +
+        	"." + KEY_DELETED + " = 0", new String[]{String.valueOf(setId)});
 
     	if (mCursor != null) {
             mCursor.moveToFirst();
@@ -350,7 +420,11 @@ public class ExcercisesDbAdapter {
     }
     
     public boolean deleteExerciseFromSet(long rowId) {
-        return mDb.delete(DATABASE_SETS_CONNECTOR_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    	
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_SETS_CONNECTOR_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
     public boolean updateSet(long rowId, String title, String desc, long site_id) {
@@ -371,13 +445,17 @@ public class ExcercisesDbAdapter {
         initialValues.put(KEY_TIMES, times);
         initialValues.put(KEY_PROGRAMID, program_id);
         initialValues.put(KEY_DAY, day);
+        initialValues.put(KEY_SITEID, 0);
 
         return mDb.insert(DATABASE_LOG_TABLE, null, initialValues);
     }
 
     public boolean deleteLogEntry(long rowId) {
 
-        return mDb.delete(DATABASE_LOG_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
     public Cursor fetchLogEntry(long rowId) throws SQLException {
@@ -400,7 +478,8 @@ public class ExcercisesDbAdapter {
         Cursor mCursor =
                 mDb.query(true, DATABASE_LOG_TABLE, new String[] {KEY_ROWID, KEY_EXERCISEID,
                 		KEY_WEIGHT, KEY_TIMES, KEY_PROGRAMID,
-                		KEY_DAY, KEY_DONE}, KEY_EXERCISEID + "=" + exerciseId + " AND '" + donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '" + doneend + "'", null,
+                		KEY_DAY, KEY_DONE}, KEY_EXERCISEID + "=" + exerciseId + " AND '" + donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '" + doneend + "' AND "
+                		+ KEY_DELETED + "=0", null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -417,7 +496,8 @@ public class ExcercisesDbAdapter {
         	", " + DATABASE_EXERCISES_TABLE + 
         	" WHERE " + DATABASE_EXERCISES_TABLE + 
         	"." + KEY_ROWID + " = "+DATABASE_LOG_TABLE+
-        	"." + KEY_EXERCISEID + " AND '" + donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '" + doneend + "' GROUP BY " + KEY_EXERCISEID, null);
+        	"." + KEY_EXERCISEID + " AND '" + donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '" + doneend + "' AND " +
+        	DATABASE_LOG_TABLE + "." + KEY_DELETED + "=0 GROUP BY " + KEY_EXERCISEID, null);
 
     	if (mCursor != null) {
             mCursor.moveToFirst();
@@ -434,5 +514,57 @@ public class ExcercisesDbAdapter {
         return mDb.update(DATABASE_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     // end of LOG
+    
+    public String getLocalTime(){
+    	
+    	Cursor mCursor = mDb.rawQuery("SELECT strftime('%s','now') AS localtime", null);
+   
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+    	
+    	return mCursor.getString(mCursor.getColumnIndex("localtime"));
+    
+    }
+    
+    // settings
+    
+    public boolean setAuthKey(String authkey) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_AUTHKEY, authkey);
+
+        return mDb.update(DATABASE_SETTINGS_TABLE, args, KEY_ROWID + "=1", null) > 0;
+    }
+    
+    public String getAuthKey() throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_SETTINGS_TABLE, new String[] {KEY_AUTHKEY}, KEY_ROWID + "=1", null,
+                        null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+    	
+        return mCursor.getString(mCursor.getColumnIndex(KEY_AUTHKEY));
+    }
+    
+    public String getLastUpdated() throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_SETTINGS_TABLE, new String[] {KEY_LASTUPDATED}, 
+                		KEY_ROWID + "=1", null,
+                        null, null, null, null);
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor.getString(mCursor.getColumnIndex(KEY_LASTUPDATED));
+    }
+    
+    public void setLastUpdated(){
+    	mDb.execSQL("update " + DATABASE_SETTINGS_TABLE + " set " +
+    					KEY_LASTUPDATED + "= DATETIME('NOW') WHERE _id=1"); 
+    }
+    
 
 }

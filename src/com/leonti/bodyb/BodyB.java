@@ -28,7 +28,7 @@ public class BodyB extends Activity {
         btnExcerciseLog.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BodyB.this, Synchronization.class);
+                Intent i = new Intent(BodyB.this, LogChooser.class);
                 startActivity(i); 
             }
         });
@@ -103,6 +103,33 @@ public class BodyB extends Activity {
             public void onClick(View v) {
                 Intent i = new Intent(BodyB.this, Expandable2.class);
                 startActivityForResult(i, 231); 
+            }
+        });
+        
+        Button btnRegister = (Button) findViewById(R.id.button_register);
+        btnRegister.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BodyB.this, Register.class);
+                startActivity(i); 
+            }
+        });
+        
+        Button btnLogin = (Button) findViewById(R.id.button_login);
+        btnLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BodyB.this, Login.class);
+                startActivity(i); 
+            }
+        });
+        
+        Button btnSync = (Button) findViewById(R.id.button_synchronize);
+        btnSync.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BodyB.this, Synchronization.class);
+                startActivity(i); 
             }
         });
         

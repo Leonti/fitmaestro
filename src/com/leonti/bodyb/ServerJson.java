@@ -21,6 +21,7 @@ public class ServerJson {
 	public static final int SUCCESS = 0;
 	public static final int NO_CONNECTION = 1;
 	public static final int ALREADY_EXISTS = 2;
+	public static final int INVALID = 3;
 	
 	public JSONObject getServerData(JSONObject jsonIn) throws JSONException, ClientProtocolException, IOException {
 
@@ -45,7 +46,7 @@ public class ServerJson {
 		return jsonResponse;
    }
 	
-	public int registerUser(String email, String password){
+	public int registerUser(String email, String password, ExcercisesDbAdapter dbbHelper){
 		JSONObject jsonSend = new JSONObject();
 		JSONObject jsonAnswer = new JSONObject();
 		try {
@@ -57,6 +58,8 @@ public class ServerJson {
 			String result = jsonAnswer.get("result").toString();
 			
 			if(result.equals("CREATED")){
+		        dbbHelper.setAuthKey(jsonAnswer.get("authkey").toString());
+		        
 				Log.i("EPTEL: ", "Success!!!");
 				return SUCCESS;
 			}
@@ -85,21 +88,92 @@ public class ServerJson {
 		return NO_CONNECTION;
 	}
 
+	public int loginUser(String email, String password, ExcercisesDbAdapter dbbHelper){
+		JSONObject jsonSend = new JSONObject();
+		JSONObject jsonAnswer = new JSONObject();
+		try {
+			jsonSend.put("what", "LOGIN");
+			jsonSend.put("email", email);
+			jsonSend.put("password", password);
+			
+			jsonAnswer = getServerData(jsonSend);
+			String result = jsonAnswer.get("result").toString();
+			
+			if(result.equals("LOGGEDIN")){
+		        dbbHelper.setAuthKey(jsonAnswer.get("authkey").toString());
+		        
+				Log.i("EPTEL: ", "Success!!!");
+				return SUCCESS;
+			}
+			if(result.equals("INVALID")){
+				Log.i("EPTEL: ", "Invalid credentials!!!");
+				return INVALID;
+			}
+			
+			Log.i("EPTEL: ", jsonAnswer.get("result").toString());
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return NO_CONNECTION;
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return NO_CONNECTION;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return NO_CONNECTION;
+		}
+		
+		
+		return NO_CONNECTION;
+	}
 	
-	public JSONObject getUpdates(String email, String password, String updated, JSONObject sendFirstData){
+	public JSONObject getUpdates(String authKey, JSONObject sendFirstData){
 		JSONObject jsonSend = new JSONObject();
 		JSONObject jsonAnswer = new JSONObject();
 
 		try {
 			jsonSend.put("what", "STARTUPDATE");
-			jsonSend.put("email", email);
-			jsonSend.put("password", password);
+			jsonSend.put("authkey", authKey);
 			jsonSend.put("data", sendFirstData);
 			
 			jsonAnswer = getServerData(jsonSend);
 			String result = jsonAnswer.get("result").toString();
 			
-			if(result.equals("UPDATED")){
+			if(result.equals("STARTUPDATED")){
+				return jsonAnswer.getJSONObject("data");	
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		return null;
+	}
+	
+	public JSONObject finishUpdates(String authKey, JSONObject sendSecondData){
+		JSONObject jsonSend = new JSONObject();
+		JSONObject jsonAnswer = new JSONObject();
+
+		try {
+			jsonSend.put("what", "FINISHUPDATE");
+			jsonSend.put("authkey", authKey);
+			jsonSend.put("data", sendSecondData);
+			
+			jsonAnswer = getServerData(jsonSend);
+			String result = jsonAnswer.get("result").toString();
+			
+			if(result.equals("FINISHUPDATED")){
 				return jsonAnswer.getJSONObject("data");	
 			}
 			

@@ -13,6 +13,7 @@ public class GroupEdit extends Activity {
 	private EditText mTitleText;
 	private EditText mDescText;
 	private Long mRowId;
+	private long mSiteId;
     private ExcercisesDbAdapter mDbHelper;
 	
     @Override
@@ -49,6 +50,8 @@ public class GroupEdit extends Activity {
      }
     
     private void populateFields() {
+    	
+    	mSiteId = 0;
         if (mRowId != null) {
             Cursor group = mDbHelper.fetchGroup(mRowId, 0);
             startManagingCursor(group);
@@ -56,6 +59,9 @@ public class GroupEdit extends Activity {
                         group.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE)));
             mDescText.setText(group.getString(
                     group.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_DESC)));
+            
+            mSiteId = group.getLong(
+                    group.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SITEID));
         }
     }
     
@@ -87,7 +93,7 @@ public class GroupEdit extends Activity {
                 mRowId = id;
             }
         } else {
-            mDbHelper.updateGroup(mRowId, title, desc, 0);
+            mDbHelper.updateGroup(mRowId, title, desc, mSiteId);
         }
     }
 	

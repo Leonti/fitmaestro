@@ -16,6 +16,8 @@ public class Register extends Activity {
 	private EditText mEmailText;
 	private EditText mPasswordText;
 	private EditText mRepeatPasswordText;
+    private ExcercisesDbAdapter mDbHelper;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,9 @@ public class Register extends Activity {
         mEmailText = (EditText) findViewById(R.id.edit_email);
         mPasswordText = (EditText) findViewById(R.id.edit_password);
         mRepeatPasswordText = (EditText) findViewById(R.id.edit_repeatpassword);
+        
+        mDbHelper = new ExcercisesDbAdapter(this);
+        mDbHelper.open();
         
         Button btnRegister = (Button) findViewById(R.id.button_register);
         btnRegister.setOnClickListener(new OnClickListener() {
@@ -58,7 +63,7 @@ public class Register extends Activity {
     	 
     	 if(errors == 0){
     		 ServerJson Js = new ServerJson();
-    		 switch(Js.registerUser(email, password)){
+    		 switch(Js.registerUser(email, password, mDbHelper)){
     		 case ServerJson.SUCCESS:
     	     		Toast.makeText(this, R.string.account_created, Toast.LENGTH_SHORT).show();
     			 break;

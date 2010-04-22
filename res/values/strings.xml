@@ -2,7 +2,8 @@
 <resources>
     
     <string name="app_name">BodyB</string><string name="start_program">Start Program</string>
-<string name="continue_program">Continue Program</string>
+<string name="sessions">Sessions</string>
+<string name="sets">Sets</string>
 <string name="excercise_log">Excercise Log</string>
 <string name="download_programs">Download Programs</string>
 <string name="download_excercises">Download Excercises</string>
@@ -64,4 +65,9 @@
 <string name="login_success">You\'ve logged in succesfully!</string>
 <string name="invalid_credentials">Invalid credentials!</string>
 <string name="synchronize">Synchronization</string>
+<string name="reps">Reps</string>
+<string name="percentage">Percentage</string>
+<string name="reps_entry_edited">Reps entry edited</string>
+<string name="edit_reps_entry">Edit reps</string>
+<string name="delete_reps_entry">Delete reps</string>
 </resources>

@@ -5,11 +5,12 @@
     android:layout_height="fill_parent"
     >
 <Button android:text="@string/start_program" android:id="@+id/button_start_program" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/continue_program" android:id="@+id/button_continue_program" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/excercise_log" android:id="@+id/button_excercise_log" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/sessions" android:id="@+id/button_sessions" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<Button android:text="@string/sets" android:id="@+id/button_sets" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button><Button android:text="@string/excercise_log" android:id="@+id/button_excercise_log" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/download_programs" android:id="@+id/button_download_programs" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/download_excercises" android:id="@+id/button_download_excercises" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/register" android:id="@+id/button_register" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/login" android:id="@+id/button_login" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/synchronize" android:id="@+id/button_synchronize" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+
 </LinearLayout>

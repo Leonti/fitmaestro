@@ -87,9 +87,18 @@ public class BodyB extends Activity {
                 startActivity(i); */ 
             }
         });
+
+        Button btnSets = (Button) findViewById(R.id.button_sets);
+        btnSets.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BodyB.this, SetsList.class);
+                startActivity(i); 
+            }
+        });
         
-        Button btnContinueProgram = (Button) findViewById(R.id.button_continue_program);
-        btnContinueProgram.setOnClickListener(new OnClickListener() {
+        Button btnSessions = (Button) findViewById(R.id.button_sessions);
+        btnSessions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(BodyB.this, SetsList.class);

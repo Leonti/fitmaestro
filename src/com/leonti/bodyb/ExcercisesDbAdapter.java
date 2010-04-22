@@ -25,8 +25,11 @@ public class ExcercisesDbAdapter {
     public static final String KEY_EXERCISEID = "exercise_id"; //for log
     public static final String KEY_SETID = "set_id"; //for set connector
     public static final String KEY_WEIGHT = "weight";
-    public static final String KEY_TIMES = "times";
+    public static final String KEY_TIMES = "reps";
+    public static final String KEY_REPS = "reps";
+    public static final String KEY_PERCENTAGE = "percentage";
     public static final String KEY_PROGRAMID = "program_id";
+    public static final String KEY_SETS_CONNECTORID = "set_connector_id";
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
     public static final String KEY_UPDATED = "updated";
@@ -41,73 +44,117 @@ public class ExcercisesDbAdapter {
     /**
      * Database creation sql statement
      */
-    private static final String GROUPS_CREATE =
-            "create table groups (_id integer primary key autoincrement, " //ON UPDATE CURRENT_TIMESTAMP
-                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
-    private static final String EXERCISES_CREATE =
-    		"create table exercises (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, ex_type integer, group_id integer, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
-    private static final String SETS_CREATE =
-    		"create table sets (_id integer primary key autoincrement, "
-                    + "title text not null, desc text not null, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
+    private static final String GROUPS_CREATE = "create table groups " +
+            				"(_id integer primary key autoincrement, " +
+            				"title text not null, " +
+                    		"desc text not null, " +
+                    		"site_id integer, " +
+                    		"updated timestamp default current_timestamp, " +
+                    		"deleted integer default 0); ";
     
-    private static final String SETS_CONNECTOR_CREATE =
-		"create table sets_connector (_id integer primary key autoincrement, "
-                + "set_id integer, exercise_id integer, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
+    private static final String EXERCISES_CREATE = "create table exercises " +
+    						"(_id integer primary key autoincrement, " +
+    						"title text not null, " +
+    						"desc text not null, " +
+    						"ex_type integer, " +
+    						"max_weight decimal(10,2), " +
+    						"max_reps integer, " +
+    						"group_id integer, " +
+    						"site_id integer, " +
+    						"updated timestamp default current_timestamp, " +
+    						"deleted integer default 0); ";
     
-    private static final String LOG_CREATE =
-		"create table log (_id integer primary key autoincrement, "
-                + "exercise_id integer, weight decimal(10,2), times integer, "
-                + "program_id integer, day integer, done timestamp default current_timestamp, site_id integer, updated timestamp default current_timestamp, deleted integer default 0); ";
+    private static final String SETS_CREATE = "create table sets " +
+    						"(_id integer primary key autoincrement, " +
+    						"title text not null, " +
+    						"desc text not null, " +
+    						"site_id integer, " +
+    						"updated timestamp default current_timestamp, " +
+    						"deleted integer default 0); ";
+    
+    private static final String SETS_CONNECTOR_CREATE = "create table sets_connector " +
+    						"(_id integer primary key autoincrement, " +
+    						"set_id integer, " +
+    						"exercise_id integer, " +
+    						"site_id integer, " +
+    						"updated timestamp default current_timestamp, " +
+    						"deleted integer default 0); ";
+    
+    private static final String SETS_DETAIL_CREATE = "create table sets_detail " +
+							"(_id integer primary key autoincrement, " +
+							"set_connector_id integer, " +
+							"reps integer, " +
+							"percentage decimal(10,2), " +
+							"site_id integer, " +
+							"updated timestamp default current_timestamp, " +
+							"deleted integer default 0); ";
+    
+    private static final String SESSIONS_CREATE = "create table sessions " +
+							"(_id integer primary key autoincrement, " +
+							"programs_connector_id integer, " +
+							"title text not null, " +
+							"notes text not null, " +
+							"status text not null, " +
+							"site_id integer, " +
+							"updated timestamp default current_timestamp, " +
+							"deleted integer default 0); ";
+    
+    private static final String SESSIONS_CONNECTOR_CREATE = "create table sessions_connector " +
+							"(_id integer primary key autoincrement, " +
+							"session_id integer, " +
+							"sets_connector_id integer, " +
+							"exercise_id integer, " +
+							"site_id integer, " +
+							"updated timestamp default current_timestamp, " +
+							"deleted integer default 0); ";
 
-    private static final String SETTINGS_CREATE =
-		"create table settings (_id integer primary key autoincrement, "
-                + "authkey text not null, last_updated timestamp default current_timestamp); ";
+    private static final String PROGRAMS_CREATE = "create table programs " +
+							"(_id integer primary key autoincrement, " +
+							"title text not null, " +
+							"desc text not null, " +
+							"site_id integer, " +
+							"updated timestamp default current_timestamp, " +
+							"deleted integer default 0); ";
     
-    private static final String SETTINGS_FILL = 
-    	"insert into settings (authkey) values ('');";
+    private static final String PROGRAMS_CONNECTOR_CREATE = "create table programs_connector " +
+						    "(_id integer primary key autoincrement, " +
+						    "program_id integer, " +
+						    "set_id integer, " +
+						    "day_number integer, " +
+						    "site_id integer, " +
+						    "updated timestamp default current_timestamp, " +
+						    "deleted integer default 0); ";    
     
-    private static final String GROUPS_TRIGGER =
-    	"CREATE TRIGGER update_group_trigger AFTER UPDATE ON groups "
-    	+ "BEGIN " 
-    	+ "UPDATE groups SET updated = DATETIME('NOW') "
-  + "WHERE rowid = new.rowid; "
-  + "END;";
+    private static final String LOG_CREATE = "create table log " +
+    						"(_id integer primary key autoincrement, " +
+    						"exercise_id integer, " +
+    						"weight decimal(10,2), " +
+    						"reps integer, " +
+    						"session_id integer, " +
+    						"sets_detail_id integer, " +
+    						"done timestamp default current_timestamp, " +
+    						"site_id integer, " +
+    						"updated timestamp default current_timestamp, " +
+    						"deleted integer default 0); ";
+
+    private static final String SETTINGS_CREATE = "create table settings " +
+    						"(_id integer primary key autoincrement, " +
+    						"authkey text not null, " +
+    						"last_updated timestamp default current_timestamp); ";
     
-    private static final String EXERCISES_TRIGGER =
-    	"CREATE TRIGGER update_exercise_trigger AFTER UPDATE ON exercises "
-    	+ "BEGIN " 
-    	+ "UPDATE exercises SET updated = DATETIME('NOW') "
-  + "WHERE rowid = new.rowid; "
-  + "END;";
+    private static final String SETTINGS_FILL = "insert into settings (authkey) values ('');";
+        
     
-    private static final String SETS_TRIGGER =
-    	"CREATE TRIGGER update_set_trigger AFTER UPDATE ON sets "
-    	+ "BEGIN " 
-    	+ "UPDATE sets SET updated = DATETIME('NOW') "
-  + "WHERE rowid = new.rowid; "
-  + "END;";
-    
-    private static final String SETS_CONNECTOR_TRIGGER =
-    	"CREATE TRIGGER update_sets_connector_trigger AFTER UPDATE ON sets_connector "
-    	+ "BEGIN " 
-    	+ "UPDATE sets_connector SET updated = DATETIME('NOW') "
-  + "WHERE rowid = new.rowid; "
-  + "END;";
-    
-    private static final String LOG_TRIGGER =
-    	"CREATE TRIGGER update_log_trigger AFTER UPDATE ON log "
-    	+ "BEGIN " 
-    	+ "UPDATE log SET updated = DATETIME('NOW') "
-  + "WHERE rowid = new.rowid; "
-  + "END;";
-    
-    
-    private static final String DATABASE_NAME = "data17";
+    private static final String DATABASE_NAME = "data18";
     public static final String DATABASE_GROUPS_TABLE = "groups";
     public static final String DATABASE_EXERCISES_TABLE = "exercises";
     public static final String DATABASE_SETS_TABLE = "sets";
     public static final String DATABASE_SETS_CONNECTOR_TABLE = "sets_connector";
+    public static final String DATABASE_SETS_DETAIL_TABLE = "sets_detail";
+    public static final String DATABASE_SESSIONS_TABLE = "sessions";
+    public static final String DATABASE_SESSIONS_CONNECTOR_TABLE = "sessions_connector";
+    public static final String DATABASE_PROGRAMS_TABLE = "programs";
+    public static final String DATABASE_PROGRAMS_CONNECTOR_TABLE = "programs_connector";
     public static final String DATABASE_LOG_TABLE = "log";
     public static final String DATABASE_SETTINGS_TABLE = "settings";
     private static final int DATABASE_VERSION = 2;
@@ -119,6 +166,15 @@ public class ExcercisesDbAdapter {
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
+        
+        public String createTrigger(String table){
+        	return "CREATE TRIGGER update_" + table + "_trigger " +
+        			"AFTER UPDATE ON " + table
+			    	+ " BEGIN " 
+			    		+ "UPDATE " + table + " SET updated = DATETIME('NOW') "
+			    		+ "WHERE rowid = new.rowid; "
+			    	+ "END;";
+        }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
@@ -126,15 +182,22 @@ public class ExcercisesDbAdapter {
             db.execSQL(EXERCISES_CREATE);
             db.execSQL(SETS_CREATE);
             db.execSQL(SETS_CONNECTOR_CREATE);
+            db.execSQL(SETS_DETAIL_CREATE);
+            db.execSQL(SESSIONS_CREATE);
+            db.execSQL(SESSIONS_CONNECTOR_CREATE);
+            db.execSQL(PROGRAMS_CREATE);
+            db.execSQL(PROGRAMS_CONNECTOR_CREATE);
             db.execSQL(LOG_CREATE);
             db.execSQL(SETTINGS_CREATE);
             db.execSQL(SETTINGS_FILL);
-            
-            db.execSQL(GROUPS_TRIGGER);
-            db.execSQL(EXERCISES_TRIGGER);            
-            db.execSQL(SETS_TRIGGER);
-            db.execSQL(SETS_CONNECTOR_TRIGGER);
-            db.execSQL(LOG_TRIGGER);
+ 
+            String[] tables = new String[] {
+            								"groups", "exercises", "sets", "sets_connector",
+            								"sets_detail", "sessions", "sessions_connector",
+            								"programs", "programs_connector", "log"};
+            for(String table : tables){
+            	db.execSQL(createTrigger(table));
+            } 
         }
 
         @Override
@@ -380,6 +443,13 @@ public class ExcercisesDbAdapter {
         return mDb.query(DATABASE_SETS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
                 KEY_DESC, KEY_SITEID},  KEY_DELETED + "=0", null, null, null, null);
     }
+    
+    // same as fetchAll - in future implement KEY_ROWID NOT IN (SELECT set_id FROM PROGRAMS_CONNECTOR)
+    public Cursor fetchFreeSets() {
+
+        return mDb.query(DATABASE_SETS_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
+                KEY_DESC, KEY_SITEID},  KEY_DELETED + "=0", null, null, null, null);
+    }
 
     public Cursor fetchSet(long rowId) throws SQLException {
 
@@ -565,6 +635,60 @@ public class ExcercisesDbAdapter {
     	mDb.execSQL("update " + DATABASE_SETTINGS_TABLE + " set " +
     					KEY_LASTUPDATED + "= DATETIME('NOW') WHERE _id=1"); 
     }
+    
+    // SETS_DETAIL methods
+    public Cursor fetchRepsForConnector(Long fetchRepsForConnector) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_SETS_DETAIL_TABLE, null, 
+                		KEY_SETS_CONNECTORID + "=" + fetchRepsForConnector + " AND " + KEY_DELETED + "=0", null,
+                        null, null, null, null);
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+    
+    public Cursor fetchRepsEntry(long rowId) throws SQLException {
+
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_SETS_DETAIL_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    public long createRepsEntry(long sets_connector_id, int reps, float percentage) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_SETS_CONNECTORID, sets_connector_id);
+        initialValues.put(KEY_REPS, reps);
+        initialValues.put(KEY_PERCENTAGE, percentage);
+        initialValues.put(KEY_SITEID, 0);
+
+        return mDb.insert(DATABASE_SETS_DETAIL_TABLE, null, initialValues);
+    }
+    
+    public boolean updateRepsEntry(long rowId, int reps, float percentage) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_REPS, reps);
+        args.put(KEY_PERCENTAGE, percentage);
+        
+        return mDb.update(DATABASE_SETS_DETAIL_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+
+    public boolean deleteRepsEntry(long rowId) {
+
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_SETS_DETAIL_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    // END OF SETS_DETAIL methods
     
 
 }

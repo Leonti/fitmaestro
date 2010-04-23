@@ -5,17 +5,17 @@ package com.leonti.bodyb;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 
 public class SetEdit extends Activity {
 	private EditText mTitleText;
 	private EditText mDescText;
 	private Long mRowId;
+	private Long mProgramId;
+	private Long mDayNumber;
     private ExcercisesDbAdapter mDbHelper;
 	
     @Override
@@ -31,12 +31,26 @@ public class SetEdit extends Activity {
       
         Button saveButton = (Button) findViewById(R.id.button_save);
        
+        Bundle extras = getIntent().getExtras();
         mRowId = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_ROWID) 
                 : null;
-        if (mRowId == null) {
-        	Bundle extras = getIntent().getExtras();            
-        	mRowId = extras != null ? extras.getLong(ExcercisesDbAdapter.KEY_ROWID) 
-        			: null;
+
+        if (mRowId == null && extras != null) {      	            
+        	mRowId = extras.getLong(ExcercisesDbAdapter.KEY_ROWID);
+        }
+        
+        mProgramId = savedInstanceState != null ? savedInstanceState.getLong("program_id") 
+                : null;
+        
+        if (mProgramId == null && extras != null) {            
+        	mProgramId = extras.getLong("program_id");
+        }
+        
+        mDayNumber = savedInstanceState != null ? savedInstanceState.getLong("day_number") 
+                : null;
+        
+        if (mDayNumber == null && extras != null) {            
+        	mDayNumber = extras.getLong("day_number");
         }
         
         populateFields();
@@ -52,7 +66,8 @@ public class SetEdit extends Activity {
      }
     
     private void populateFields() {
-        if (mRowId != null) {
+        if (mRowId != null && mRowId > 0) {
+        	Log.i("Set edit ", "Have mRowId?" + Long.toString(mRowId));
             Cursor set = mDbHelper.fetchSet(mRowId);
             startManagingCursor(set);
             mTitleText.setText(set.getString(
@@ -61,6 +76,10 @@ public class SetEdit extends Activity {
                     set.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_DESC)));
             
           //  fillExcercises();
+        }
+        
+        if (mProgramId != null && mProgramId > 0){
+        	Log.i("Edit Set", "Have program Id " + Long.toString(mProgramId));
         }
     }
     /*
@@ -79,6 +98,8 @@ public class SetEdit extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(ExcercisesDbAdapter.KEY_ROWID, mRowId);
+        outState.putLong("program_id", mProgramId);
+        outState.putLong("day_number", mDayNumber);
     }
     
     @Override
@@ -97,9 +118,10 @@ public class SetEdit extends Activity {
         String title = mTitleText.getText().toString();
         String desc = mDescText.getText().toString();
 
-        if (mRowId == null) {
+        if (mRowId == null || mRowId == 0) {
         	if(title.length() > 0){
         		long id = mDbHelper.createSet(title, desc, 0);
+        		Log.i("NEW SET CREATED: ", Long.toString(id));
         		if (id > 0) {
         			mRowId = id;
         		}
@@ -107,6 +129,16 @@ public class SetEdit extends Activity {
         } else {
             mDbHelper.updateSet(mRowId, title, desc, 0);
         }
+       
+        if (mProgramId != null && mProgramId > 0){
+        	mDbHelper.addSetToProgram(mProgramId, mRowId, mDayNumber);
+        	
+        	Log.i("Edit Set", "Set added to program with id: " + Long.toString(mProgramId) +
+        			" and day_number: " + Long.toString(mDayNumber) +
+        			" and set_id: " + Long.toString(mRowId));
+        }
+        
+        // adding this set to program (if id provided)
     }
 	
 }

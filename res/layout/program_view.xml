@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/program_table"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:stretchColumns="1" 
+    android:background="#000000">
+
+         
+         <TableRow android:background="#00ff00" android:layout_margin="2dip">
+              <TextView android:text="col1"  android:background="#0000ff" android:layout_margin="2dip" />
+              <TextView android:text="col2"  android:background="#0000ff" android:layout_margin="2dip" />
+    	</TableRow>
+
+</TableLayout>

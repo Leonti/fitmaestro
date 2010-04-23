@@ -29,6 +29,7 @@ public class ExcercisesDbAdapter {
     public static final String KEY_REPS = "reps";
     public static final String KEY_PERCENTAGE = "percentage";
     public static final String KEY_PROGRAMID = "program_id";
+    public static final String KEY_DAY_NUMBER = "day_number";
     public static final String KEY_SETS_CONNECTORID = "set_connector_id";
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
@@ -689,6 +690,65 @@ public class ExcercisesDbAdapter {
     }
     
     // END OF SETS_DETAIL methods
+    
+    // PROGRAMS methods
+
+    public Cursor fetchAllPrograms() {
+
+        return mDb.query(DATABASE_PROGRAMS_TABLE, null, KEY_DELETED + "=0", null, null, null, null);
+    }
+    
+    public Cursor fetchProgram(long rowId) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_PROGRAMS_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public long createProgram(String title, String desc) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_TITLE, title);
+        initialValues.put(KEY_DESC, desc);
+
+        return mDb.insert(DATABASE_PROGRAMS_TABLE, null, initialValues);
+    }
+    
+    public boolean updateProgram(long rowId, String title, String desc) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_TITLE, title);
+        args.put(KEY_DESC, desc);
+
+        return mDb.update(DATABASE_PROGRAMS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public boolean deleteProgram(long rowId) {
+    	
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_PROGRAMS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public Cursor fetchProgramSets(long programId){
+        return mDb.query(DATABASE_PROGRAMS_CONNECTOR_TABLE, null, 
+        		KEY_DELETED + "=0 AND " + KEY_PROGRAMID + "=" + programId, 
+        		null, null, null, KEY_DAY_NUMBER + " ASC");
+    }
+    
+    public long addSetToProgram(long program_id, long set_id, long day_number) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_PROGRAMID, program_id);
+        initialValues.put(KEY_SETID, set_id);
+        initialValues.put(KEY_DAY_NUMBER, day_number);
+
+        return mDb.insert(DATABASE_PROGRAMS_CONNECTOR_TABLE, null, initialValues);
+    }
+    // END of PROGRAMS methods
     
 
 }

@@ -4,6 +4,7 @@
     <string name="app_name">BodyB</string><string name="start_program">Start Program</string>
 <string name="sessions">Sessions</string>
 <string name="sets">Sets</string>
+<string name="programs">Programs</string>
 <string name="excercise_log">Excercise Log</string>
 <string name="download_programs">Download Programs</string>
 <string name="download_excercises">Download Excercises</string>
@@ -70,4 +71,9 @@
 <string name="reps_entry_edited">Reps entry edited</string>
 <string name="edit_reps_entry">Edit reps</string>
 <string name="delete_reps_entry">Delete reps</string>
+<string name="add_program">Add program</string>
+<string name="delete_program">Delete program</string>
+<string name="program_edited">Program edited</string>
+<string name="edit_program">Edit program</string>
+<string name="plan_added">Plan added</string>
 </resources>

@@ -24,13 +24,16 @@ public class ExcercisesDbAdapter {
     public static final String KEY_GROUPID = "group_id"; //for exercises
     public static final String KEY_EXERCISEID = "exercise_id"; //for log
     public static final String KEY_SETID = "set_id"; //for set connector
+    public static final String KEY_SESSIONID = "session_id"; //for session connector
     public static final String KEY_WEIGHT = "weight";
     public static final String KEY_TIMES = "reps";
     public static final String KEY_REPS = "reps";
     public static final String KEY_PERCENTAGE = "percentage";
     public static final String KEY_PROGRAMID = "program_id";
     public static final String KEY_DAY_NUMBER = "day_number";
-    public static final String KEY_SETS_CONNECTORID = "set_connector_id";
+    public static final String KEY_SETS_CONNECTORID = "sets_connector_id";
+    public static final String KEY_PROGRAMS_CONNECTORID = "programs_connector_id";
+    public static final String KEY_STATUS = "status";    
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
     public static final String KEY_UPDATED = "updated";
@@ -94,7 +97,7 @@ public class ExcercisesDbAdapter {
 							"(_id integer primary key autoincrement, " +
 							"programs_connector_id integer, " +
 							"title text not null, " +
-							"notes text not null, " +
+							"desc text not null, " +
 							"status text not null, " +
 							"site_id integer, " +
 							"updated timestamp default current_timestamp, " +
@@ -146,7 +149,7 @@ public class ExcercisesDbAdapter {
     private static final String SETTINGS_FILL = "insert into settings (authkey) values ('');";
         
     
-    private static final String DATABASE_NAME = "data18";
+    private static final String DATABASE_NAME = "data19";
     public static final String DATABASE_GROUPS_TABLE = "groups";
     public static final String DATABASE_EXERCISES_TABLE = "exercises";
     public static final String DATABASE_SETS_TABLE = "sets";
@@ -749,6 +752,89 @@ public class ExcercisesDbAdapter {
         return mDb.insert(DATABASE_PROGRAMS_CONNECTOR_TABLE, null, initialValues);
     }
     // END of PROGRAMS methods
+    
+    // SESSIONS methods
+    public Cursor fetchAllSessions() {
+
+        return mDb.query(DATABASE_SESSIONS_TABLE, null, KEY_DELETED + "=0", null, null, null, null);
+    }
+    
+    public Cursor fetchSession(long rowId) throws SQLException {
+
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_SESSIONS_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public long createSession(String title, String desc, long programs_connector_id) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_TITLE, title);
+        initialValues.put(KEY_DESC, desc);
+        initialValues.put(KEY_PROGRAMS_CONNECTORID, programs_connector_id);
+        initialValues.put(KEY_STATUS, "INPROGRESS");
+
+        return mDb.insert(DATABASE_SESSIONS_TABLE, null, initialValues);
+    }
+    
+    public boolean updateSession(long rowId, String title, String desc, String status) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_TITLE, title);
+        args.put(KEY_DESC, desc);
+        args.put(KEY_STATUS, status);
+
+        return mDb.update(DATABASE_SESSIONS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public boolean deleteSession(long rowId) {
+
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_SESSIONS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public Cursor fetchExercisesForSession(long sessionId) throws SQLException {
+        Cursor mCursor = mDb.rawQuery(
+        	"SELECT " + DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_ROWID + ", "+ DATABASE_EXERCISES_TABLE +
+        	"." + KEY_TITLE + ", " + DATABASE_EXERCISES_TABLE + "." + KEY_DESC + " FROM "+ DATABASE_SESSIONS_CONNECTOR_TABLE + 
+        	", " + DATABASE_EXERCISES_TABLE + 
+        	" WHERE " + DATABASE_EXERCISES_TABLE + 
+        	"." + KEY_ROWID + " = " + DATABASE_SESSIONS_CONNECTOR_TABLE +
+        	"." + KEY_EXERCISEID + " AND " + DATABASE_SESSIONS_CONNECTOR_TABLE +
+        	"." + KEY_SESSIONID + " = ?" + " AND " + DATABASE_SESSIONS_CONNECTOR_TABLE +
+        	"." + KEY_DELETED + " = 0", new String[]{String.valueOf(sessionId)});
+
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public long addExerciseToSession(long session_id, long exercise_id, long sets_connector_id) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_SESSIONID, session_id);
+        initialValues.put(KEY_EXERCISEID, exercise_id);
+        initialValues.put(KEY_SETS_CONNECTORID, sets_connector_id);
+
+        return mDb.insert(DATABASE_SESSIONS_CONNECTOR_TABLE, null, initialValues);
+    }
+    
+    public boolean deleteExerciseFromSession(long rowId) {
+    	
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_SESSIONS_CONNECTOR_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    // END of SESSIONS methods
     
 
 }

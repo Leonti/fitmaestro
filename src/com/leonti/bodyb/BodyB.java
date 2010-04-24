@@ -110,7 +110,7 @@ public class BodyB extends Activity {
         btnSessions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BodyB.this, SetsList.class);
+                Intent i = new Intent(BodyB.this, SessionsList.class);
                 startActivity(i); 
             }
         });

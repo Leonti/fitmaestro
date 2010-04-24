@@ -32,7 +32,12 @@
                     <activity android:label="@string/app_name" android:name=".AddRepsEntry"></activity>
      <activity android:label="@string/app_name" android:name=".ProgramsList"></activity>
           <activity android:label="@string/app_name" android:name=".ProgramEdit"></activity>
-          <activity android:label="@string/app_name" android:name=".ProgramView"></activity>       
+          <activity android:label="@string/app_name" android:name=".ProgramView"></activity>   
+    <activity android:label="@string/app_name" android:name=".SessionsList"></activity>
+    <activity android:label="@string/app_name" android:name=".SessionEdit"></activity> 
+        <activity android:label="@string/app_name" android:name=".SessionView"></activity>
+        <activity android:label="@string/app_name" android:name=".SessionRepsList"></activity>
+           
 </application>
     <uses-sdk android:minSdkVersion="7" />
 

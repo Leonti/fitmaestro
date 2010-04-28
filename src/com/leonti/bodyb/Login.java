@@ -3,7 +3,10 @@ package com.leonti.bodyb;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
+
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,28 +37,47 @@ public class Login extends Activity {
             @Override
             public void onClick(View v) {
             	
-                loginUser(mEmailText.getText().toString(),
-                			mPasswordText.getText().toString());
+                new PerformLogin().execute(mEmailText.getText().toString(),
+            			mPasswordText.getText().toString());
             }
         });
     }
     
-    public int loginUser(String email, String password){
-  	 
-    		 ServerJson Js = new ServerJson();
-    		 switch(Js.loginUser(email, password, mDbHelper)){
-    		 case ServerJson.SUCCESS:
-    	     		Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
-    			 break;
-    		 case ServerJson.INVALID:
-    	     		Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
-    			 break;
-    		 case ServerJson.NO_CONNECTION:
- 	     		Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
- 			 break;
-    		 }
+    
+    private class PerformLogin extends AsyncTask<String, Integer, Long> {
+        protected Long doInBackground(String... userData) {
+
+   		 ServerJson Js = new ServerJson();
+			
+            return Long.valueOf(Js.loginUser(userData[0], userData[1], mDbHelper));
+        }
+        
+        protected void onPreExecute(){
+     //   	onStartSync();        	
+        }
+
+        protected void onPostExecute(Long result) {
+        	onEndLogin(result);
+        }
+
+    }
+    
+    private void onEndLogin(Long result){
     	
-    	return 0;
+    	Log.i("Login DONE: ", String.valueOf(result));
+    	
+		 switch(result.intValue()){
+		 case ServerJson.SUCCESS:
+	     		Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
+	     		finish();
+			 break;
+		 case ServerJson.INVALID:
+	     		Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
+			 break;
+		 case ServerJson.NO_CONNECTION:
+	     		Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+			 break;
+		 }
     }
 
 }

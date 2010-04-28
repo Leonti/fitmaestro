@@ -27,7 +27,7 @@ public class ServerJson {
 
 	    DefaultHttpClient httpClient = new DefaultHttpClient();
 		ResponseHandler <String> resonseHandler = new BasicResponseHandler();
-		HttpPost postMethod = new HttpPost("http://10.0.2.2/bodyb/api.php");
+		HttpPost postMethod = new HttpPost("http://10.0.2.2/koh/remote");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
 		nameValuePairs.add(new BasicNameValuePair("jsonString", jsonIn.toString()));

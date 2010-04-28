@@ -4,7 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<Button android:text="@string/start_program" android:id="@+id/button_start_program" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/sessions" android:id="@+id/button_sessions" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/programs" android:id="@+id/button_programs" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="@string/sets" android:id="@+id/button_sets" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>

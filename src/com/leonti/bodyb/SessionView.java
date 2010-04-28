@@ -126,12 +126,12 @@ public class SessionView extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
- /* SHOW REPS FOR SESSION
+
     	super.onListItemClick(l, v, position, id);
-        Intent i = new Intent(this, RepsList.class);
+        Intent i = new Intent(this, SessionRepsList.class);
         i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
         startActivity(i);    
-        */
+
     }
     
     @Override

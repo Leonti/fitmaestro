@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,20 +63,47 @@ public class Register extends Activity {
     	 }
     	 
     	 if(errors == 0){
-    		 ServerJson Js = new ServerJson();
-    		 switch(Js.registerUser(email, password, mDbHelper)){
-    		 case ServerJson.SUCCESS:
-    	     		Toast.makeText(this, R.string.account_created, Toast.LENGTH_SHORT).show();
-    			 break;
-    		 case ServerJson.ALREADY_EXISTS:
-    	     		Toast.makeText(this, R.string.email_registered, Toast.LENGTH_SHORT).show();
-    			 break;
-    		 case ServerJson.NO_CONNECTION:
-    	     		Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
-    			 break;
-    		 }
+
+    		 // perform registering in background
+    		 new PerformRegister().execute(email, password);
     	 }
     	
     	return 0;
+    }
+    
+    private class PerformRegister extends AsyncTask<String, Integer, Long> {
+        protected Long doInBackground(String... userData) {
+
+   		 ServerJson Js = new ServerJson();
+			
+            return Long.valueOf(Js.registerUser(userData[0], userData[1], mDbHelper));
+        }
+        
+        protected void onPreExecute(){
+     //   	onStartSync();        	
+        }
+
+        protected void onPostExecute(Long result) {
+        	onEndRegister(result);
+        }
+
+    }
+    
+    private void onEndRegister(Long result){
+    	
+    	Log.i("Registering DONE: ", String.valueOf(result));
+    	
+		 switch(result.intValue()){
+		 case ServerJson.SUCCESS:
+	     		Toast.makeText(this, R.string.account_created, Toast.LENGTH_SHORT).show();
+	     		finish();
+			 break;
+		 case ServerJson.ALREADY_EXISTS:
+	     		Toast.makeText(this, R.string.email_registered, Toast.LENGTH_SHORT).show();
+			 break;
+		 case ServerJson.NO_CONNECTION:
+	     		Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+			 break;
+		 }
     }
 }

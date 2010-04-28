@@ -27,9 +27,9 @@
     <activity android:label="@string/app_name" android:name=".ByExerciseList"></activity>
     <activity android:label="@string/app_name" android:name=".Register"></activity>
      <activity android:label="@string/app_name" android:name=".Login"></activity>
-     <activity android:label="@string/app_name" android:name=".Synchronization"></activity>
+     <activity android:label="@string/app_name" android:name=".SynchronizationView"></activity>
           <activity android:label="@string/app_name" android:name=".RepsList"></activity>
-                    <activity android:label="@string/app_name" android:name=".AddRepsEntry"></activity>
+                    <activity android:label="@string/app_name" android:name=".EditRepsEntry"></activity>
      <activity android:label="@string/app_name" android:name=".ProgramsList"></activity>
           <activity android:label="@string/app_name" android:name=".ProgramEdit"></activity>
           <activity android:label="@string/app_name" android:name=".ProgramView"></activity>   
@@ -37,6 +37,7 @@
     <activity android:label="@string/app_name" android:name=".SessionEdit"></activity> 
         <activity android:label="@string/app_name" android:name=".SessionView"></activity>
         <activity android:label="@string/app_name" android:name=".SessionRepsList"></activity>
+                <activity android:label="@string/app_name" android:name=".EditSessionRepsEntry"></activity>
            
 </application>
     <uses-sdk android:minSdkVersion="7" />

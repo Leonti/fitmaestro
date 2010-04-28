@@ -32,7 +32,7 @@ public class BodyB extends Activity {
                 startActivity(i); 
             }
         });
-        
+/*        
         Button btnStartProgram = (Button) findViewById(R.id.button_start_program);
         btnStartProgram.setOnClickListener(new OnClickListener() {
             @Override
@@ -82,12 +82,12 @@ public class BodyB extends Activity {
 					e.printStackTrace();
 				}
                 
-                /*
-                Intent i = new Intent(BodyB.this, ExcercisesList.class);
-                startActivity(i); */ 
+                
+              //  Intent i = new Intent(BodyB.this, ExcercisesList.class);
+              //  startActivity(i);  
             }
         });
-
+*/
         Button btnPrograms = (Button) findViewById(R.id.button_programs);
         btnPrograms.setOnClickListener(new OnClickListener() {
             @Override
@@ -146,7 +146,7 @@ public class BodyB extends Activity {
         btnSync.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BodyB.this, Synchronization.class);
+                Intent i = new Intent(BodyB.this, SynchronizationView.class);
                 startActivity(i); 
             }
         });

@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class AddRepsEntry extends Activity {
+public class EditRepsEntry extends Activity {
 	
 	private EditText mRepsText;
 	private EditText mPercentageText;

@@ -5,14 +5,34 @@
 	android:layout_height="fill_parent" 
 	android:orientation="vertical" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
+	
+		<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    >
+		<TextView android:text="@string/weight" android:id="@+id/planned_weight_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="" android:id="@+id/planned_weight_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
 	<LinearLayout
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="1"
     >
-		<TextView android:text="@string/percentage" android:id="@+id/percentage_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-		<TextView android:text="" android:id="@+id/percentage_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="@string/reps" android:id="@+id/planned_reps_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="" android:id="@+id/planned_reps_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
+	
+	<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    >
+		<TextView android:text="@string/weight" android:id="@+id/weight_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="" android:id="@+id/weight_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 	</LinearLayout>
 	<LinearLayout
     android:orientation="horizontal"

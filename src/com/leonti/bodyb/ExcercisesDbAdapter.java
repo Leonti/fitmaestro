@@ -28,11 +28,15 @@ public class ExcercisesDbAdapter {
     public static final String KEY_WEIGHT = "weight";
     public static final String KEY_TIMES = "reps";
     public static final String KEY_REPS = "reps";
+    public static final String KEY_MAX_WEIGHT = "max_weight";
+    public static final String KEY_MAX_REPS = "max_reps";
     public static final String KEY_PERCENTAGE = "percentage";
     public static final String KEY_PROGRAMID = "program_id";
     public static final String KEY_DAY_NUMBER = "day_number";
     public static final String KEY_SETS_CONNECTORID = "sets_connector_id";
+    public static final String KEY_SESSIONS_CONNECTORID = "sessions_connector_id";
     public static final String KEY_PROGRAMS_CONNECTORID = "programs_connector_id";
+    public static final String KEY_SETS_DETAILID = "sets_detail_id";
     public static final String KEY_STATUS = "status";    
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
@@ -52,7 +56,7 @@ public class ExcercisesDbAdapter {
             				"(_id integer primary key autoincrement, " +
             				"title text not null, " +
                     		"desc text not null, " +
-                    		"site_id integer, " +
+                    		"site_id integer default 0, " +
                     		"updated timestamp default current_timestamp, " +
                     		"deleted integer default 0); ";
     
@@ -64,7 +68,7 @@ public class ExcercisesDbAdapter {
     						"max_weight decimal(10,2), " +
     						"max_reps integer, " +
     						"group_id integer, " +
-    						"site_id integer, " +
+    						"site_id integer default 0, " +
     						"updated timestamp default current_timestamp, " +
     						"deleted integer default 0); ";
     
@@ -72,7 +76,7 @@ public class ExcercisesDbAdapter {
     						"(_id integer primary key autoincrement, " +
     						"title text not null, " +
     						"desc text not null, " +
-    						"site_id integer, " +
+    						"site_id integer default 0, " +
     						"updated timestamp default current_timestamp, " +
     						"deleted integer default 0); ";
     
@@ -80,16 +84,16 @@ public class ExcercisesDbAdapter {
     						"(_id integer primary key autoincrement, " +
     						"set_id integer, " +
     						"exercise_id integer, " +
-    						"site_id integer, " +
+    						"site_id integer default 0, " +
     						"updated timestamp default current_timestamp, " +
     						"deleted integer default 0); ";
     
     private static final String SETS_DETAIL_CREATE = "create table sets_detail " +
 							"(_id integer primary key autoincrement, " +
-							"set_connector_id integer, " +
+							"sets_connector_id integer, " +
 							"reps integer, " +
 							"percentage decimal(10,2), " +
-							"site_id integer, " +
+							"site_id integer default 0, " +
 							"updated timestamp default current_timestamp, " +
 							"deleted integer default 0); ";
     
@@ -99,7 +103,7 @@ public class ExcercisesDbAdapter {
 							"title text not null, " +
 							"desc text not null, " +
 							"status text not null, " +
-							"site_id integer, " +
+							"site_id integer default 0, " +
 							"updated timestamp default current_timestamp, " +
 							"deleted integer default 0); ";
     
@@ -108,7 +112,7 @@ public class ExcercisesDbAdapter {
 							"session_id integer, " +
 							"sets_connector_id integer, " +
 							"exercise_id integer, " +
-							"site_id integer, " +
+							"site_id integer default 0, " +
 							"updated timestamp default current_timestamp, " +
 							"deleted integer default 0); ";
 
@@ -116,7 +120,7 @@ public class ExcercisesDbAdapter {
 							"(_id integer primary key autoincrement, " +
 							"title text not null, " +
 							"desc text not null, " +
-							"site_id integer, " +
+							"site_id integer default 0, " +
 							"updated timestamp default current_timestamp, " +
 							"deleted integer default 0); ";
     
@@ -125,7 +129,7 @@ public class ExcercisesDbAdapter {
 						    "program_id integer, " +
 						    "set_id integer, " +
 						    "day_number integer, " +
-						    "site_id integer, " +
+						    "site_id integer default 0, " +
 						    "updated timestamp default current_timestamp, " +
 						    "deleted integer default 0); ";    
     
@@ -137,7 +141,7 @@ public class ExcercisesDbAdapter {
     						"session_id integer, " +
     						"sets_detail_id integer, " +
     						"done timestamp default current_timestamp, " +
-    						"site_id integer, " +
+    						"site_id integer default 0, " +
     						"updated timestamp default current_timestamp, " +
     						"deleted integer default 0); ";
 
@@ -149,7 +153,7 @@ public class ExcercisesDbAdapter {
     private static final String SETTINGS_FILL = "insert into settings (authkey) values ('');";
         
     
-    private static final String DATABASE_NAME = "data19";
+    private static final String DATABASE_NAME = "data26";
     public static final String DATABASE_GROUPS_TABLE = "groups";
     public static final String DATABASE_EXERCISES_TABLE = "exercises";
     public static final String DATABASE_SETS_TABLE = "sets";
@@ -477,8 +481,18 @@ public class ExcercisesDbAdapter {
 
     public Cursor fetchExercisesForSet(long setId) throws SQLException {
         Cursor mCursor = mDb.rawQuery(
-        	"SELECT " + DATABASE_SETS_CONNECTOR_TABLE + "." + KEY_ROWID + ", "+ DATABASE_EXERCISES_TABLE +
-        	"." + KEY_TITLE + ", " + DATABASE_EXERCISES_TABLE + "." + KEY_DESC + " FROM "+ DATABASE_SETS_CONNECTOR_TABLE + 
+        	"SELECT " + DATABASE_SETS_CONNECTOR_TABLE + "." + KEY_ROWID + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_ROWID + " AS " + KEY_EXERCISEID + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." 
+        	+ KEY_TITLE + ", " 
+        	+ DATABASE_EXERCISES_TABLE + "." 
+        	+ KEY_TYPE + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." 
+        	+ KEY_MAX_WEIGHT + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." 
+        	+ KEY_MAX_REPS + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_DESC 
+        	+ " FROM "+ DATABASE_SETS_CONNECTOR_TABLE + 
         	", " + DATABASE_EXERCISES_TABLE + 
         	" WHERE " + DATABASE_EXERCISES_TABLE + 
         	"." + KEY_ROWID + " = "+DATABASE_SETS_CONNECTOR_TABLE+
@@ -491,6 +505,29 @@ public class ExcercisesDbAdapter {
         }
         return mCursor;
 
+    }
+    
+    public Cursor fetchExerciseForSetsConnector(long setsConnectorId) throws SQLException {
+        Cursor mCursor = mDb.rawQuery(
+        	"SELECT "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_ROWID + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_TITLE + ", " 
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_TYPE + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_MAX_WEIGHT + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_MAX_REPS + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_DESC 
+        	+ " FROM "+ DATABASE_SETS_CONNECTOR_TABLE + 
+        	", " + DATABASE_EXERCISES_TABLE + 
+        	" WHERE " + DATABASE_EXERCISES_TABLE + 
+        	"." + KEY_ROWID + " = " + DATABASE_SETS_CONNECTOR_TABLE+
+        	"." + KEY_EXERCISEID + " AND " + DATABASE_SETS_CONNECTOR_TABLE +
+        	"." + KEY_ROWID + " = ?" + " AND " + DATABASE_SETS_CONNECTOR_TABLE +
+        	"." + KEY_DELETED + " = 0", new String[]{String.valueOf(setsConnectorId)});
+
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
     
     public boolean deleteExerciseFromSet(long rowId) {
@@ -641,11 +678,11 @@ public class ExcercisesDbAdapter {
     }
     
     // SETS_DETAIL methods
-    public Cursor fetchRepsForConnector(Long fetchRepsForConnector) throws SQLException {
+    public Cursor fetchRepsForConnector(Long setsConnectorId) throws SQLException {
 
         Cursor mCursor =
                 mDb.query(true, DATABASE_SETS_DETAIL_TABLE, null, 
-                		KEY_SETS_CONNECTORID + "=" + fetchRepsForConnector + " AND " + KEY_DELETED + "=0", null,
+                		KEY_SETS_CONNECTORID + "=" + setsConnectorId + " AND " + KEY_DELETED + "=0", null,
                         null, null, null, null);
     	if (mCursor != null) {
             mCursor.moveToFirst();
@@ -834,7 +871,95 @@ public class ExcercisesDbAdapter {
         return mDb.update(DATABASE_SESSIONS_CONNECTOR_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
+    public Cursor fetchFreeSessionReps(long session_id, long exercise_id) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_LOG_TABLE, null, 
+                		KEY_SESSIONID + "=" + session_id 
+                		+ " AND " + KEY_EXERCISEID + "=" + exercise_id
+                		+ " AND " + KEY_SETS_DETAILID + "=0"
+                		+ " AND " + KEY_DELETED + "=0", null,
+                        null, null, null, null);
+    	if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+    
+    public Cursor fetchSessionRepsEntry(long rowId) throws SQLException {
+
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_LOG_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public Cursor fetchSessionRepsEntryBySet(long session_id, long sets_detail_id) throws SQLException {
+
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_LOG_TABLE, null, 
+                		KEY_SESSIONID + "=" + session_id +
+                		" AND " + KEY_SETS_DETAILID + "=" + sets_detail_id, 
+                		null,
+                		null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public long createSessionRepsEntry(long session_id, long exercise_id, long set_detail_id, int reps, float weight) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_SESSIONID, session_id);
+        initialValues.put(KEY_EXERCISEID, exercise_id);
+        initialValues.put(KEY_SETS_DETAILID, set_detail_id);
+        initialValues.put(KEY_REPS, reps);
+        initialValues.put(KEY_WEIGHT, weight);
+        initialValues.put(KEY_SITEID, 0);
+
+        return mDb.insert(DATABASE_LOG_TABLE, null, initialValues);
+    }
+    
+    public boolean updateSessionRepsEntry(long rowId, int reps, float weight) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_REPS, reps);
+        args.put(KEY_WEIGHT, weight);
+        
+        return mDb.update(DATABASE_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public boolean deleteSessionRepsEntry(long rowId) {
+
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
     // END of SESSIONS methods
+    
+    // SESSION_CONNECTOR methods
+    public Cursor fetchSessionConnector(long rowId) throws SQLException {
+
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_SESSIONS_CONNECTOR_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    // END of session_connector methods
     
 
 }

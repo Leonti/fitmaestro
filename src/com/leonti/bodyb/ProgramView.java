@@ -86,6 +86,11 @@ public class ProgramView extends Activity {
 		    		Long setId = mProgramSetsCursor.getLong(
 		    				mProgramSetsCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETID));
 		    		dayData.put("set_id", setId);
+		    		
+		    		Long programsConnectorId = mProgramSetsCursor.getLong(
+		    				mProgramSetsCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
+		    		dayData.put("programs_connector_id", programsConnectorId);
+		    		
 		    		if(!mProgramSetsCursor.isLast()){
 		    			mProgramSetsCursor.moveToNext();
 		    		}
@@ -117,6 +122,7 @@ public class ProgramView extends Activity {
 	                	 Log.i("HASH DATA SET_ID", dayClickedData.get("set_id").toString());
 	                     Intent i = new Intent(ProgramView.this, SetView.class);
 	                     i.putExtra(ExcercisesDbAdapter.KEY_ROWID, dayClickedData.get("set_id"));
+	                     i.putExtra("programs_connector_id", dayClickedData.get("programs_connector_id"));
 	                     startActivityForResult(i, 5);
 	                 }else{
 		                 addSet(); 

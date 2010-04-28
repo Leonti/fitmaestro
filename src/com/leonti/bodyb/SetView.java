@@ -24,9 +24,11 @@ public class SetView extends ListActivity {
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mExercisesForSetCursor;
     private Long mSetId;
+    private Long mProgramsConnectorId;
     
     private static final int ADD_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
+    private static final int START_SESSION_ID = Menu.FIRST + 2;
     private static final int ACTIVITY_ADD = 0;
 
     @Override
@@ -34,12 +36,19 @@ public class SetView extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setview_list);
         
+        Bundle extras = getIntent().getExtras();
         mSetId = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_ROWID)
         : null;
-        if (mSetId == null) {
-        	Bundle extras = getIntent().getExtras();            
+        if (mSetId == null) {           
         	mSetId = extras != null ? extras.getLong(ExcercisesDbAdapter.KEY_ROWID) 
         			: null;
+        }
+        
+        mProgramsConnectorId = savedInstanceState != null ? savedInstanceState.getLong("programs_connector_id") 
+                : null;
+        
+        if (mProgramsConnectorId == null && extras != null) {            
+        	mProgramsConnectorId = extras.getLong("programs_connector_id");
         }
          
         mDbHelper = new ExcercisesDbAdapter(this);
@@ -75,6 +84,7 @@ public class SetView extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, ADD_ID, 0, R.string.add_exercise_to_set);
+        menu.add(0, START_SESSION_ID, 0, R.string.start_session);
         return true;
     }
     
@@ -83,7 +93,11 @@ public class SetView extends ListActivity {
         switch(item.getItemId()) {
         case ADD_ID:
             addExercise();
-            return true;
+            break;
+            
+        case START_SESSION_ID:
+            startSession();
+            break;
         }
        
         return super.onMenuItemSelected(featureId, item);
@@ -92,6 +106,33 @@ public class SetView extends ListActivity {
     private void addExercise() {
         Intent i = new Intent(this, Expandable2.class);
         startActivityForResult(i, ACTIVITY_ADD);
+    }
+    
+    private void startSession() {
+
+    	if(mProgramsConnectorId == null){
+    		mProgramsConnectorId = Long.valueOf(0);
+    	} 
+    	Long sessionId = mDbHelper.createSession("Some session", "Some desc", mProgramsConnectorId);
+    	
+    	// add exercises to session
+    	mExercisesForSetCursor.moveToFirst(); 
+    	for (int i=0; i<mExercisesForSetCursor.getCount(); i++) {
+    		
+    		Long setsConnectorId = mExercisesForSetCursor.getLong(
+    				mExercisesForSetCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
+    		
+    		Long exerciseId = mExercisesForSetCursor.getLong(
+    				mExercisesForSetCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
+    		
+    		mDbHelper.addExerciseToSession(sessionId, exerciseId, setsConnectorId);
+    		
+    		mExercisesForSetCursor.moveToNext(); 
+    	} 
+    	
+        Intent i = new Intent(this, SessionView.class);
+        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, sessionId);
+        startActivity(i);
     }
     
     @Override

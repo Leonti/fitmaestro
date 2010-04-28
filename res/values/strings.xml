@@ -83,4 +83,9 @@
 <string name="session_edited">Session Edited</string>
 <string name="edit_session">Edit Session</string>
 <string name="delete_session">Delete Session</string>
+<string name="session_reps_entry_edited">Session Reps Entry edited</string>
+<string name="edit_session_reps_entry">Edit Session Reps Entry</string>
+<string name="delete_session_reps_entry">Delete Session Reps Entry</string>
+<string name="start_session">Start Session</string>
+
 </resources>

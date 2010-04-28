@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,9 @@ public class RepsList extends ListActivity {
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mRepsForConnectorCursor;
     private Long mSetConnectorId;
+    private Long mExType;
+    private Float mMaxWeight;
+    private Long mMaxReps;
     
     private static final int ACTIVITY_CREATE=0;
     private static final int ACTIVITY_EDIT=1;
@@ -45,11 +49,23 @@ public class RepsList extends ListActivity {
          
         mDbHelper = new ExcercisesDbAdapter(this);
         mDbHelper.open();
+      
         fillData(); 
         registerForContextMenu(getListView());
     }
     
     private void fillData() {
+    	
+    	Cursor exerciseCursor = mDbHelper.fetchExerciseForSetsConnector(mSetConnectorId);
+    	mExType = exerciseCursor.getLong(
+    			exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
+    	mMaxReps = exerciseCursor.getLong(
+    			exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_REPS));
+    	mMaxWeight = exerciseCursor.getFloat(
+    			exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_WEIGHT));
+    	
+    	Log.i(TAG, mExType.toString() + mMaxWeight.toString() + mMaxReps.toString());
+    	
     	mRepsForConnectorCursor = mDbHelper.fetchRepsForConnector(mSetConnectorId);
         startManagingCursor(mRepsForConnectorCursor);
         String[] from = new String[]{ExcercisesDbAdapter.KEY_REPS, ExcercisesDbAdapter.KEY_PERCENTAGE};
@@ -78,13 +94,13 @@ public class RepsList extends ListActivity {
     }
     
     private void createEntry() {
-        Intent i = new Intent(this, AddRepsEntry.class);
+        Intent i = new Intent(this, EditRepsEntry.class);
         i.putExtra(ExcercisesDbAdapter.KEY_SETS_CONNECTORID, mSetConnectorId);
         startActivityForResult(i, ACTIVITY_CREATE);
     }
     
     private void editEntry(long id) {
-        Intent i = new Intent(this, AddRepsEntry.class);
+        Intent i = new Intent(this, EditRepsEntry.class);
         i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
         startActivityForResult(i, ACTIVITY_EDIT);
     }

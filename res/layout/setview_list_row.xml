@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/exercise_name"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:textAppearance="?android:attr/textAppearanceLarge"
-    android:gravity="center_vertical"
-    android:paddingLeft="5dip"
-    android:singleLine="true"
-/>
+<LinearLayout 
+	android:id="@+id/LinearLayoutELL_row" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:orientation="vertical" 
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	
+	    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/exercise_name"
+	    android:layout_width="fill_parent"
+	    android:layout_height="?android:attr/listPreferredItemHeight"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:gravity="center_vertical"
+	    android:paddingLeft="5dip"
+	    android:singleLine="true"
+		/>
+		<TableLayout android:id="@+id/reps_table" android:layout_width="wrap_content" android:layout_height="wrap_content">
+	         <TableRow android:background="#00ff00" android:layout_margin="2dip">
+	              <TextView android:text="reps"  android:background="#0000ff" android:layout_margin="2dip" />
+	              <TextView android:text="x"  android:background="#0000ff" android:layout_margin="2dip" />
+	              <TextView android:text="percentage"  android:background="#0000ff" android:layout_margin="2dip" />
+	    	</TableRow>
+		</TableLayout>
+		
+</LinearLayout>

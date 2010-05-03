@@ -38,7 +38,7 @@ public class Synchronization {
 	public Synchronization(Context ctx){
 	
 		this.mCtx = ctx;
-;
+
         mDbHelper = new ExcercisesDbAdapter(mCtx);
         mDbHelper.open();
         

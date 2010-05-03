@@ -838,8 +838,14 @@ public class ExcercisesDbAdapter {
     
     public Cursor fetchExercisesForSession(long sessionId) throws SQLException {
         Cursor mCursor = mDb.rawQuery(
-        	"SELECT " + DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_ROWID + ", "+ DATABASE_EXERCISES_TABLE +
-        	"." + KEY_TITLE + ", " + DATABASE_EXERCISES_TABLE + "." + KEY_DESC + " FROM "+ DATABASE_SESSIONS_CONNECTOR_TABLE + 
+        	"SELECT " + 
+        	DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_ROWID + ", "+
+        	DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_SETS_CONNECTORID + ", "+
+        	DATABASE_EXERCISES_TABLE + "." + KEY_ROWID + " AS " + KEY_EXERCISEID + ", " +
+        	DATABASE_EXERCISES_TABLE + "." + KEY_TITLE + ", " + 
+        	DATABASE_EXERCISES_TABLE + "." + KEY_DESC + " " +
+        	
+        	"FROM "+ DATABASE_SESSIONS_CONNECTOR_TABLE + 
         	", " + DATABASE_EXERCISES_TABLE + 
         	" WHERE " + DATABASE_EXERCISES_TABLE + 
         	"." + KEY_ROWID + " = " + DATABASE_SESSIONS_CONNECTOR_TABLE +

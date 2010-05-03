@@ -14,6 +14,7 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
+        public static final int LinearLayout01=0x7f05004f;
         public static final int LinearLayoutAD=0x7f05001f;
         public static final int LinearLayoutAE=0x7f050009;
         public static final int LinearLayoutAG=0x7f050013;
@@ -29,8 +30,8 @@ public final class R {
         public static final int LinearLayoutGL=0x7f050025;
         public static final int LinearLayoutLEL=0x7f050029;
         public static final int LinearLayoutSL=0x7f05003d;
-        public static final int LinearLayoutSV=0x7f050050;
-        public static final int TextMessage=0x7f050052;
+        public static final int LinearLayoutSV=0x7f05004e;
+        public static final int TextMessage=0x7f050051;
         public static final int TextView01=0x7f05000a;
         public static final int TextView02=0x7f050014;
         public static final int TextView03=0x7f050040;
@@ -73,16 +74,15 @@ public final class R {
         public static final int log_entry_weight_text=0x7f05002b;
         public static final int percentage_text=0x7f050042;
         public static final int percentage_value=0x7f050043;
-        public static final int planned_reps_text=0x7f05004c;
-        public static final int planned_reps_value=0x7f05004d;
-        public static final int planned_weight_text=0x7f05004a;
-        public static final int planned_weight_value=0x7f05004b;
+        public static final int planned_reps_value=0x7f05004b;
+        public static final int planned_weight_value=0x7f05004c;
         public static final int program_name=0x7f05003e;
         public static final int program_table=0x7f05003f;
+        public static final int reps_table=0x7f05004a;
         public static final int reps_text=0x7f050044;
         public static final int reps_value=0x7f050045;
         public static final int session_name=0x7f050049;
-        public static final int set_name=0x7f050051;
+        public static final int set_name=0x7f050050;
         public static final int spinner_day=0x7f050047;
         public static final int spinner_group=0x7f050011;
         public static final int spinner_set=0x7f050021;
@@ -95,8 +95,7 @@ public final class R {
         public static final int text_type=0x7f05000c;
         public static final int text_weight=0x7f050018;
         public static final int toggle_type=0x7f05000d;
-        public static final int weight_text=0x7f05004e;
-        public static final int weight_value=0x7f05004f;
+        public static final int weight_value=0x7f05004d;
     }
     public static final class layout {
         public static final int by_exercise_list=0x7f030000;

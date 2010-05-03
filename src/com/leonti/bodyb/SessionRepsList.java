@@ -24,10 +24,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class SessionRepsList extends ListActivity {
 
     private ExcercisesDbAdapter mDbHelper;
-    private Cursor mRepsForSessionCursor;
-    
-    // free - without sets detail predefined
-    private Cursor mFreeRepsForSessionCursor;
+
     private Long mSessionConnectorId;
     private Long mSessionId;
     private Long mExerciseId;
@@ -74,84 +71,9 @@ public class SessionRepsList extends ListActivity {
     	mSetsConnectorId = SessionConnectorCursor.getLong(
     			SessionConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETS_CONNECTORID));
     	
-    	// converting cursor(s) data to array list    	
-    	mSessionRepsList.clear();
+    	SessionRepsArray repsArray = new SessionRepsArray(this, mSessionId, mExerciseId, mSetsConnectorId); 
+    	mSessionRepsList = repsArray.getRepsArray();
     	
-    	// if it's not 0 - session was created from set so we can get planned reps for this exercise
-    	if(mSetsConnectorId != Long.valueOf(0)){
-        	Cursor setReps = mDbHelper.fetchRepsForConnector(mSetsConnectorId);  
-        	setReps.moveToFirst();
-        	for (int i=0; i < setReps.getCount(); i++) {
-        		
-        		Long setDetailId = setReps.getLong(
-        				setReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
-        		
-        		Long planned_reps = setReps.getLong(
-        				setReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
-        		
-        		Float planned_percentage = setReps.getFloat(
-        				setReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
-        		
-        		HashMap<String, String> item = new HashMap<String, String>(); 
-        		
-        		// fetch done from log table and fill it
-        		
-        		Cursor sessionReps = mDbHelper.fetchSessionRepsEntryBySet(mSessionId, setDetailId);
-        		if(sessionReps.getCount() > 0){
-        			String id = sessionReps.getString(
-        					sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
-        			
-        			String reps = sessionReps.getString(
-        					sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
-        			
-        			String weight = sessionReps.getString(
-        					sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_WEIGHT));
-        			
-            		item.put("id", id);
-            		item.put("reps", reps);
-            		item.put("weight", weight);	
-            		
-        		}else{
-            		item.put("id", null);
-            		item.put("reps", "not_done");
-            		item.put("weight", "not_done");	
-        		}
-        		
-        		item.put("set_detail_id", setDetailId.toString());
-        		item.put("planned_reps", planned_reps.toString());
-        		item.put("planned_weight", planned_percentage.toString());
-        		mSessionRepsList.add(item);
-        		
-        		setReps.moveToNext(); 
-        	} 
-    	}
-
-    	
-
-    	mFreeRepsForSessionCursor = mDbHelper.fetchFreeSessionReps(mSessionId, mExerciseId);    	
-    	mFreeRepsForSessionCursor.moveToFirst(); 
-    	for (int i=0; i < mFreeRepsForSessionCursor.getCount(); i++) {
-
-    		Long repsId = mFreeRepsForSessionCursor.getLong(
-    				mFreeRepsForSessionCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
-    		
-    		Long reps = mFreeRepsForSessionCursor.getLong(
-    				mFreeRepsForSessionCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
-    		
-    		Float weight = mFreeRepsForSessionCursor.getFloat(
-    				mFreeRepsForSessionCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_WEIGHT));
-    		
-    		HashMap<String, String> item = new HashMap<String, String>(); 
-    		
-    		item.put("id", repsId.toString());
-    		item.put("reps", reps.toString());
-    		item.put("weight", weight.toString());
-    		item.put("planned_reps", "extra");
-    		item.put("planned_weight", "extra");
-    		mSessionRepsList.add(item);
-    		
-    		mFreeRepsForSessionCursor.moveToNext(); 
-    	} 
     	
         String[] from = new String[]{"reps", "weight", "planned_reps", "planned_weight"};
         int[] to = new int[]{R.id.reps_value, R.id.weight_value, R.id.planned_reps_value, R.id.planned_weight_value};

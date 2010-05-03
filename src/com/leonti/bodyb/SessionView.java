@@ -1,21 +1,33 @@
 package com.leonti.bodyb;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.TableRow.LayoutParams;
 
 public class SessionView extends ListActivity {
 
@@ -59,8 +71,8 @@ public class SessionView extends ListActivity {
         startManagingCursor(mExercisesForSessionCursor);
         String[] from = new String[]{ExcercisesDbAdapter.KEY_TITLE};
         int[] to = new int[]{R.id.exercise_name};
-        SimpleCursorAdapter excercises = 
-        	    new SimpleCursorAdapter(this, R.layout.sessionview_list_row, mExercisesForSessionCursor, from, to);
+        SessionViewCursorAdapter excercises = 
+        	    new SessionViewCursorAdapter(this, R.layout.sessionview_list_row, mExercisesForSessionCursor, from, to);
         setListAdapter(excercises); 
     }
     
@@ -140,4 +152,108 @@ public class SessionView extends ListActivity {
         outState.putLong(ExcercisesDbAdapter.KEY_ROWID, mRowId);
         outState.putLong("sets_connector_id", mSetsConnectorId);
     }
+    
+    protected class SessionViewCursorAdapter extends SimpleCursorAdapter {
+
+    	Activity mActivity;
+
+    	public SessionViewCursorAdapter(Activity activity, int layout, Cursor c, String[] from, int[] to) {
+    		super(activity, layout, c, from, to);
+
+    		mActivity = activity;
+
+    	}
+    	
+    	
+    	
+
+    	@Override
+    	public void bindView(View view, Context context, Cursor cursor) {
+    		super.bindView(view, context, cursor);
+    		
+    		Log.i("BIND", "bind view called");
+
+    		Long sessionId = mRowId;
+    		Long exerciseId = cursor.getLong(
+        			cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
+    		
+    		Long setsConnectorId = cursor.getLong(
+        			cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETS_CONNECTORID));
+    		
+        	SessionRepsArray repsArray = new SessionRepsArray(SessionView.this, sessionId, exerciseId, setsConnectorId); 
+        	ArrayList<HashMap<String, String>> sessionRepsList = repsArray.getRepsArray();
+    		
+            TableLayout repsTable = (TableLayout) view.findViewById(R.id.reps_table);
+            
+            repsTable.removeViews(1, repsTable.getChildCount() - 1);
+            
+            
+            for (int i = 0; i < sessionRepsList.size(); i++) {
+            	
+        	    // Create a new row to be added. 
+        	    TableRow tr = new TableRow(SessionView.this);
+        	    tr.setLayoutParams(new LayoutParams(
+        	                   LayoutParams.FILL_PARENT,
+        	                   LayoutParams.WRAP_CONTENT));  
+        	    
+	   	         // planned reps 
+        	    String plannedReps = sessionRepsList.get(i).get("planned_reps");
+	   	        TextView plannedRepsTxt = new TextView(SessionView.this);
+	   	        plannedRepsTxt.setText(plannedReps);
+	   	        plannedRepsTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(plannedRepsTxt);
+	   	        
+	   	        TextView xTxt = new TextView(SessionView.this);
+	   	        xTxt.setText("x");
+	   	        xTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(xTxt);
+	   	        
+        	    String plannedWeight = sessionRepsList.get(i).get("planned_weight");
+	   	        TextView plannedWeightTxt = new TextView(SessionView.this);
+	   	        plannedWeightTxt.setText(plannedWeight);
+	   	        plannedWeightTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(plannedWeightTxt);
+	   	        
+	   	        // done reps
+        	    String reps = sessionRepsList.get(i).get("reps");
+	   	        TextView repsTxt = new TextView(SessionView.this);
+	   	        repsTxt.setText(reps);
+	   	        repsTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(repsTxt);
+	   	        
+	   	        TextView xTxt2 = new TextView(SessionView.this);
+	   	        xTxt2.setText("x");
+	   	        xTxt2.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(xTxt2);
+	   	        
+        	    String weight = sessionRepsList.get(i).get("weight");
+	   	        TextView weightTxt = new TextView(SessionView.this);
+	   	        weightTxt.setText(weight);
+	   	        weightTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(weightTxt);
+	   	         
+	   	         // Add row to TableLayout. 
+
+	             repsTable.addView(tr, new TableLayout.LayoutParams(
+	      	             LayoutParams.FILL_PARENT,
+	      	             LayoutParams.WRAP_CONTENT));  
+
+            } 
+            
+
+    	}
+
+    	}
 }

@@ -1,11 +1,17 @@
 package com.leonti.bodyb;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +20,13 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+import android.widget.TableRow.LayoutParams;
 
 public class SetView extends ListActivity {
 
@@ -62,8 +71,8 @@ public class SetView extends ListActivity {
         startManagingCursor(mExercisesForSetCursor);
         String[] from = new String[]{ExcercisesDbAdapter.KEY_TITLE};
         int[] to = new int[]{R.id.exercise_name};
-        SimpleCursorAdapter excercises = 
-        	    new SimpleCursorAdapter(this, R.layout.setview_list_row, mExercisesForSetCursor, from, to);
+        SetViewCursorAdapter excercises = 
+        	    new SetViewCursorAdapter(this, R.layout.setview_list_row, mExercisesForSetCursor, from, to);
         setListAdapter(excercises); 
     }
     
@@ -166,5 +175,82 @@ public class SetView extends ListActivity {
         i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
         startActivity(i);      
     }
+    
+    protected class SetViewCursorAdapter extends SimpleCursorAdapter {
+
+    	Activity mActivity;
+
+    	public SetViewCursorAdapter(Activity activity, int layout, Cursor c, String[] from, int[] to) {
+    		super(activity, layout, c, from, to);
+
+    		mActivity = activity;
+
+    	}
+    	
+    	@Override
+    	public void bindView(View view, Context context, Cursor cursor) {
+    		super.bindView(view, context, cursor);
+    		
+    		Log.i("BIND", "bind view called");
+
+    		Long setsConnectorId = cursor.getLong(
+    				cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
+    		
+    		Cursor repsForConnectorCursor = mDbHelper.fetchRepsForConnector(setsConnectorId);
+    		
+    		
+    		// remove all rows except for the first one
+            TableLayout repsTable = (TableLayout) view.findViewById(R.id.reps_table);            
+            repsTable.removeViews(1, repsTable.getChildCount() - 1);
+            
+            repsForConnectorCursor.moveToFirst();
+            for (int i=0; i<repsForConnectorCursor.getCount(); i++) {
+            	
+            	String reps = repsForConnectorCursor.getString(
+            			repsForConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
+ 
+            	String percentage = repsForConnectorCursor.getString(
+            			repsForConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
+            
+        	    // Create a new row to be added. 
+        	    TableRow tr = new TableRow(SetView.this);
+        	    tr.setLayoutParams(new LayoutParams(
+        	                   LayoutParams.FILL_PARENT,
+        	                   LayoutParams.WRAP_CONTENT)); 
+            
+	   	        TextView repsTxt = new TextView(SetView.this);
+	   	        repsTxt.setText(reps);
+	   	        repsTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(repsTxt);
+	   	        
+	   	        TextView xTxt = new TextView(SetView.this);
+	   	        xTxt.setText("x");
+	   	        xTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(xTxt);
+	   	        
+	   	        TextView percentageTxt = new TextView(SetView.this);
+	   	        percentageTxt.setText(percentage);
+	   	        percentageTxt.setLayoutParams(new LayoutParams(
+	   	                   LayoutParams.FILL_PARENT,
+	   	                   LayoutParams.WRAP_CONTENT));
+	   	        tr.addView(percentageTxt);
+	   	        
+	   	         // Add row to TableLayout. 
+
+	             repsTable.addView(tr, new TableLayout.LayoutParams(
+	      	             LayoutParams.FILL_PARENT,
+	      	             LayoutParams.WRAP_CONTENT)); 
+	             
+	             repsForConnectorCursor.moveToNext();
+            
+            }
+
+    	}
+
+    	}
     
 }

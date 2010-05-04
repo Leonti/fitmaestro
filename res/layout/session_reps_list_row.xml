@@ -10,21 +10,21 @@
 	<TableLayout android:id="@+id/reps_table" android:layout_width="wrap_content" android:layout_height="wrap_content">
          <TableRow android:background="#00ff00" android:layout_margin="2dip">
               <TextView android:text="pl. reps"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="x"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="pl. weight"  android:background="#0000ff" android:layout_margin="2dip" />
+              <TextView android:text="x" android:id="@+id/x_col" android:background="#0000ff" android:layout_margin="2dip" />
+              <TextView android:text="pl. weight" android:id="@+id/planned_weight_col" android:background="#0000ff" android:layout_margin="2dip" />
               
               <TextView android:text="reps"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="x"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="weight"  android:background="#0000ff" android:layout_margin="2dip" />
+              <TextView android:text="x" android:id="@+id/x_done_col" android:background="#0000ff" android:layout_margin="2dip" />
+              <TextView android:text="weight" android:id="@+id/weight_col" android:background="#0000ff" android:layout_margin="2dip" />
     	</TableRow>
     	
     	<TableRow>
 			  <TextView android:text="" android:id="@+id/planned_reps_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-              <TextView android:text="x" />
+              <TextView android:text="x" android:id="@+id/x_col_value" />
               <TextView android:text="" android:id="@+id/planned_weight_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
               
               <TextView android:text="" android:id="@+id/reps_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-              <TextView android:text="x" />
+              <TextView android:text="x" android:id="@+id/x_col_value2" />
               <TextView android:text="" android:id="@+id/weight_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
               
     	</TableRow>

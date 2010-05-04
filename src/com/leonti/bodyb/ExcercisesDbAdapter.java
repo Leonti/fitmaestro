@@ -483,14 +483,10 @@ public class ExcercisesDbAdapter {
         Cursor mCursor = mDb.rawQuery(
         	"SELECT " + DATABASE_SETS_CONNECTOR_TABLE + "." + KEY_ROWID + ", "
         	+ DATABASE_EXERCISES_TABLE + "." + KEY_ROWID + " AS " + KEY_EXERCISEID + ", "
-        	+ DATABASE_EXERCISES_TABLE + "." 
-        	+ KEY_TITLE + ", " 
-        	+ DATABASE_EXERCISES_TABLE + "." 
-        	+ KEY_TYPE + ", "
-        	+ DATABASE_EXERCISES_TABLE + "." 
-        	+ KEY_MAX_WEIGHT + ", "
-        	+ DATABASE_EXERCISES_TABLE + "." 
-        	+ KEY_MAX_REPS + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_TITLE + ", " 
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_TYPE + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_MAX_WEIGHT + ", "
+        	+ DATABASE_EXERCISES_TABLE + "." + KEY_MAX_REPS + ", "
         	+ DATABASE_EXERCISES_TABLE + "." + KEY_DESC 
         	+ " FROM "+ DATABASE_SETS_CONNECTOR_TABLE + 
         	", " + DATABASE_EXERCISES_TABLE + 
@@ -843,7 +839,10 @@ public class ExcercisesDbAdapter {
         	DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_SETS_CONNECTORID + ", "+
         	DATABASE_EXERCISES_TABLE + "." + KEY_ROWID + " AS " + KEY_EXERCISEID + ", " +
         	DATABASE_EXERCISES_TABLE + "." + KEY_TITLE + ", " + 
-        	DATABASE_EXERCISES_TABLE + "." + KEY_DESC + " " +
+        	DATABASE_EXERCISES_TABLE + "." + KEY_DESC + ", " +
+        	DATABASE_EXERCISES_TABLE + "." + KEY_TYPE + ", " +
+        	DATABASE_EXERCISES_TABLE + "." + KEY_MAX_REPS + ", " + 
+        	DATABASE_EXERCISES_TABLE + "." + KEY_MAX_WEIGHT + " " + 
         	
         	"FROM "+ DATABASE_SESSIONS_CONNECTOR_TABLE + 
         	", " + DATABASE_EXERCISES_TABLE + 

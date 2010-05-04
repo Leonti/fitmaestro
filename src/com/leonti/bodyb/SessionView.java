@@ -177,6 +177,9 @@ public class SessionView extends ListActivity {
     		Long exerciseId = cursor.getLong(
         			cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
     		
+    		Long exType = cursor.getLong(
+    				cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
+    		
     		Long setsConnectorId = cursor.getLong(
         			cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETS_CONNECTORID));
     		
@@ -186,6 +189,19 @@ public class SessionView extends ListActivity {
             TableLayout repsTable = (TableLayout) view.findViewById(R.id.reps_table);
             
             repsTable.removeViews(1, repsTable.getChildCount() - 1);
+
+            // if 0 - own weight - don't show percentage values
+            if(exType == Long.valueOf(0)){
+           	 repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);
+           	 repsTable.findViewById(R.id.planned_weight_col).setVisibility(View.GONE);
+           	 repsTable.findViewById(R.id.x_done_col).setVisibility(View.GONE);
+           	 repsTable.findViewById(R.id.weight_col).setVisibility(View.GONE);
+            }else{
+             repsTable.findViewById(R.id.x_col).setVisibility(View.VISIBLE);
+             repsTable.findViewById(R.id.planned_weight_col).setVisibility(View.VISIBLE);
+           	 repsTable.findViewById(R.id.x_done_col).setVisibility(View.VISIBLE);
+           	 repsTable.findViewById(R.id.weight_col).setVisibility(View.VISIBLE);	            	 
+            }
             
             
             for (int i = 0; i < sessionRepsList.size(); i++) {
@@ -248,7 +264,15 @@ public class SessionView extends ListActivity {
 
 	             repsTable.addView(tr, new TableLayout.LayoutParams(
 	      	             LayoutParams.FILL_PARENT,
-	      	             LayoutParams.WRAP_CONTENT));  
+	      	             LayoutParams.WRAP_CONTENT)); 
+	             
+	             // if 0 - own weight - don't show percentage values
+	             if(exType == Long.valueOf(0)){
+	            	 xTxt.setVisibility(View.GONE);
+	            	 plannedWeightTxt.setVisibility(View.GONE);
+	            	 xTxt2.setVisibility(View.GONE);
+	            	 weightTxt.setVisibility(View.GONE);
+	             }
 
             } 
             

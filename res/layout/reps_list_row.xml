@@ -5,22 +5,19 @@
 	android:layout_height="fill_parent" 
 	android:orientation="vertical" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_weight="1"
-    >
-		<TextView android:text="@string/percentage" android:id="@+id/percentage_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-		<TextView android:text="" android:id="@+id/percentage_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	</LinearLayout>
-	<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_weight="1"
-    >
-		<TextView android:text="@string/reps" android:id="@+id/reps_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-		<TextView android:text="" android:id="@+id/reps_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	</LinearLayout>
+	
+	
+		<TableLayout android:id="@+id/reps_table" android:layout_width="wrap_content" android:layout_height="wrap_content">
+	         <TableRow android:background="#00ff00" android:layout_margin="2dip">
+	              <TextView android:text="reps"  android:background="#0000ff" android:layout_margin="2dip" />
+	              <TextView android:text="x" android:id="@+id/x_col" android:background="#0000ff" android:layout_margin="2dip" />
+	              <TextView android:text="percentage" android:id="@+id/percentage_col" android:background="#0000ff" android:layout_margin="2dip" />
+	    	</TableRow>
+	    	
+	    	<TableRow>
+				  <TextView android:text="" android:id="@+id/reps_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	              <TextView android:text="x" android:id="@+id/x_col_value" />
+	              <TextView android:text="" android:id="@+id/percentage_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>              
+	    	</TableRow>
+    	</TableLayout>
 </LinearLayout>

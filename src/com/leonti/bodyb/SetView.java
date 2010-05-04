@@ -196,12 +196,24 @@ public class SetView extends ListActivity {
     		Long setsConnectorId = cursor.getLong(
     				cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
     		
+    		Long exType = cursor.getLong(
+    				cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
+    		
     		Cursor repsForConnectorCursor = mDbHelper.fetchRepsForConnector(setsConnectorId);
     		
     		
     		// remove all rows except for the first one
             TableLayout repsTable = (TableLayout) view.findViewById(R.id.reps_table);            
             repsTable.removeViews(1, repsTable.getChildCount() - 1);
+            
+            // if 0 - own weight - don't show percentage values
+            if(exType == Long.valueOf(0)){
+           	 repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);
+           	 repsTable.findViewById(R.id.percentage_col).setVisibility(View.GONE);
+            }else{
+           	 repsTable.findViewById(R.id.x_col).setVisibility(View.VISIBLE);
+           	 repsTable.findViewById(R.id.percentage_col).setVisibility(View.VISIBLE);	            	 
+            }
             
             repsForConnectorCursor.moveToFirst();
             for (int i=0; i<repsForConnectorCursor.getCount(); i++) {
@@ -243,7 +255,13 @@ public class SetView extends ListActivity {
 
 	             repsTable.addView(tr, new TableLayout.LayoutParams(
 	      	             LayoutParams.FILL_PARENT,
-	      	             LayoutParams.WRAP_CONTENT)); 
+	      	             LayoutParams.WRAP_CONTENT));
+	             
+	             // if 0 - own weight - don't show percentage values
+	             if(exType == Long.valueOf(0)){
+	            	 xTxt.setVisibility(View.GONE);
+	            	 percentageTxt.setVisibility(View.GONE);
+	             }
 	             
 	             repsForConnectorCursor.moveToNext();
             

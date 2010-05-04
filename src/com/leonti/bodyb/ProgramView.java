@@ -56,6 +56,7 @@ public class ProgramView extends Activity {
     	
         /* Find Tablelayout defined in main.xml */
         TableLayout tl = (TableLayout)findViewById(R.id.program_table);
+        tl.removeViews(1, tl.getChildCount() - 1);
         addWeek(tl, 1);
         addWeek(tl, 8);
         addWeek(tl, 15);

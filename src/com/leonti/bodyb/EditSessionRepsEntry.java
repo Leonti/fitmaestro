@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class EditSessionRepsEntry extends Activity {
 	
@@ -16,6 +17,7 @@ public class EditSessionRepsEntry extends Activity {
 	private Long mSessionId;
 	private Long mExerciseId;
 	private Long mSetDetailId;
+	private Long mExType;
 	
     private ExcercisesDbAdapter mDbHelper;
 	
@@ -30,7 +32,7 @@ public class EditSessionRepsEntry extends Activity {
         mRepsText = (EditText) findViewById(R.id.editText_reps);
         mWeightText = (EditText) findViewById(R.id.editText_weight);
      
-        Button saveButton = (Button) findViewById(R.id.button_save);
+       // Button saveButton = (Button) findViewById(R.id.button_save);
        
         Bundle extras = getIntent().getExtras();
         
@@ -63,10 +65,19 @@ public class EditSessionRepsEntry extends Activity {
         	mSetDetailId = extras.getLong("set_detail_id");
         }
         
-    	Log.i("SET DETAIL ID:", mSetDetailId.toString());
         
+        mExType = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_TYPE) 
+                : null; 
+        if (mExType == null) {           
+        	mExType = extras.getLong(ExcercisesDbAdapter.KEY_TYPE);
+        }
+        
+    	Log.i("SET DETAIL ID:", mSetDetailId.toString());
+    	Log.i("EX TYPE IN EDIT: ", mExType.toString());
+    	
         populateFields();
        
+        /*
         saveButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -75,6 +86,7 @@ public class EditSessionRepsEntry extends Activity {
             }
           
         });
+        */
      }
     
     private void populateFields() {
@@ -93,6 +105,16 @@ public class EditSessionRepsEntry extends Activity {
         }
         */
        
+
+    	
+        if(mExType == Long.valueOf(0)){
+       	 	
+        	findViewById(R.id.text_weight).setVisibility(View.GONE);
+       	 	TextView weightTxt = (TextView) findViewById(R.id.editText_weight);
+       	 	weightTxt.setText("0");
+       	 	weightTxt.setVisibility(View.GONE);
+        }
+    	
         if (mRowId != 0) {
             Cursor sessionRepsEntry = mDbHelper.fetchSessionRepsEntry(mRowId);
             startManagingCursor(sessionRepsEntry);

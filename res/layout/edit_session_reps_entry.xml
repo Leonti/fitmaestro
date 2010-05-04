@@ -8,5 +8,4 @@
 <EditText android:text="" android:id="@+id/editText_reps" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
 <TextView android:text="@string/weight" android:id="@+id/text_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 <EditText android:text="" android:id="@+id/editText_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
-<Button android:text="@string/done" android:id="@+id/button_save" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 </LinearLayout>

@@ -14,6 +14,7 @@ public class EditRepsEntry extends Activity {
 	private EditText mPercentageText;
 	private Long mRowId;
 	private Long mSetConnectorId;
+	private Long mExType;
     private ExcercisesDbAdapter mDbHelper;
 	
     @Override
@@ -27,7 +28,7 @@ public class EditRepsEntry extends Activity {
         mRepsText = (EditText) findViewById(R.id.editText_reps);
         mPercentageText = (EditText) findViewById(R.id.editText_percentage);
      
-        Button saveButton = (Button) findViewById(R.id.button_save);
+        // Button saveButton = (Button) findViewById(R.id.button_save);
        
         mRowId = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_ROWID) 
                 : null;
@@ -45,8 +46,17 @@ public class EditRepsEntry extends Activity {
         			: null;
         }
         
+        mExType = savedInstanceState != null ? savedInstanceState.getLong(ExcercisesDbAdapter.KEY_TYPE) 
+                : null;
+        if (mExType == null) {
+        	Bundle extras = getIntent().getExtras();            
+        	mExType = extras != null ? extras.getLong(ExcercisesDbAdapter.KEY_TYPE) 
+        			: null;
+        }
+        
         populateFields();
        
+        /*
         saveButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -55,6 +65,7 @@ public class EditRepsEntry extends Activity {
             }
           
         });
+        */
      }
     
     private void populateFields() {
@@ -72,6 +83,13 @@ public class EditRepsEntry extends Activity {
         	weightLabel.setVisibility(View.GONE);
         }
         */
+    	
+        if(mExType == Long.valueOf(0)){
+	       	 	findViewById(R.id.text_percentage).setVisibility(View.GONE);
+	       	 	TextView percentageTxt = (TextView) findViewById(R.id.editText_percentage);
+	       	 	percentageTxt.setText("0");
+	       	 	percentageTxt.setVisibility(View.GONE);
+       }
        
         if (mRowId != 0) {
             Cursor repsEntry = mDbHelper.fetchRepsEntry(mRowId);

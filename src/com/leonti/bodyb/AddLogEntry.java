@@ -59,7 +59,7 @@ public class AddLogEntry extends Activity {
     
     private void populateFields() {
     	
-        Cursor exerciseCursor = (Cursor) mDbHelper.fetchExcercise(mExerciseId);
+        Cursor exerciseCursor = (Cursor) mDbHelper.fetchExercise(mExerciseId);
         startManagingCursor(exerciseCursor);
         
         int type = exerciseCursor.getInt(exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));

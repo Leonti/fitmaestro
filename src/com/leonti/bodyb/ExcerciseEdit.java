@@ -5,13 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class ExcerciseEdit extends Activity {
 	
@@ -19,10 +21,13 @@ public class ExcerciseEdit extends Activity {
 
 	private EditText mTitleText;
 	private EditText mDescText;
+	private EditText mMaxReps;
+	private EditText mMaxWeight;
 	private ToggleButton mType;
 	private Spinner mGroup;
 	private Long mRowId;
 	private Long mGroupId;
+	private int mTypeVal;
     private ExcercisesDbAdapter mDbHelper;
     
     @Override
@@ -34,8 +39,36 @@ public class ExcerciseEdit extends Activity {
         
         mTitleText = (EditText) findViewById(R.id.edit_name);
         mDescText = (EditText) findViewById(R.id.edit_description);
+        mMaxReps = (EditText) findViewById(R.id.edit_max_reps);
+        mMaxWeight = (EditText) findViewById(R.id.edit_max_weight);
         mType = (ToggleButton) findViewById(R.id.toggle_type);
         mGroup = (Spinner) findViewById(R.id.spinner_group);
+        
+        mType.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				Log.i("TOGGLE CHANGE", "Changed!");
+				
+				mTypeVal = mType.isChecked()?1:0;
+				
+				if(mTypeVal == 1){
+					findViewById(R.id.text_max_reps).setVisibility(View.GONE);
+					mMaxReps.setVisibility(View.GONE);
+					
+					findViewById(R.id.text_max_weight).setVisibility(View.VISIBLE);
+					mMaxWeight.setVisibility(View.VISIBLE);
+				}else{
+					findViewById(R.id.text_max_weight).setVisibility(View.GONE);
+					mMaxWeight.setVisibility(View.GONE);
+					
+					findViewById(R.id.text_max_reps).setVisibility(View.VISIBLE);
+					mMaxReps.setVisibility(View.VISIBLE);
+				}
+				
+			} 
+        });
       
         Button saveButton = (Button) findViewById(R.id.button_save);
         
@@ -62,7 +95,7 @@ public class ExcerciseEdit extends Activity {
     private void populateFields() {
  
         if (mRowId != null) {
-            Cursor excercise = mDbHelper.fetchExcercise(mRowId);
+            Cursor excercise = mDbHelper.fetchExercise(mRowId);
             startManagingCursor(excercise);
             mTitleText.setText(excercise.getString(
             		excercise.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE)));
@@ -70,6 +103,10 @@ public class ExcerciseEdit extends Activity {
             		excercise.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_DESC)));
             mType.setChecked(excercise.getInt(
             		excercise.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE))==1?true:false);
+            mMaxReps.setText(excercise.getString(
+            		excercise.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_REPS)));
+            mMaxWeight.setText(excercise.getString(
+            		excercise.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_WEIGHT)));
             mGroupId = excercise.getLong(
             		excercise.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_GROUPID));            
         }
@@ -134,19 +171,27 @@ public class ExcerciseEdit extends Activity {
         String title = mTitleText.getText().toString();
         String desc = mDescText.getText().toString();
         int type = mType.isChecked()?1:0;
-        long group_id = mGroup.getSelectedItemId();
+        long groupId = mGroup.getSelectedItemId();
+        
+        Long maxReps = mMaxReps.getText().length() > 0 ?
+        		Long.valueOf(mMaxReps.getText().toString()):
+        		0;
+        		
+        Float maxWeight = mMaxWeight.getText().length() > 0 ?
+        		Float.valueOf(mMaxWeight.getText().toString()):
+        		0;
                
         if (mRowId == null) {
         	
         	// create exercise only if title is not empty
             if(title.length() > 0){
-            	long id = mDbHelper.createExcercise(title, desc, type, group_id, 0);
+            	long id = mDbHelper.createExercise(title, desc, groupId, type, maxReps, maxWeight);
             	if (id > 0) {
             		mRowId = id;
             	}
             }
         } else {
-            mDbHelper.updateExcercise(mRowId, title, desc, type, group_id, 0);
+            mDbHelper.updateExercise(mRowId, title, desc, groupId, type, maxReps, maxWeight);
         }
     }
 }

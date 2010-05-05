@@ -83,7 +83,7 @@ public class SessionRepsList extends ListActivity {
     	mSetsConnectorId = SessionConnectorCursor.getLong(
     			SessionConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETS_CONNECTORID));
     	
-    	Cursor exerciseCursor = (Cursor) mDbHelper.fetchExcercise(mExerciseId);
+    	Cursor exerciseCursor = (Cursor) mDbHelper.fetchExercise(mExerciseId);
     	mExType = exerciseCursor.getLong(exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
     	
     	SessionRepsArray repsArray = new SessionRepsArray(this, mSessionId, mExerciseId, mSetsConnectorId); 

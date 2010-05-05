@@ -23,7 +23,17 @@ public class BodyB extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        Button btnExercises = (Button) findViewById(R.id.button_exercises);
+        btnExercises.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BodyB.this, Expandable2.class);
+                startActivity(i); 
+            }
+        });
         
+        /*
         Button btnExcerciseLog = (Button) findViewById(R.id.button_excercise_log);
         btnExcerciseLog.setOnClickListener(new OnClickListener() {
             @Override
@@ -32,6 +42,7 @@ public class BodyB extends Activity {
                 startActivity(i); 
             }
         });
+        */
 /*        
         Button btnStartProgram = (Button) findViewById(R.id.button_start_program);
         btnStartProgram.setOnClickListener(new OnClickListener() {
@@ -119,8 +130,8 @@ public class BodyB extends Activity {
         btnDownloadPrograms.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BodyB.this, Expandable2.class);
-                startActivityForResult(i, 231); 
+             //   Intent i = new Intent(BodyB.this, Expandable2.class);
+             //   startActivityForResult(i, 231); 
             }
         });
         
@@ -158,8 +169,8 @@ public class BodyB extends Activity {
                                     Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         Bundle extras = intent.getExtras();
-    	Long ExerciseId = extras != null ? extras.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) 
-    			: null;
-    	Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
+    //	Long ExerciseId = extras != null ? extras.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) 
+    //			: null;
+   // 	Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
     }
 }

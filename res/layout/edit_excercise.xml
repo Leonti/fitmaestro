@@ -13,6 +13,12 @@
 		android:layout_height="wrap_content"
 		android:textOn = "@string/with_weight"
 		android:textOff = "@string/own_weight" android:checked = "true" />
+		
+<TextView android:text="@string/max_reps" android:id="@+id/text_max_reps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" ></TextView>
+<EditText android:text="" android:id="@+id/edit_max_reps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" ></EditText>
+<TextView android:text="@string/max_weight" android:id="@+id/text_max_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<EditText android:text="" android:id="@+id/edit_max_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>		
+
 <TextView android:text="@string/description" android:id="@+id/text_description" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 <EditText android:text="" android:id="@+id/edit_description" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
 <TextView android:text="@string/group" android:id="@+id/text_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>

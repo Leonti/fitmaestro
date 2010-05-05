@@ -353,12 +353,13 @@ public class ExcercisesDbAdapter {
     // end of GROUPS
     
     // EXCERCISES methods
-    public long createExcercise(String title, String desc, int type, long group_id, long site_id) {
+    public long createExercise(String title, String desc, long group_id, int type, long max_reps, float max_weight) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_TITLE, title);
         initialValues.put(KEY_DESC, desc);
+        initialValues.put(KEY_MAX_REPS, max_reps);
+        initialValues.put(KEY_MAX_WEIGHT, max_weight);
         initialValues.put(KEY_GROUPID, group_id);
-        initialValues.put(KEY_SITEID, site_id);
         initialValues.put(KEY_TYPE, type);
 
         return mDb.insert(DATABASE_EXERCISES_TABLE, null, initialValues);
@@ -386,12 +387,12 @@ public class ExcercisesDbAdapter {
                 KEY_DESC, KEY_TYPE, KEY_GROUPID, KEY_SITEID}, KEY_GROUPID + "=" + group_id + " AND " + KEY_DELETED + "=0", null, null, null, null, null);
     }
 
-    public Cursor fetchExcercise(long rowId) throws SQLException {
+    public Cursor fetchExercise(long rowId) throws SQLException {
 
         Cursor mCursor =
 
-                mDb.query(true, DATABASE_EXERCISES_TABLE, new String[] {KEY_ROWID,
-                        KEY_TITLE, KEY_DESC, KEY_TYPE, KEY_GROUPID, KEY_SITEID}, KEY_ROWID + "=" + rowId, null,
+                mDb.query(true, DATABASE_EXERCISES_TABLE, null, 
+                		KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -406,12 +407,13 @@ public class ExcercisesDbAdapter {
                 KEY_DESC, KEY_TYPE, KEY_GROUPID, KEY_SITEID, KEY_UPDATED}, KEY_UPDATED + " >  ?", new String[]{updated}, null, null, null, null);
     }
 
-    public boolean updateExcercise(long rowId, String title, String desc, int type, long group_id, long site_id) {
+    public boolean updateExercise(long rowId, String title, String desc, long group_id, int type, long max_reps, float max_weight) {
         ContentValues args = new ContentValues();
         args.put(KEY_TITLE, title);
         args.put(KEY_DESC, desc);
         args.put(KEY_GROUPID, group_id);
-        args.put(KEY_SITEID, site_id);
+        args.put(KEY_MAX_REPS, max_reps);
+        args.put(KEY_MAX_WEIGHT, max_weight);
         args.put(KEY_TYPE, type);
         args.put(KEY_UPDATED, "CURRENT_TIMESTAMP");
 

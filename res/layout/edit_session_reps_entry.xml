@@ -5,7 +5,7 @@
 	android:layout_height="fill_parent" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
 <TextView android:text="@string/reps" android:id="@+id/text_times" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/editText_reps" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
+<EditText android:text="" android:id="@+id/editText_reps" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
 <TextView android:text="@string/weight" android:id="@+id/text_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/editText_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
+<EditText android:text="" android:id="@+id/editText_weight" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
 </LinearLayout>

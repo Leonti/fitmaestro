@@ -271,6 +271,8 @@ public class RepsList extends ListActivity {
 	        if(mExType == Long.valueOf(0)){
 	       	 	
 	        	percentageText.setText("0");
+	        }else{
+	        	percentageText.setText("");
 	        }
         }
     }

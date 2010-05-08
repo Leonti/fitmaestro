@@ -4,26 +4,40 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
-<TextView android:text="@string/name" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/edit_name" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
-<TextView android:text="@string/type" android:id="@+id/text_type" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	<ToggleButton 
-		android:text="" android:id="@+id/toggle_type" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:textOn = "@string/with_weight"
-		android:textOff = "@string/own_weight" android:checked = "true" />
-		
-<TextView android:text="@string/max_reps" android:id="@+id/text_max_reps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" ></TextView>
-<EditText android:text="" android:id="@+id/edit_max_reps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" ></EditText>
-<TextView android:text="@string/max_weight" android:id="@+id/text_max_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/edit_max_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>		
 
-<TextView android:text="@string/description" android:id="@+id/text_description" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/edit_description" android:layout_width="wrap_content" android:layout_height="wrap_content"></EditText>
-<TextView android:text="@string/group" android:id="@+id/text_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<Spinner android:id="@+id/spinner_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+	<TextView android:text="@string/name" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	<EditText android:text="" android:id="@+id/edit_name" android:layout_width="fill_parent" android:layout_height="wrap_content"></EditText>
 
-<Button android:text="@string/save" android:id="@+id/button_save" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+	<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content">
+		<LinearLayout android:id="@+id/LinearLayout02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
+				<TextView android:text="@string/type" android:id="@+id/text_type" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+				<ToggleButton 
+					android:text="" android:id="@+id/toggle_type" 
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					android:textOn = "@string/with_weight"
+					android:textOff = "@string/own_weight" android:checked = "true" />			
+		</LinearLayout>
+		<LinearLayout android:id="@+id/LinearLayout03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
+			<TextView android:text="@string/max_reps" android:id="@+id/text_max_reps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" ></TextView>
+			<EditText android:text="" android:id="@+id/edit_max_reps" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content" android:visibility="gone" ></EditText>
+			<TextView android:text="@string/max_weight" android:id="@+id/text_max_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+			<EditText android:text="" android:id="@+id/edit_max_weight" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>		
+		</LinearLayout>
+	</LinearLayout>
+
+
+	<TextView android:text="@string/group" android:id="@+id/text_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	<Spinner android:id="@+id/spinner_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>		
+	
+	
+	<TextView android:text="@string/description" android:id="@+id/text_description" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"></TextView>
+	<EditText android:text="" android:id="@+id/edit_description" android:layout_width="fill_parent" android:layout_height="wrap_content"></EditText>
+	
+	
+	<Button android:text="@string/save" android:id="@+id/button_save" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+
+
+
 
 </LinearLayout>

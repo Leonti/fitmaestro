@@ -30,6 +30,7 @@ public class Synchronization {
     public HashMap<String, String> programs_connectorFields = new HashMap<String, String>();
     public HashMap<String, String> sessionFields = new HashMap<String, String>();
     public HashMap<String, String> sessions_connectorFields = new HashMap<String, String>();
+    public HashMap<String, String> sessions_detailFields = new HashMap<String, String>();
     
     public HashMap<String, String> setFields = new HashMap<String, String>();
     public HashMap<String, String> sets_connectorFields = new HashMap<String, String>();
@@ -67,7 +68,7 @@ public class Synchronization {
     	logFields.put("reps", ExcercisesDbAdapter.KEY_REPS);
     	logFields.put("done", ExcercisesDbAdapter.KEY_DONE);
     	logFields.put("session_id", ExcercisesDbAdapter.KEY_SESSIONID);
-    	logFields.put("sets_detail_id", ExcercisesDbAdapter.KEY_SETS_DETAILID);
+    	logFields.put("sessions_detail_id", ExcercisesDbAdapter.KEY_SESSIONS_DETAILID);
     	
     	programFields.put("title", ExcercisesDbAdapter.KEY_TITLE);
     	programFields.put("desc", ExcercisesDbAdapter.KEY_DESC); 
@@ -82,9 +83,11 @@ public class Synchronization {
     	sessionFields.put("status", ExcercisesDbAdapter.KEY_STATUS); 
     	
     	sessions_connectorFields.put("session_id", ExcercisesDbAdapter.KEY_SESSIONID);
-    	sessions_connectorFields.put("sets_connector_id", ExcercisesDbAdapter.KEY_SETS_CONNECTORID);
     	sessions_connectorFields.put("exercise_id", ExcercisesDbAdapter.KEY_EXERCISEID);
  
+    	sessions_detailFields.put("sessions_connector_id", ExcercisesDbAdapter.KEY_SESSIONS_CONNECTORID);
+    	sessions_detailFields.put("reps", ExcercisesDbAdapter.KEY_REPS);
+    	sessions_detailFields.put("percentage", ExcercisesDbAdapter.KEY_PERCENTAGE);
     	
     	setFields.put("title", ExcercisesDbAdapter.KEY_TITLE);
     	setFields.put("desc", ExcercisesDbAdapter.KEY_DESC);
@@ -176,6 +179,10 @@ public class Synchronization {
 		 JSONArray sessions_connectorReturn = performItemsUpdate(ExcercisesDbAdapter.DATABASE_SESSIONS_CONNECTOR_TABLE, sessions_connector, sessions_connectorFields);
 		 backData.put("sessions_connector", sessions_connectorReturn);
 		 
+		 JSONArray sessions_detail = jsonUpdateData.getJSONArray("sessions_detail");			 
+		 JSONArray sessions_detailReturn = performItemsUpdate(ExcercisesDbAdapter.DATABASE_SESSIONS_DETAIL_TABLE, sessions_detail, sessions_detailFields);
+		 backData.put("sessions_detail", sessions_detailReturn);
+		 
 		 JSONArray log = jsonUpdateData.getJSONArray("log");			 
 		 JSONArray logReturn = performItemsUpdate(ExcercisesDbAdapter.DATABASE_LOG_TABLE, log, logFields);
 		 backData.put("log", logReturn);
@@ -249,7 +256,8 @@ public class Synchronization {
 			dataToSend.put("programs", prepareItems(ExcercisesDbAdapter.DATABASE_PROGRAMS_TABLE, programFields, updated));
 			dataToSend.put("programs_connector", prepareItems(ExcercisesDbAdapter.DATABASE_PROGRAMS_CONNECTOR_TABLE, programs_connectorFields, updated));
 			dataToSend.put("sessions", prepareItems(ExcercisesDbAdapter.DATABASE_SESSIONS_TABLE, sessionFields, updated));
-			dataToSend.put("sessions_connector", prepareItems(ExcercisesDbAdapter.DATABASE_SESSIONS_CONNECTOR_TABLE, sessions_connectorFields, updated));						
+			dataToSend.put("sessions_connector", prepareItems(ExcercisesDbAdapter.DATABASE_SESSIONS_CONNECTOR_TABLE, sessions_connectorFields, updated));
+			dataToSend.put("sessions_detail", prepareItems(ExcercisesDbAdapter.DATABASE_SESSIONS_DETAIL_TABLE, sessions_detailFields, updated));
 			dataToSend.put("log", prepareItems(ExcercisesDbAdapter.DATABASE_LOG_TABLE, logFields, updated));
 			
             

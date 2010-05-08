@@ -34,7 +34,6 @@ public class SessionView extends ListActivity {
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mExercisesForSessionCursor;
     private Long mRowId;
-    private Long mSetsConnectorId;
     
     private static final int ADD_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
@@ -51,13 +50,6 @@ public class SessionView extends ListActivity {
 
         if (mRowId == null && extras != null) {      	            
         	mRowId = extras.getLong(ExcercisesDbAdapter.KEY_ROWID);
-        }
-        
-        mSetsConnectorId = savedInstanceState != null ? savedInstanceState.getLong("sets_connector_id") 
-                : null;
-        
-        if (mSetsConnectorId == null && extras != null) {            
-        	mSetsConnectorId = extras.getLong("sets_connector_id");
         }
          
         mDbHelper = new ExcercisesDbAdapter(this);
@@ -83,7 +75,7 @@ public class SessionView extends ListActivity {
         Bundle extras = intent.getExtras();
     	Long ExerciseId = extras != null ? extras.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) 
     			: null;
-    	mDbHelper.addExerciseToSession(mRowId, ExerciseId, mSetsConnectorId);
+    	mDbHelper.addExerciseToSession(mRowId, ExerciseId);
     	fillData();
     	Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
     	Log.i("SESSION ID FROM ACTIVITY: ", String.valueOf(mRowId));
@@ -150,7 +142,6 @@ public class SessionView extends ListActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(ExcercisesDbAdapter.KEY_ROWID, mRowId);
-        outState.putLong("sets_connector_id", mSetsConnectorId);
     }
     
     protected class SessionViewCursorAdapter extends SimpleCursorAdapter {
@@ -180,10 +171,10 @@ public class SessionView extends ListActivity {
     		Long exType = cursor.getLong(
     				cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
     		
-    		Long setsConnectorId = cursor.getLong(
-        			cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETS_CONNECTORID));
+    		Long sessionsConnectorId = cursor.getLong(
+        			cursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
     		
-        	SessionRepsArray repsArray = new SessionRepsArray(SessionView.this, sessionId, exerciseId, setsConnectorId); 
+        	SessionRepsArray repsArray = new SessionRepsArray(SessionView.this, sessionId, exerciseId, sessionsConnectorId); 
         	ArrayList<HashMap<String, String>> sessionRepsList = repsArray.getRepsArray();
     		
             TableLayout repsTable = (TableLayout) view.findViewById(R.id.reps_table);

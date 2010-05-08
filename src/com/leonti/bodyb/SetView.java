@@ -128,13 +128,31 @@ public class SetView extends ListActivity {
     	mExercisesForSetCursor.moveToFirst(); 
     	for (int i=0; i<mExercisesForSetCursor.getCount(); i++) {
     		
+    		Long exerciseId = mExercisesForSetCursor.getLong(
+    				mExercisesForSetCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
     		Long setsConnectorId = mExercisesForSetCursor.getLong(
     				mExercisesForSetCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
     		
-    		Long exerciseId = mExercisesForSetCursor.getLong(
-    				mExercisesForSetCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
+    		long sessionsConnectorId = mDbHelper.addExerciseToSession(sessionId, exerciseId);
     		
-    		mDbHelper.addExerciseToSession(sessionId, exerciseId, setsConnectorId);
+    		Cursor repsForConnectorCursor = mDbHelper.fetchRepsForConnector(setsConnectorId);
+    		
+    		repsForConnectorCursor.moveToFirst();
+            for (int j = 0; j < repsForConnectorCursor.getCount(); j++) {
+            	
+            	Long reps = repsForConnectorCursor.getLong(
+            			repsForConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
+ 
+            	Float percentage = repsForConnectorCursor.getFloat(
+            			repsForConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
+            
+            	// adding reps to new session
+            	mDbHelper.createSessionRepsEntry(sessionsConnectorId, reps, percentage);
+        	  
+	             
+	             repsForConnectorCursor.moveToNext();
+            
+            }
     		
     		mExercisesForSetCursor.moveToNext(); 
     	} 

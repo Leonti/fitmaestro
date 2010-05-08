@@ -99,4 +99,5 @@
 <string name="sat">Sat</string>
 <string name="sun">Sun</string>
 
+<dimen name="numeric_width">100dip</dimen>
 </resources>

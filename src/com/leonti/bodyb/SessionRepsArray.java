@@ -19,15 +19,15 @@ public class SessionRepsArray {
     
     private Long mSessionId;
     private Long mExerciseId;
-    private Long mSetsConnectorId;
+    private Long mSessionsConnectorId;
     
     ArrayList<HashMap<String, String>>  mSessionRepsList = new ArrayList<HashMap<String, String>>();
     
-    public SessionRepsArray(Context ctx, Long sessionId, Long exerciseId, Long setsConnectorId){
+    public SessionRepsArray(Context ctx, Long sessionId, Long exerciseId, Long sessionsConnectorId){
 		this.mCtx = ctx;
 		mSessionId = sessionId;
 		mExerciseId = exerciseId;
-		mSetsConnectorId = setsConnectorId;
+		mSessionsConnectorId = sessionsConnectorId;
 		
         mDbHelper = new ExcercisesDbAdapter(mCtx);
         mDbHelper.open();
@@ -37,39 +37,39 @@ public class SessionRepsArray {
 
     	// converting cursor(s) data to array list    	
     	mSessionRepsList.clear();
-    	Log.i("SETS CONNECTOR ID: ", mSetsConnectorId.toString());
+    	Log.i("SESSIONS CONNECTOR ID: ", mSessionsConnectorId.toString());
     	Log.i("EXERCISE ID: ", mExerciseId.toString());
     	Log.i("SESSION ID: ", mSessionId.toString());
     	// if it's not 0 - session was created from set so we can get planned reps for this exercise
-    	if(mSetsConnectorId != Long.valueOf(0)){
-        	Cursor setReps = mDbHelper.fetchRepsForConnector(mSetsConnectorId);  
+    	if(mSessionsConnectorId != Long.valueOf(0)){
+        	Cursor sessionReps = mDbHelper.fetchRepsForSessionConnector(mSessionsConnectorId);  
         	Log.i("DYG: ", "MYG");
-        	setReps.moveToFirst();
-        	for (int i=0; i < setReps.getCount(); i++) {
+        	sessionReps.moveToFirst();
+        	for (int i=0; i < sessionReps.getCount(); i++) {
         		
-        		Long setDetailId = setReps.getLong(
-        				setReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
+        		Long sessionDetailId = sessionReps.getLong(
+        				sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
         		
-        		Long planned_reps = setReps.getLong(
-        				setReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
+        		Long planned_reps = sessionReps.getLong(
+        				sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
         		
-        		Float planned_percentage = setReps.getFloat(
-        				setReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
+        		Float planned_percentage = sessionReps.getFloat(
+        				sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
         		
         		HashMap<String, String> item = new HashMap<String, String>(); 
         		
         		// fetch done from log table and fill it
         		
-        		Cursor sessionReps = mDbHelper.fetchSessionRepsEntryBySet(mSessionId, setDetailId);
-        		if(sessionReps.getCount() > 0){
-        			String id = sessionReps.getString(
-        					sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
+        		Cursor sessionDoneReps = mDbHelper.fetchDoneSessionReps(mSessionId, sessionDetailId);
+        		if(sessionDoneReps.getCount() > 0){
+        			String id = sessionDoneReps.getString(
+        					sessionDoneReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
         			
-        			String reps = sessionReps.getString(
-        					sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
+        			String reps = sessionDoneReps.getString(
+        					sessionDoneReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
         			
-        			String weight = sessionReps.getString(
-        					sessionReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_WEIGHT));
+        			String weight = sessionDoneReps.getString(
+        					sessionDoneReps.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_WEIGHT));
         			
             		item.put("id", id);
             		item.put("reps", reps);
@@ -81,12 +81,12 @@ public class SessionRepsArray {
             		item.put("weight", "not_done");	
         		}
         		
-        		item.put("set_detail_id", setDetailId.toString());
+        		item.put("session_detail_id", sessionDetailId.toString());
         		item.put("planned_reps", planned_reps.toString());
         		item.put("planned_weight", planned_percentage.toString());
         		mSessionRepsList.add(item);
         		
-        		setReps.moveToNext(); 
+        		sessionReps.moveToNext(); 
         	} 
     	}
 

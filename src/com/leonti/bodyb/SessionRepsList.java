@@ -35,7 +35,6 @@ public class SessionRepsList extends ListActivity {
     private Long mSessionId;
     private Long mExerciseId;
     private Long mExType;
-    private Long mSetsConnectorId;
     private Long mListPosition;
     private Dialog mEditRepsDialog;
     private Long mSessionRepsId;
@@ -80,13 +79,11 @@ public class SessionRepsList extends ListActivity {
     			SessionConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SESSIONID));
     	mExerciseId = SessionConnectorCursor.getLong(
     			SessionConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
-    	mSetsConnectorId = SessionConnectorCursor.getLong(
-    			SessionConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETS_CONNECTORID));
     	
     	Cursor exerciseCursor = (Cursor) mDbHelper.fetchExercise(mExerciseId);
     	mExType = exerciseCursor.getLong(exerciseCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
     	
-    	SessionRepsArray repsArray = new SessionRepsArray(this, mSessionId, mExerciseId, mSetsConnectorId); 
+    	SessionRepsArray repsArray = new SessionRepsArray(this, mSessionId, mExerciseId, mSessionConnectorId); 
     	mSessionRepsList = repsArray.getRepsArray();
     	
     	
@@ -218,7 +215,7 @@ public class SessionRepsList extends ListActivity {
         
         if(mSessionRepsList.get(position).get("id") == null){
         	Log.i("ID: ", "Null!!!");
-        	Log.i("SET detail id: ", mSessionRepsList.get(position).get("set_detail_id"));
+        	Log.i("SESSION detail id: ", mSessionRepsList.get(position).get("session_detail_id"));
  
         	mListPosition = Long.valueOf(position);
         	showDialog(DIALOG_EDIT_REPS);
@@ -279,13 +276,13 @@ public class SessionRepsList extends ListActivity {
 	                    	// entry is new, so we add it
 	            	        if (mSessionRepsId == null) {
 	            	        	
-	            	        	// if it has an entry than it's planned, so we get corresponding setDetailId, if not - it's 0
-	            	        	Long setDetailId = mListPosition != null ?
-	            	        			Long.valueOf(mSessionRepsList.get(mListPosition.intValue()).get("set_detail_id")) :
+	            	        	// if it has an entry than it's planned, so we get corresponding sessionDetailId, if not - it's 0
+	            	        	Long sessionDetailId = mListPosition != null ?
+	            	        			Long.valueOf(mSessionRepsList.get(mListPosition.intValue()).get("session_detail_id")) :
 	            	        			0;
 	            	        	
 	            	        	
-	            	        	mDbHelper.createSessionRepsEntry(mSessionId, mExerciseId, setDetailId, Integer.parseInt(reps.trim()), Float.valueOf(weight.trim()));
+	            	        	mDbHelper.createSessionRepsEntry(mSessionId, mExerciseId, sessionDetailId, Integer.parseInt(reps.trim()), Float.valueOf(weight.trim()));
 	            	        } else {
 	            	        	
 	            	        	// entry is old so we update it
@@ -338,6 +335,8 @@ public class SessionRepsList extends ListActivity {
 		        if(mExType == Long.valueOf(0)){
 		       	 	
 		        	weightText.setText("0");
+		        }else{
+		        	weightText.setText("");
 		        }
 	        	
 	        }
@@ -351,6 +350,8 @@ public class SessionRepsList extends ListActivity {
 	        if(mExType == Long.valueOf(0)){
 	       	 	
 	        	weightText.setText("0");
+	        }else{
+	        	weightText.setText("");
 	        }
         }
     }

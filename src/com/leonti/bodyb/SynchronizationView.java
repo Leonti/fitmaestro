@@ -3,17 +3,19 @@ package com.leonti.bodyb;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SynchronizationView extends Activity {
 
     private ExcercisesDbAdapter mDbHelper;
-    private TextView mMessageText;
-    
+    private TextView mMessageText; 
+    private int mResult;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,17 @@ public class SynchronizationView extends Activity {
      }
     
     private class PerformSync extends AsyncTask<Void, Integer, Long> {
+    	
+    	private ProgressDialog mProgress = new ProgressDialog(SynchronizationView.this);
+    	
+    	
         protected Long doInBackground(Void... arg0) {
 
         	Synchronization sync = new Synchronization(SynchronizationView.this);
 			try {
-				sync.startSynchronization();
+				mResult = sync.startSynchronization();
 			} catch (JSONException e) {
+				Log.i("ERROR: ", e.getMessage());
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -53,6 +60,10 @@ public class SynchronizationView extends Activity {
         }
         
         protected void onPreExecute(){
+
+        	mProgress.setMessage(getString(R.string.synchronizing));  
+        	mProgress.show();  
+
         	onStartSync();        	
         }
 
@@ -62,7 +73,11 @@ public class SynchronizationView extends Activity {
         }
 
         protected void onPostExecute(Long result) {
+        	mProgress.dismiss();
         	onEndSync(result);
+        	if(mResult == ServerJson.NO_CONNECTION){
+        		Toast.makeText(SynchronizationView.this, R.string.no_connection, Toast.LENGTH_LONG).show(); 
+        	}
            // showDialog("Downloaded " + result + " bytes");
         }
 
@@ -70,12 +85,17 @@ public class SynchronizationView extends Activity {
     
     private void onStartSync(){
     	Log.i("PREEXECUTE: ", "PREEXECUTE");
-    	mMessageText.setText("Sychronization started. Please wait...(Nice wait animation is going on :)");
+ //   	mMessageText.setText("Sychronization started. Please wait...(Nice wait animation is going on :)");
     }
     
     private void onEndSync(Long result){
     	Log.i("SYNCRONIZATION DONE: ", String.valueOf(result));
-    	mMessageText.setText("Synchronization finished");
+    	if(mResult == ServerJson.SUCCESS){
+        	mMessageText.setText(R.string.synchronization_finished);    		
+    	}else{
+    		mMessageText.setText(R.string.synchronization_failed);
+    	}
+
     }
 
 }

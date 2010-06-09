@@ -22,7 +22,7 @@
 			<TextView android:text="@string/max_reps" android:id="@+id/text_max_reps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" ></TextView>
 			<EditText android:text="" android:id="@+id/edit_max_reps" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content" android:visibility="gone" ></EditText>
 			<TextView android:text="@string/max_weight" android:id="@+id/text_max_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-			<EditText android:text="" android:id="@+id/edit_max_weight" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>		
+			<EditText android:text="" android:id="@+id/edit_max_weight" android:inputType="numberDecimal" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>		
 		</LinearLayout>
 	</LinearLayout>
 
@@ -31,8 +31,8 @@
 	<Spinner android:id="@+id/spinner_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>		
 	
 	
-	<TextView android:text="@string/description" android:id="@+id/text_description" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"></TextView>
-	<EditText android:text="" android:id="@+id/edit_description" android:layout_width="fill_parent" android:layout_height="wrap_content"></EditText>
+	<TextView android:text="@string/description" android:id="@+id/text_description" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	<EditText android:text="" android:id="@+id/edit_description" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="top" android:layout_weight="1"></EditText>
 	
 	
 	<Button android:text="@string/save" android:id="@+id/button_save" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>

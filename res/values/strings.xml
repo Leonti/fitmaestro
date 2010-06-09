@@ -98,6 +98,11 @@
 <string name="fri">Fri</string>
 <string name="sat">Sat</string>
 <string name="sun">Sun</string>
+<string name="synchronization_finished">Synchronization Finished</string>
+<string name="synchronization_failed">Synchronization Failed</string>
+<string name="synchronizing">Synchronizing...</string>
+<string name="stop">Stop</string>
+<string name="counter_title">Rest time</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

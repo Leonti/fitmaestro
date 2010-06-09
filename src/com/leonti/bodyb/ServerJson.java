@@ -23,11 +23,15 @@ public class ServerJson {
 	public static final int ALREADY_EXISTS = 2;
 	public static final int INVALID = 3;
 	
+	//public static final String address = "http://10.0.2.2/koh/remote";
+	public static final String address = "http://eleonti.com/fitmaestro/remote";
+	
 	public JSONObject getServerData(JSONObject jsonIn) throws JSONException, ClientProtocolException, IOException {
 
 	    DefaultHttpClient httpClient = new DefaultHttpClient();
 		ResponseHandler <String> resonseHandler = new BasicResponseHandler();
-		HttpPost postMethod = new HttpPost("http://10.0.2.2/koh/remote");
+		
+		HttpPost postMethod = new HttpPost(address);
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
 		nameValuePairs.add(new BasicNameValuePair("jsonString", jsonIn.toString()));

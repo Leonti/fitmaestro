@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -37,6 +39,7 @@ public class SessionRepsList extends ListActivity {
     private Long mExType;
     private Long mListPosition;
     private Dialog mEditRepsDialog;
+    private Dialog mCounterDialog;
     private Long mSessionRepsId;
     
     ArrayList<HashMap<String, String>>  mSessionRepsList = new ArrayList<HashMap<String, String>>();  
@@ -46,6 +49,7 @@ public class SessionRepsList extends ListActivity {
     private static final int ACTIVITY_EDIT=1;
     
     private static final int DIALOG_EDIT_REPS = 2;
+    private static final int DIALOG_CHRONOMETER = 3;
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
     private static final int EDIT_ID = Menu.FIRST + 2;
@@ -267,7 +271,8 @@ public class SessionRepsList extends ListActivity {
 	
 	                    /* User clicked OK so do some stuff */
         
-	                	 
+	    
+	                	boolean showCounter = false;
 	                    String reps = repsText.getText().toString();
 	                    String weight = weightText.getText().toString();
 	                    
@@ -283,16 +288,27 @@ public class SessionRepsList extends ListActivity {
 	            	        	
 	            	        	
 	            	        	mDbHelper.createSessionRepsEntry(mSessionId, mExerciseId, sessionDetailId, Integer.parseInt(reps.trim()), Float.valueOf(weight.trim()));
+
+	            	        	//setting counter flag to true
+	            	        	showCounter = true;
+	            	        	
 	            	        } else {
 	            	        	
 	            	        	// entry is old so we update it
 	            	        	mDbHelper.updateSessionRepsEntry(mSessionRepsId, Integer.parseInt(reps.trim()), Float.valueOf(weight.trim()));
 	            	        }
+
+	            	        // setting focus back on reps
+	            	        repsText.requestFocus();
 	            	        
 	            	        fillData();
 	            	        registerForContextMenu(getListView());
 	                	}
 	                    
+	                    if(showCounter){
+		                    showDialog(DIALOG_CHRONOMETER);
+		                    startCounter();	
+	                    }
 	                }
 	            })
 	            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -304,6 +320,25 @@ public class SessionRepsList extends ListActivity {
 	            .create();
 	        
 	        return mEditRepsDialog;
+	        
+	        case DIALOG_CHRONOMETER:
+		        LayoutInflater counterInflater = LayoutInflater.from(this);
+		        final View counterView = counterInflater.inflate(R.layout.counter, null);
+		        final Chronometer counter = (Chronometer) counterView.findViewById(R.id.counter);
+		        
+		        mCounterDialog = new AlertDialog.Builder(this)
+	            .setTitle(R.string.counter_title)
+	            .setView(counterView)
+	            .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	
+	                    /* User clicked OK so do some stuff */
+	                	counter.stop();
+	                }
+	            })
+	            .create();
+		        
+		        return mCounterDialog;
     	}
     	
         return null;
@@ -354,6 +389,12 @@ public class SessionRepsList extends ListActivity {
 	        	weightText.setText("");
 	        }
         }
+    }
+    
+    public void startCounter(){
+    	Chronometer counter = (Chronometer) mCounterDialog.findViewById(R.id.counter);
+    	counter.setBase(SystemClock.elapsedRealtime());
+    	counter.start();
     }
     
     public class SpecialAdapter extends SimpleAdapter {

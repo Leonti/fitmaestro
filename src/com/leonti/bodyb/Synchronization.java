@@ -105,7 +105,7 @@ public class Synchronization {
     	
     }
     
-    public void startSynchronization() throws JSONException{
+    public int startSynchronization() throws JSONException{
     	/*
     	 * 1. Send to site new/updated items
     	 * 2. Site performs updates and gives back his items but with relations not complete
@@ -135,7 +135,10 @@ public class Synchronization {
 			 }
 		 }else{
 			 Log.i("WTF", "Fuck!");
-		 }    	
+			 return ServerJson.NO_CONNECTION;
+		 }
+		 
+		 return ServerJson.SUCCESS;
     }
     
     public JSONObject updateItems(JSONObject jsonUpdateData) throws JSONException{

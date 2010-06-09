@@ -229,6 +229,7 @@ public class RepsList extends ListActivity {
 	            	        	mDbHelper.createRepsEntry(mSetConnectorId, Integer.parseInt(reps.trim()), Float.valueOf(percentage.trim()));
 	            	        } else {
 	            	        	Log.i("OLD ENTRY", "Editing old entry");
+	            	        	mRepsForConnectorCursor.moveToPosition(mListPosition.intValue());
 	            	        	Long setDetailsId = mRepsForConnectorCursor.getLong(
 	            	            		mRepsForConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
 	            	        	mDbHelper.updateRepsEntry(setDetailsId, Integer.parseInt(reps.trim()), Float.valueOf(percentage.trim()));

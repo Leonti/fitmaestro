@@ -4,8 +4,22 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
-<TextView android:text="@string/reps" android:id="@+id/text_times" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/editText_reps" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
-<TextView android:text="@string/weight" android:id="@+id/text_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-<EditText android:text="" android:id="@+id/editText_weight" android:inputType="numberDecimal" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
+	
+			<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center">
+			<LinearLayout android:id="@+id/LinearLayout02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
+				<TextView android:text="@string/reps" android:id="@+id/text_times" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+				<LinearLayout android:id="@+id/LinearLayout02" android:layout_width="wrap_content" android:layout_height="wrap_content">
+					<EditText android:text="" android:id="@+id/editText_reps" android:inputType="number" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
+					<TextView android:text=" X " android:id="@+id/text_x"
+						android:textAppearance="?android:attr/textAppearanceLarge"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"></TextView>
+				</LinearLayout>
+			</LinearLayout>
+			
+			<LinearLayout android:id="@+id/LinearLayout03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >			
+				<TextView android:text="@string/weight" android:id="@+id/text_weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+				<EditText android:text="" android:id="@+id/editText_weight" android:inputType="numberDecimal" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
+			</LinearLayout>
+		</LinearLayout>
 </LinearLayout>

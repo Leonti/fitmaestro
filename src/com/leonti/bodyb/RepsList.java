@@ -20,12 +20,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.TableRow.LayoutParams;
 
 public class RepsList extends ListActivity {
 
@@ -44,7 +40,6 @@ public class RepsList extends ListActivity {
     private static final int DIALOG_EDIT_REPS = 2;
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
-    private static final int EDIT_ID = Menu.FIRST + 2;
 	    
     private static final String TAG = "RepsList";
 	
@@ -105,25 +100,10 @@ public class RepsList extends ListActivity {
         	mListPosition = null;
         	showDialog(DIALOG_EDIT_REPS);
         	populateRepsDialog();
-            //createEntry();
             return true;
         }
        
         return super.onMenuItemSelected(featureId, item);
-    }
-    
-    private void createEntry() {
-        Intent i = new Intent(this, EditRepsEntry.class);
-        i.putExtra(ExcercisesDbAdapter.KEY_SETS_CONNECTORID, mSetConnectorId);
-        i.putExtra(ExcercisesDbAdapter.KEY_TYPE, mExType);
-        startActivityForResult(i, ACTIVITY_CREATE);
-    }
-    
-    private void editEntry(long id) {
-        Intent i = new Intent(this, EditRepsEntry.class);
-        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-        i.putExtra(ExcercisesDbAdapter.KEY_TYPE, mExType);
-        startActivityForResult(i, ACTIVITY_EDIT);
     }
     
     @Override
@@ -148,7 +128,6 @@ public class RepsList extends ListActivity {
        // String title = ((TextView) info.targetView).getText().toString();
 
         menu.setHeaderTitle("Dyg");
-        menu.add(0, EDIT_ID, 0, R.string.edit_reps_entry);
         menu.add(0, DELETE_ID, 1, R.string.delete_reps_entry);
     }
     
@@ -161,14 +140,6 @@ public class RepsList extends ListActivity {
             mDbHelper.deleteRepsEntry(info.id);
             fillData();
             return true;
-        
-        case EDIT_ID:
-            mListPosition = Long.valueOf(info.position);
-            Log.i("LIST POSITION IN EDIT: ", mListPosition.toString());
-        	showDialog(DIALOG_EDIT_REPS);
-        	populateRepsDialog();
-        	//editEntry(info.id);
-        	return true;
         }
 		return super.onContextItemSelected(item);
 	}
@@ -177,12 +148,11 @@ public class RepsList extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Log.i("CLICK test", "clicked!");
- /*
-        Intent i = new Intent(this, SetView.class);
-        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-        startActivityForResult(i, 5);    
-        */
-        // SHOW ADDITIONAL INFO FOR THIS Reps ENTRY
+        
+        mListPosition = Long.valueOf(position);
+        Log.i("LIST POSITION IN EDIT: ", mListPosition.toString());
+    	showDialog(DIALOG_EDIT_REPS);
+    	populateRepsDialog();
     }
     
     
@@ -194,12 +164,6 @@ public class RepsList extends ListActivity {
 	        LayoutInflater factory = LayoutInflater.from(this);
 	        final View repsEditView = factory.inflate(R.layout.edit_reps_entry, null);
 	        Log.i("DYG", "Creating dialog");
-	        /*
-	        if(mListPosition != null){
-	        	mRepsForConnectorCursor.moveToPosition(mListPosition.intValue());
-	       // 	mRepsForConnectorCursor.getLong(
-	       // 			mRepsForConnectorCursor.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
-	        } */
 	        
         	final EditText repsText = (EditText) repsEditView.findViewById(R.id.editText_reps);
         	final EditText percentageText = (EditText) repsEditView.findViewById(R.id.editText_percentage);
@@ -208,6 +172,7 @@ public class RepsList extends ListActivity {
 	       	 	
 	        	repsEditView.findViewById(R.id.text_percentage).setVisibility(View.GONE);
 	       	 	percentageText.setVisibility(View.GONE);
+	       	 	repsEditView.findViewById(R.id.text_x).setVisibility(View.GONE);
 	        }
 	        
 	        
@@ -216,8 +181,6 @@ public class RepsList extends ListActivity {
 	            .setView(repsEditView)
 	            .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int whichButton) {
-	
-	                //	Log.i("LIST POSITION: ", mListPosition.toString());
 	                	
 	                	/* User clicked OK so do some stuff */
 	                	

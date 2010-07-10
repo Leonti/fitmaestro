@@ -16,8 +16,6 @@ import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class ExcerciseEdit extends Activity {
-	
-    private static final int ACTIVITY_GROUP_CREATE=0;
 
 	private EditText mTitleText;
 	private EditText mDescText;

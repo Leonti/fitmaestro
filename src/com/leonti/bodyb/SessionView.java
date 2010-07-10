@@ -1,7 +1,6 @@
 package com.leonti.bodyb;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import android.app.Activity;
@@ -12,14 +11,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
@@ -34,10 +30,15 @@ public class SessionView extends ListActivity {
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mExercisesForSessionCursor;
     private Long mRowId;
+    private String mStatus;
     
     private static final int ADD_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
+    private static final int DONE_ID = Menu.FIRST + 1;
+    private static final int INPROGRESS_ID = Menu.FIRST + 2;
+    
     private static final int ACTIVITY_ADD = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,11 @@ public class SessionView extends ListActivity {
     }
     
     private void fillData() {
+    	
+    	Cursor session = mDbHelper.fetchSession(mRowId);
+    	mStatus = session.getString(
+                session.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_STATUS));
+    	
     	mExercisesForSessionCursor = mDbHelper.fetchExercisesForSession(mRowId);
         startManagingCursor(mExercisesForSessionCursor);
         String[] from = new String[]{ExcercisesDbAdapter.KEY_TITLE};
@@ -85,6 +91,11 @@ public class SessionView extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, ADD_ID, 0, R.string.add_exercise_to_session);
+        if(mStatus.equals("DONE")){
+            menu.add(0, INPROGRESS_ID, 0, R.string.set_inprogress);
+        }else{
+            menu.add(0, DONE_ID, 0, R.string.set_done);
+        }
         return true;
     }
     
@@ -94,14 +105,28 @@ public class SessionView extends ListActivity {
         case ADD_ID:
             addExercise();
             return true;
+        case INPROGRESS_ID:
+        	markInProgress();
+        	return true;
+        case DONE_ID:
+        	markDone();
+        	return true;
         }
        
         return super.onMenuItemSelected(featureId, item);
     }
     
     private void addExercise() {
-        Intent i = new Intent(this, Expandable2.class);
+        Intent i = new Intent(this, ExercisesList.class);
         startActivityForResult(i, ACTIVITY_ADD);
+    }
+    private void markInProgress() {
+    	mDbHelper.updateSessionStatus(mRowId, "INPROGRESS");
+    	finish();
+    }
+    private void markDone() {
+    	mDbHelper.updateSessionStatus(mRowId, "DONE");
+    	finish();
     }
     
     @Override

@@ -23,7 +23,6 @@ public class ProgramView extends Activity {
     private Cursor mProgramSetsCursor;
     
     private static final int ACTIVITY_ADD_SET=0;
-    private static final int ACTIVITY_EDIT_SET=1;
 
     /** Called when the activity is first created. */
     @Override
@@ -116,7 +115,6 @@ public class ProgramView extends Activity {
 	                 HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v.getTag();
 	                 
 	                 Log.i("HASH DATA DAY NUMBER", dayClickedData.get("day_number").toString());
-	                // Log.i("HASH DATA SET_ID", dayClickedData.get("set_id").toString());
 	                 
 	                 mDayNumber = dayClickedData.get("day_number");
 	                 if(dayClickedData.get("set_id") != null){

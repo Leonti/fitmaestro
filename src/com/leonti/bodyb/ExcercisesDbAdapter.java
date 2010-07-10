@@ -41,6 +41,10 @@ public class ExcercisesDbAdapter {
     public static final String KEY_STATUS = "status";    
     public static final String KEY_DAY = "day";
     public static final String KEY_DONE = "done";
+    public static final String KEY_MEASUREMENT_TYPEID = "measurement_type_id";
+    public static final String KEY_VALUE = "value";
+    public static final String KEY_UNITS = "units";
+    public static final String KEY_DATE = "date";
     public static final String KEY_UPDATED = "updated";
     public static final String KEY_DELETED = "deleted";
     public static final String KEY_LASTUPDATED = "last_updated";
@@ -153,16 +157,34 @@ public class ExcercisesDbAdapter {
     						"site_id integer default 0, " +
     						"updated timestamp default current_timestamp, " +
     						"deleted integer default 0); ";
+    
+    private static final String MEASUREMENT_TYPES_CREATE = "create table measurement_types " +
+							"(_id integer primary key autoincrement, " +
+							"title text not null, " +
+							"units text not null, " +
+							"desc text not null, " +
+							"site_id integer default 0, " +
+							"updated timestamp default current_timestamp, " +
+							"deleted integer default 0); ";
+    
+    private static final String MEASUREMENTS_LOG_CREATE = "create table measurements_log " +
+							"(_id integer primary key autoincrement, " +
+							"value decimal(10,2), " +
+							"measurement_type_id integer, " +
+							"date timestamp default current_timestamp, " +
+							"site_id integer default 0, " +
+							"updated timestamp default current_timestamp, " +
+							"deleted integer default 0); ";
 
     private static final String SETTINGS_CREATE = "create table settings " +
     						"(_id integer primary key autoincrement, " +
     						"authkey text not null, " +
-    						"last_updated timestamp default current_timestamp); ";
+    						"last_updated timestamp default null); ";
     
     private static final String SETTINGS_FILL = "insert into settings (authkey) values ('');";
         
     
-    private static final String DATABASE_NAME = "data31";
+    private static final String DATABASE_NAME = "data41";
     public static final String DATABASE_GROUPS_TABLE = "groups";
     public static final String DATABASE_EXERCISES_TABLE = "exercises";
     public static final String DATABASE_SETS_TABLE = "sets";
@@ -174,6 +196,8 @@ public class ExcercisesDbAdapter {
     public static final String DATABASE_PROGRAMS_TABLE = "programs";
     public static final String DATABASE_PROGRAMS_CONNECTOR_TABLE = "programs_connector";
     public static final String DATABASE_LOG_TABLE = "log";
+    public static final String DATABASE_MEASUREMENT_TYPES_TABLE = "measurement_types";
+    public static final String DATABASE_MEASUREMENTS_LOG_TABLE = "measurements_log";
     public static final String DATABASE_SETTINGS_TABLE = "settings";
     private static final int DATABASE_VERSION = 2;
 
@@ -208,13 +232,16 @@ public class ExcercisesDbAdapter {
             db.execSQL(PROGRAMS_CONNECTOR_CREATE);
             db.execSQL(LOG_CREATE);
             db.execSQL(SETTINGS_CREATE);
+            db.execSQL(MEASUREMENT_TYPES_CREATE);
+            db.execSQL(MEASUREMENTS_LOG_CREATE);
             db.execSQL(SETTINGS_FILL);
  
             String[] tables = new String[] {
             								"groups", "exercises", "sets", "sets_connector",
             								"sets_detail", "sessions", "sessions_connector",
             								"sessions_detail",
-            								"programs", "programs_connector", "log"};
+            								"programs", "programs_connector", "log", 
+            								"measurement_types", "measurements_log"};
             for(String table : tables){
             	db.execSQL(createTrigger(table));
             } 
@@ -225,7 +252,7 @@ public class ExcercisesDbAdapter {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
             
-            // UPDATE !!!
+            // UPDATE !!! - UPDATE LIST OF TABLES
             
             db.execSQL("DROP TABLE IF EXISTS groups");
             db.execSQL("DROP TABLE IF EXISTS excercises");
@@ -834,6 +861,11 @@ public class ExcercisesDbAdapter {
         return mDb.query(DATABASE_SESSIONS_TABLE, null, KEY_DELETED + "=0", null, null, null, null);
     }
     
+    public Cursor fetchFilteredSessions(String filter) {
+
+        return mDb.query(DATABASE_SESSIONS_TABLE, null, KEY_DELETED + "=0 AND " + KEY_STATUS + "= ?", new String[]{filter}, null, null, null, null);
+    }
+    
     public Cursor fetchSession(long rowId) throws SQLException {
 
         Cursor mCursor =
@@ -861,6 +893,13 @@ public class ExcercisesDbAdapter {
         ContentValues args = new ContentValues();
         args.put(KEY_TITLE, title);
         args.put(KEY_DESC, desc);
+        args.put(KEY_STATUS, status);
+
+        return mDb.update(DATABASE_SESSIONS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public boolean updateSessionStatus(long rowId, String status) {
+        ContentValues args = new ContentValues();
         args.put(KEY_STATUS, status);
 
         return mDb.update(DATABASE_SESSIONS_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
@@ -952,7 +991,8 @@ public class ExcercisesDbAdapter {
 
                 mDb.query(true, DATABASE_LOG_TABLE, null, 
                 		KEY_SESSIONID + "=" + session_id +
-                		" AND " + KEY_SESSIONS_DETAILID + "=" + sessions_detail_id, 
+                		" AND " + KEY_SESSIONS_DETAILID + "=" + sessions_detail_id
+                		+ " AND " + KEY_DELETED + "=0", 
                 		null,
                 		null, null, null, null);
         if (mCursor != null) {
@@ -1006,6 +1046,107 @@ public class ExcercisesDbAdapter {
     }
     
     // END of session_connector methods
+    
+    // MEASUREMENTS methods
+    // GROUPS methods
+    public long createMeasurementType(String title, String units, String desc) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_TITLE, title);
+        initialValues.put(KEY_UNITS, units);
+        initialValues.put(KEY_DESC, desc);
+
+        return mDb.insert(DATABASE_MEASUREMENT_TYPES_TABLE, null, initialValues);
+    }
+    
+    public boolean updateMeasurementType(long rowId, String title, String units, String desc) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_TITLE, title);
+        args.put(KEY_UNITS, units);
+        args.put(KEY_DESC, desc);
+
+        return mDb.update(DATABASE_MEASUREMENT_TYPES_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+
+    public boolean deleteMeasurementType(long rowId) {
+    	
+    	// delete exercises for this group first
+    	deleteLogsForMeasurement(rowId);
+    	
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_MEASUREMENT_TYPES_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+
+    public Cursor fetchMeasurementType(long rowId) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_MEASUREMENT_TYPES_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    public Cursor fetchAllMeasurementTypes() {
+
+        return mDb.query(DATABASE_MEASUREMENT_TYPES_TABLE, null, KEY_DELETED + "=0", null, null, null, null);
+    }
+    
+    public boolean deleteLogsForMeasurement(long typeId) {
+
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+        return mDb.update(DATABASE_MEASUREMENTS_LOG_TABLE, args, KEY_MEASUREMENT_TYPEID + "=" + typeId, null) > 0;
+    }
+    
+    public Cursor fetchMeasLogEntries(long typeId) throws SQLException {
+
+
+        return mDb.query(DATABASE_MEASUREMENTS_LOG_TABLE, null, 
+        				KEY_MEASUREMENT_TYPEID + "=" + typeId 
+        				+ " AND " + KEY_DELETED + "=0", null, null, null, null, null);
+
+    }
+     
+    public long createMeasLogEntry(long type_id, float value) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_MEASUREMENT_TYPEID, type_id);
+        initialValues.put(KEY_VALUE, value);
+
+        return mDb.insert(DATABASE_MEASUREMENTS_LOG_TABLE, null, initialValues);
+    }
+    
+    public boolean updateMeasLogEntry(long rowId, float value) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_VALUE, value);
+
+        return mDb.update(DATABASE_MEASUREMENTS_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    public Cursor fetchMeasLogEntry(long rowId) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_MEASUREMENTS_LOG_TABLE, null, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    
+    public boolean deleteMeasLogEntry(long rowId) {
+
+    	ContentValues args = new ContentValues();
+    	args.put(KEY_DELETED, 1);
+    	
+    	return mDb.update(DATABASE_MEASUREMENTS_LOG_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    // END of MEASUREMENTS methods
     
 
 }

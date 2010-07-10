@@ -24,7 +24,7 @@ public class ServerJson {
 	public static final int INVALID = 3;
 	
 	//public static final String address = "http://10.0.2.2/koh/remote";
-	public static final String address = "http://eleonti.com/fitmaestro/remote";
+	public static final String address = "http://fitmaestro.com/remote";
 	
 	public JSONObject getServerData(JSONObject jsonIn) throws JSONException, ClientProtocolException, IOException {
 
@@ -134,7 +134,7 @@ public class ServerJson {
 		return NO_CONNECTION;
 	}
 	
-	public JSONObject getUpdates(String authKey, JSONObject sendFirstData){
+	public JSONObject getUpdates(String authKey, JSONObject sendFirstData, long fresh){
 		JSONObject jsonSend = new JSONObject();
 		JSONObject jsonAnswer = new JSONObject();
 
@@ -142,6 +142,7 @@ public class ServerJson {
 			jsonSend.put("what", "STARTUPDATE");
 			jsonSend.put("authkey", authKey);
 			jsonSend.put("data", sendFirstData);
+			jsonSend.put("fresh", fresh);
 			
 			jsonAnswer = getServerData(jsonSend);
 			String result = jsonAnswer.get("result").toString();

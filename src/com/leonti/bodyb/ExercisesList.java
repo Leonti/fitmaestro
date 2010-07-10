@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 
-public class Expandable2 extends ExpandableListActivity {
+public class ExercisesList extends ExpandableListActivity {
 	
     private static final int INSERT_GROUP_ID = Menu.FIRST;
     private static final int INSERT_EXERCISE_ID = Menu.FIRST + 1;
@@ -29,7 +29,6 @@ public class Expandable2 extends ExpandableListActivity {
 
     private static final int ACTIVITY_GROUP_CREATE=0;
     private static final int ACTIVITY_GROUP_EDIT=1;
-    private static final int ACTIVITY_EXERCISE_CREATE=2;
     private static final int ACTIVITY_EXERCISE_EDIT=3;
     
     private ExcercisesDbAdapter mDbHelper;

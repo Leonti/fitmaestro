@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	android:id="@+id/LinearLayoutELL_row" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:orientation="vertical" 
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    >
+		<TextView android:text="@string/value" android:id="@+id/meas_value_caption" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="" android:id="@+id/meas_value" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="" android:id="@+id/units_name" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
+	
+	<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    >
+		<TextView android:text="@string/time_row" android:id="@+id/log_entry_time_text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="" android:id="@+id/entry_time" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
+</LinearLayout>

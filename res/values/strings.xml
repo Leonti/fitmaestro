@@ -103,6 +103,19 @@
 <string name="synchronizing">Synchronizing...</string>
 <string name="stop">Stop</string>
 <string name="counter_title">Rest time</string>
+<string name="units">Units</string>
+<string name="add_measurement">Add measurement</string>
+<string name="measurement_edited">Measurement edited</string>
+<string name="edit_measurement">Edit Measurement</string>
+<string name="delete_measurement">Delete Measurement</string>
+<string name="measurements">Measurements</string>
+<string name="value">Value</string>
+<string name="edit_measurement_value">Edit Measurement Value</string>
+<string name="in_progress">In Progress</string>
+<string name="set_inprogress">Mark as \"In Progress\"</string>
+<string name="set_done">Mark as \"Done\"</string>
+<string name="exercising">Exercising</string>
+<string name="fitmaestro">Fitmaestro.com</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

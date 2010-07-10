@@ -15,15 +15,9 @@ public class ExcercisesList extends ListActivity {
     private static final int ACTIVITY_CREATE=0;
     private static final int ACTIVITY_EDIT=1;
     private static final int INSERT_ID = Menu.FIRST;
-    private static final int DELETE_ID = Menu.FIRST + 1;
-
-    /** The index of the title column */
-    private static final int COLUMN_INDEX_TITLE = 1;
     
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mExcercisesCursor;
-    
-    private static final String TAG = "ExcercisesList";
     
     /** Called when the activity is first created. */
     @Override
@@ -34,7 +28,6 @@ public class ExcercisesList extends ListActivity {
         mDbHelper = new ExcercisesDbAdapter(this);
         mDbHelper.open();
         fillData();
-  //      registerForContextMenu(getListView());
     }
     
     private void fillData() {

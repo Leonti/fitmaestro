@@ -1,9 +1,5 @@
 package com.leonti.bodyb;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.json.JSONException;
 
 import android.app.Activity;
 import android.os.AsyncTask;

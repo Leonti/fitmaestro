@@ -1,8 +1,5 @@
 package com.leonti.bodyb;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
@@ -11,13 +8,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
@@ -25,7 +20,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.TableRow.LayoutParams;
 
 public class SetView extends ListActivity {
@@ -113,7 +107,7 @@ public class SetView extends ListActivity {
     }
     
     private void addExercise() {
-        Intent i = new Intent(this, Expandable2.class);
+        Intent i = new Intent(this, ExercisesList.class);
         startActivityForResult(i, ACTIVITY_ADD);
     }
     

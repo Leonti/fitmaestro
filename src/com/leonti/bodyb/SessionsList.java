@@ -1,21 +1,16 @@
 package com.leonti.bodyb;
 
-import java.util.Calendar;
-
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -29,14 +24,11 @@ public class SessionsList extends ListActivity {
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
     private static final int EDIT_ID = Menu.FIRST + 2;
-
-    /** The index of the title column */
-    private static final int COLUMN_INDEX_TITLE = 1;
     
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mSessionsCursor;
+    private String mFilter;
     
-    private static final String TAG = "SessionsList";
 	
     /** Called when the activity is first created. */
     @Override
@@ -46,12 +38,29 @@ public class SessionsList extends ListActivity {
         
         mDbHelper = new ExcercisesDbAdapter(this);
         mDbHelper.open();
+
+        Bundle extras = getIntent().getExtras();
+        mFilter = savedInstanceState != null ? savedInstanceState.getString("filter") 
+                : null;        
+        if (mFilter == null && extras != null) {            
+        	mFilter = extras.getString("filter");
+        }
+        
         fillData();
         registerForContextMenu(getListView());
     }
     
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("filter", mFilter);
+    }
+    
     private void fillData() {
-        mSessionsCursor = mDbHelper.fetchAllSessions();
+    	
+
+		Log.i("SESSION FILTER:", mFilter);
+		mSessionsCursor = mDbHelper.fetchFilteredSessions(mFilter);   	
         startManagingCursor(mSessionsCursor);
         String[] from = new String[]{ExcercisesDbAdapter.KEY_TITLE};
         int[] to = new int[]{R.id.session_name};

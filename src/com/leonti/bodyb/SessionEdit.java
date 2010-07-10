@@ -69,20 +69,9 @@ public class SessionEdit extends Activity {
             
             mProgramsConnectorId = session.getLong(
                     session.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PROGRAMS_CONNECTORID));
-          //  fillExcercises();
         }
     }
-    /*
-    private void fillExcercises(){
-    	Cursor ExcercisesCursor = mDbHelper.fetchExcercisesForGroup(1); //for now
-        startManagingCursor(ExcercisesCursor);
-        String[] from = new String[]{ExcercisesDbAdapter.KEY_TITLE};
-        int[] to = new int[]{R.id.excercise_name};
-        SimpleCursorAdapter adapter = 
-        	    new SimpleCursorAdapter(this, R.layout.excercise_list_set_row, ExcercisesCursor, from, to);
-        ListView exList = (ListView) findViewById(R.id.ex_list);
-        exList.setAdapter(adapter);
-    } */
+
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {

@@ -25,7 +25,6 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -41,20 +40,17 @@ public class SessionRepsList extends ListActivity {
     private Dialog mEditRepsDialog;
     private Dialog mCounterDialog;
     private Long mSessionRepsId;
+    private Long mLastChronometerBase;
+    private Chronometer mCounter;
     
     ArrayList<HashMap<String, String>>  mSessionRepsList = new ArrayList<HashMap<String, String>>();  
-//    private SimpleAdapter mRepsAdapter;
     
-    private static final int ACTIVITY_CREATE=0;
     private static final int ACTIVITY_EDIT=1;
     
     private static final int DIALOG_EDIT_REPS = 2;
     private static final int DIALOG_CHRONOMETER = 3;
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
-    private static final int EDIT_ID = Menu.FIRST + 2;
-	    
-    private static final String TAG = "SessionRepsList";
 	
     /** Called when the activity is first created. */
     @Override
@@ -74,6 +70,32 @@ public class SessionRepsList extends ListActivity {
         mDbHelper.open();
         fillData(); 
         registerForContextMenu(getListView());
+        
+        // restoring chronometer counter
+        
+        mLastChronometerBase = savedInstanceState != null ? savedInstanceState.getLong("last_chronometer_base")
+                : null;
+        
+        /*
+        // we have saved state so restore counter
+        if(mLastChronometerBase != null){
+        	Log.i("CHRONOMETER VALUE RESTORED:", String.valueOf(mLastChronometerBase));	  
+        	mCounter = (Chronometer) mCounterDialog.findViewById(R.id.counter);
+        	startCounter(mLastChronometerBase);
+        }
+        */
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ExcercisesDbAdapter.KEY_ROWID, mSessionConnectorId);
+        
+        // saving chronometer state
+    	long currentChronometerBase = mCounter.getBase();
+        outState.putLong("last_chronometer_base", currentChronometerBase);
+        Log.i("CHRONOMETER VALUE:", String.valueOf(currentChronometerBase));
+        
     }
     
     private void fillData() {
@@ -120,32 +142,9 @@ public class SessionRepsList extends ListActivity {
     }
     
     private void createEntry() {
-    	/*
-        Intent i = new Intent(this, EditSessionRepsEntry.class);
-        i.putExtra("session_id", mSessionId);
-        i.putExtra("exercise_id", mExerciseId);
-        i.putExtra("set_detail_id", 0);    	
-        i.putExtra(ExcercisesDbAdapter.KEY_TYPE, mExType);
-        startActivityForResult(i, ACTIVITY_CREATE);
-        */
     	mListPosition = null;
     	showDialog(DIALOG_EDIT_REPS);
     	populateRepsDialog();
-    }
-    
-    private void editEntry(long position) {
-/*
-    	Intent i = new Intent(this, EditSessionRepsEntry.class);
-        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-        i.putExtra("set_detail_id", 0);
-        i.putExtra(ExcercisesDbAdapter.KEY_TYPE, mExType);
-        startActivityForResult(i, ACTIVITY_EDIT);
-        
-*/
-    	/*
-    	mListPosition = position;
-    	showDialog(DIALOG_EDIT_REPS);
-    	*/
     }
     
     @Override
@@ -181,7 +180,6 @@ public class SessionRepsList extends ListActivity {
             	menu.setHeaderTitle(reps + "x" + weight);
             }
 	        
-	        menu.add(0, EDIT_ID, 0, R.string.edit_session_reps_entry);
 	        menu.add(0, DELETE_ID, 1, R.string.delete_session_reps_entry);
         }
     }
@@ -193,56 +191,21 @@ public class SessionRepsList extends ListActivity {
         Long id = Long.valueOf(mSessionRepsList.get(info.position).get("id"));
     	switch(item.getItemId()) {
         case DELETE_ID:
+        	Log.i("DELETE SESSION REPS, ID: ", String.valueOf(id));
             mDbHelper.deleteSessionRepsEntry(id);
             fillData();
             return true;
-        
-        case EDIT_ID:
-        	//editEntry(info.position);
-        	mListPosition = Long.valueOf(info.position);
-        	showDialog(DIALOG_EDIT_REPS);
-        	populateRepsDialog();
-        	return true;
-        }
+    	}
 		return super.onContextItemSelected(item);
 	}
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
- /*
-        Intent i = new Intent(this, SetView.class);
-        i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-        startActivityForResult(i, 5);    
-        */
-        // SHOW ADDITIONAL INFO FOR THIS Reps ENTRY
-        
-        if(mSessionRepsList.get(position).get("id") == null){
-        	Log.i("ID: ", "Null!!!");
-        	Log.i("SESSION detail id: ", mSessionRepsList.get(position).get("session_detail_id"));
- 
-        	mListPosition = Long.valueOf(position);
-        	showDialog(DIALOG_EDIT_REPS);
-        	populateRepsDialog();
-        	/*
-            Intent i = new Intent(this, EditSessionRepsEntry.class);
-            i.putExtra("session_id", mSessionId);
-            i.putExtra("exercise_id", mExerciseId);
-            i.putExtra("set_detail_id", Long.valueOf(mSessionRepsList.get(position).get("set_detail_id")));
-            i.putExtra(ExcercisesDbAdapter.KEY_TYPE, mExType);
-            startActivityForResult(i, ACTIVITY_CREATE);
-            */
-        }else{
-        	Log.i("ID: ", mSessionRepsList.get(position).get("id"));
-        }
-        
-        /*
-        Intent i = new Intent(this, EditSessionRepsEntry.class);
-        i.putExtra("session_id", mSessionId);
-        i.putExtra("exercise_id", mExerciseId);
-        i.putExtra("set_detail_id", 0);
-        startActivityForResult(i, ACTIVITY_CREATE);
-        */
+       
+    	mListPosition = Long.valueOf(position);
+    	showDialog(DIALOG_EDIT_REPS);
+    	populateRepsDialog();
     }
     
     @Override
@@ -261,6 +224,7 @@ public class SessionRepsList extends ListActivity {
 	        	repsEditView.findViewById(R.id.text_weight).setVisibility(View.GONE);
 	       	 	weightText.setText("0");
 	       	 	weightText.setVisibility(View.GONE);
+	       	 	repsEditView.findViewById(R.id.text_x).setVisibility(View.GONE);
 	        }
 	        
 	        mEditRepsDialog = new AlertDialog.Builder(this)
@@ -307,7 +271,8 @@ public class SessionRepsList extends ListActivity {
 	                    
 	                    if(showCounter){
 		                    showDialog(DIALOG_CHRONOMETER);
-		                    startCounter();	
+		                    mCounter = (Chronometer) mCounterDialog.findViewById(R.id.counter);
+		                    startCounter(SystemClock.elapsedRealtime());	
 	                    }
 	                }
 	            })
@@ -337,6 +302,12 @@ public class SessionRepsList extends ListActivity {
 	                }
 	            })
 	            .create();
+		        
+		        if(mLastChronometerBase != null){
+		        	mCounter = counter;
+		        	startCounter(mLastChronometerBase);
+		        	mLastChronometerBase = null;
+		        }
 		        
 		        return mCounterDialog;
     	}
@@ -391,10 +362,9 @@ public class SessionRepsList extends ListActivity {
         }
     }
     
-    public void startCounter(){
-    	Chronometer counter = (Chronometer) mCounterDialog.findViewById(R.id.counter);
-    	counter.setBase(SystemClock.elapsedRealtime());
-    	counter.start();
+    public void startCounter(long base){
+    	mCounter.setBase(base);
+    	mCounter.start();
     }
     
     public class SpecialAdapter extends SimpleAdapter {

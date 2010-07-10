@@ -80,7 +80,7 @@ public class ByExerciseList extends ListActivity {
     }
     
     private void addExercise() {
-        Intent i = new Intent(this, Expandable2.class);
+        Intent i = new Intent(this, ExercisesList.class);
         startActivityForResult(i, ACTIVITY_SELECT_EX);
     }
     private void addLogEntry(Long ExerciseId) {

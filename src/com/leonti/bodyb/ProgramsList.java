@@ -4,7 +4,6 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +23,9 @@ public class ProgramsList extends ListActivity {
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
     private static final int EDIT_ID = Menu.FIRST + 2;
-
-    /** The index of the title column */
-    private static final int COLUMN_INDEX_TITLE = 1;
     
     private ExcercisesDbAdapter mDbHelper;
     private Cursor mProgramsCursor;
-    
-    private static final String TAG = "ProgramsList";
 	
     /** Called when the activity is first created. */
     @Override

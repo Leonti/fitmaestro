@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -35,6 +34,9 @@ public class Synchronization {
     public HashMap<String, String> setFields = new HashMap<String, String>();
     public HashMap<String, String> sets_connectorFields = new HashMap<String, String>();
     public HashMap<String, String> sets_detailFields = new HashMap<String, String>();
+    
+    public HashMap<String, String> measurement_typesFields = new HashMap<String, String>();
+    public HashMap<String, String> measurements_logFields = new HashMap<String, String>();
 	
 	public Synchronization(Context ctx){
 	
@@ -100,8 +102,13 @@ public class Synchronization {
     	sets_detailFields.put("reps", ExcercisesDbAdapter.KEY_REPS);
     	sets_detailFields.put("percentage", ExcercisesDbAdapter.KEY_PERCENTAGE);
  
-    
-    
+    	measurement_typesFields.put("title", ExcercisesDbAdapter.KEY_TITLE);
+    	measurement_typesFields.put("units", ExcercisesDbAdapter.KEY_UNITS);
+    	measurement_typesFields.put("desc", ExcercisesDbAdapter.KEY_DESC);
+
+    	measurements_logFields.put("value", ExcercisesDbAdapter.KEY_VALUE);
+    	measurements_logFields.put("measurement_type_id", ExcercisesDbAdapter.KEY_MEASUREMENT_TYPEID);
+    	measurements_logFields.put("date", ExcercisesDbAdapter.KEY_DATE);   
     	
     }
     
@@ -113,13 +120,24 @@ public class Synchronization {
     	 * 4. Site receives id's - repairs relations and gives back items with updated relations
     	 * 5. we perform updates from p.3 and give nothing back    
     	*/
-    	 String lastUpdated = mDbHelper.getLastUpdated();
+    	 String lastUpdated = String.valueOf(mDbHelper.getLastUpdated());
 		 Log.i("Last updated", lastUpdated);
     	 String authKey = mDbHelper.getAuthKey();
 		 ServerJson Js = new ServerJson();
 		 JSONObject jsonUpdateData = new JSONObject();
 		 JSONObject sendFirstData = prepareLocalUpdates(lastUpdated); 
-		 jsonUpdateData = Js.getUpdates(authKey, sendFirstData);
+
+		 // fresh means that data on the phone is clean - so we have to reset phone id's on the server
+		 // so update will go properly
+		 long fresh = 0;
+		 
+		 // we have empty string - phone has never been updated before
+		 if(lastUpdated.equals("null")){
+			 Log.i("FRESH INSTALL", "fresh");
+			 lastUpdated = "";
+			 fresh = 1;
+		 }
+		 jsonUpdateData = Js.getUpdates(authKey, sendFirstData, fresh);
 		 if(jsonUpdateData != null){
 			 
 			 JSONObject jsonRelationsData = new JSONObject();
@@ -189,6 +207,14 @@ public class Synchronization {
 		 JSONArray log = jsonUpdateData.getJSONArray("log");			 
 		 JSONArray logReturn = performItemsUpdate(ExcercisesDbAdapter.DATABASE_LOG_TABLE, log, logFields);
 		 backData.put("log", logReturn);
+		 
+		 JSONArray measurement_types = jsonUpdateData.getJSONArray("measurement_types");			 
+		 JSONArray measurement_typesReturn = performItemsUpdate(ExcercisesDbAdapter.DATABASE_MEASUREMENT_TYPES_TABLE, measurement_types, measurement_typesFields);
+		 backData.put("measurement_types", measurement_typesReturn);
+		 
+		 JSONArray measurements_log = jsonUpdateData.getJSONArray("measurements_log");			 
+		 JSONArray measurements_logReturn = performItemsUpdate(ExcercisesDbAdapter.DATABASE_MEASUREMENTS_LOG_TABLE, measurements_log, measurements_logFields);
+		 backData.put("measurements_log", measurements_logReturn);
 		 
 		
 		 return backData;
@@ -262,6 +288,8 @@ public class Synchronization {
 			dataToSend.put("sessions_connector", prepareItems(ExcercisesDbAdapter.DATABASE_SESSIONS_CONNECTOR_TABLE, sessions_connectorFields, updated));
 			dataToSend.put("sessions_detail", prepareItems(ExcercisesDbAdapter.DATABASE_SESSIONS_DETAIL_TABLE, sessions_detailFields, updated));
 			dataToSend.put("log", prepareItems(ExcercisesDbAdapter.DATABASE_LOG_TABLE, logFields, updated));
+			dataToSend.put("measurement_types", prepareItems(ExcercisesDbAdapter.DATABASE_MEASUREMENT_TYPES_TABLE, measurement_typesFields, updated));
+			dataToSend.put("measurements_log", prepareItems(ExcercisesDbAdapter.DATABASE_MEASUREMENTS_LOG_TABLE, measurements_logFields, updated));
 			
             
 			dataToSend.put("localtime", mDbHelper.getLocalTime());

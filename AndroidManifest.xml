@@ -12,32 +12,33 @@
             </intent-filter>
         </activity>
 
-    <activity android:label="@string/app_name" android:name=".Group"></activity>
-    <activity android:label="@string/app_name" android:name=".GroupEdit"></activity>
-    <activity android:label="@string/app_name" android:name=".ExcercisesList"></activity>
-    <activity android:label="@string/app_name" android:name=".ExcerciseEdit"></activity>
-    <activity android:label="@string/app_name" android:name=".SetsList"></activity>
-    <activity android:label="@string/app_name" android:name=".SetEdit"></activity>
-        <activity android:label="@string/app_name" android:name=".Expandable"></activity>
-        <activity android:label="@string/app_name" android:name=".Expandable2"></activity>
- <activity android:label="@string/app_name" android:name=".SetView"></activity>
-  <activity android:label="@string/app_name" android:name=".LogEntries"></activity>
-    <activity android:label="@string/app_name" android:name=".AddLogEntry"></activity>
-    <activity android:label="@string/app_name" android:name=".LogChooser"></activity>
-    <activity android:label="@string/app_name" android:name=".ByExerciseList"></activity>
-    <activity android:label="@string/app_name" android:name=".Register"></activity>
-     <activity android:label="@string/app_name" android:name=".Login"></activity>
-     <activity android:label="@string/app_name" android:name=".SynchronizationView"></activity>
-          <activity android:label="@string/app_name" android:name=".RepsList"></activity>
-                    <activity android:label="@string/app_name" android:name=".EditRepsEntry"></activity>
-     <activity android:label="@string/app_name" android:name=".ProgramsList"></activity>
-          <activity android:label="@string/app_name" android:name=".ProgramEdit"></activity>
-          <activity android:label="@string/app_name" android:name=".ProgramView"></activity>   
-    <activity android:label="@string/app_name" android:name=".SessionsList"></activity>
-    <activity android:label="@string/app_name" android:name=".SessionEdit"></activity> 
-        <activity android:label="@string/app_name" android:name=".SessionView"></activity>
-        <activity android:label="@string/app_name" android:name=".SessionRepsList"></activity>
-                <activity android:label="@string/app_name" android:name=".EditSessionRepsEntry"></activity>
+	<activity android:label="@string/app_name" android:name=".Group"></activity>
+	<activity android:label="@string/app_name" android:name=".GroupEdit"></activity>
+	<activity android:label="@string/app_name" android:name=".ExcercisesList"></activity>
+	<activity android:label="@string/app_name" android:name=".ExcerciseEdit"></activity>
+	<activity android:label="@string/app_name" android:name=".SetsList"></activity>
+	<activity android:label="@string/app_name" android:name=".SetEdit"></activity>
+	<activity android:label="@string/app_name" android:name=".ExercisesList"></activity>
+	<activity android:label="@string/app_name" android:name=".SetView"></activity>
+	<activity android:label="@string/app_name" android:name=".LogEntries"></activity>
+	<activity android:label="@string/app_name" android:name=".AddLogEntry"></activity>
+	<activity android:label="@string/app_name" android:name=".LogChooser"></activity>
+	<activity android:label="@string/app_name" android:name=".ByExerciseList"></activity>
+	<activity android:label="@string/app_name" android:name=".Register"></activity>
+	<activity android:label="@string/app_name" android:name=".Login"></activity>
+	<activity android:label="@string/app_name" android:name=".SynchronizationView"></activity>
+	<activity android:label="@string/app_name" android:name=".RepsList"></activity>
+	<activity android:label="@string/app_name" android:name=".ProgramsList"></activity>
+	<activity android:label="@string/app_name" android:name=".ProgramEdit"></activity>
+	<activity android:label="@string/app_name" android:name=".ProgramView"></activity>   
+	<activity android:label="@string/app_name" android:name=".SessionsList"></activity>
+	<activity android:label="@string/app_name" android:name=".SessionEdit"></activity> 
+	<activity android:label="@string/app_name" android:name=".SessionView"></activity>
+	<activity android:label="@string/app_name" android:name=".SessionRepsList"></activity>
+	<activity android:label="@string/app_name" android:name=".MeasurementsList"></activity>
+	<activity android:label="@string/app_name" android:name=".MeasurementEdit"></activity>
+	<activity android:label="@string/app_name" android:name=".MeasLogEntries"></activity>
+	<activity android:label="@string/app_name" android:name=".SessionTabs"></activity>
            
 </application>
     <uses-sdk android:minSdkVersion="3" />

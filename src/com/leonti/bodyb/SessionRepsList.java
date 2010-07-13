@@ -41,7 +41,7 @@ public class SessionRepsList extends ListActivity {
     private Dialog mCounterDialog;
     private Long mSessionRepsId;
     private Long mLastChronometerBase;
-    private Chronometer mCounter;
+    private Chronometer mCounter = null;
     
     ArrayList<HashMap<String, String>>  mSessionRepsList = new ArrayList<HashMap<String, String>>();  
     
@@ -92,9 +92,11 @@ public class SessionRepsList extends ListActivity {
         outState.putLong(ExcercisesDbAdapter.KEY_ROWID, mSessionConnectorId);
         
         // saving chronometer state
-    	long currentChronometerBase = mCounter.getBase();
-        outState.putLong("last_chronometer_base", currentChronometerBase);
-        Log.i("CHRONOMETER VALUE:", String.valueOf(currentChronometerBase));
+        if(mCounter != null){
+        	long currentChronometerBase = mCounter.getBase();
+        	outState.putLong("last_chronometer_base", currentChronometerBase);
+        	Log.i("CHRONOMETER VALUE:", String.valueOf(currentChronometerBase));
+        }
         
     }
     

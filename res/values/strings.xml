@@ -116,6 +116,7 @@
 <string name="set_done">Mark as \"Done\"</string>
 <string name="exercising">Exercising</string>
 <string name="fitmaestro">Fitmaestro.com</string>
+<string name="fetching">Please wait, fetching...</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

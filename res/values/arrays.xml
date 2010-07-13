@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="exercising_tab">
+		<item>Exercises</item>
+		<item>Sets</item>
+		<item>Programs</item>
+		<item>Sessions</item>
+		<item>Measurements</item>
+	</string-array>
+	<string-array name="fitmaestro_tab">
+		<item>Account</item>
+		<item>Synchronization</item>
+		<item>Imports</item>
+	</string-array>
+	<string-array name="imports">
+		<item>Import Exercises</item>
+		<item>Import Programs</item>
+	</string-array>
+	<string-array name="account">
+		<item>Login</item>
+		<item>Register</item>
+	</string-array>	
+</resources>

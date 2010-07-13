@@ -12,13 +12,10 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    >
-	
-		<Button android:text="@string/exercises" android:id="@+id/button_exercises" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/sets" android:id="@+id/button_sets" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/programs" android:id="@+id/button_programs" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/sessions" android:id="@+id/button_sessions" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/measurements" android:id="@+id/button_measurements" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-	
+	<ListView android:id="@+id/ListView_exercising" android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:entries="@array/exercising_tab"
+		></ListView>	
 	</LinearLayout>
 	
 	<LinearLayout
@@ -27,13 +24,11 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    >
-	
-		<Button android:text="@string/register" android:id="@+id/button_register" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/login" android:id="@+id/button_login" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/synchronize" android:id="@+id/button_synchronize" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/download_programs" android:id="@+id/button_download_programs" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		<Button android:text="@string/download_excercises" android:id="@+id/button_download_excercises" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 
+	<ListView android:id="@+id/ListView_fitmaestro" android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:entries="@array/fitmaestro_tab"
+		></ListView>
 </LinearLayout>
 
 </FrameLayout>

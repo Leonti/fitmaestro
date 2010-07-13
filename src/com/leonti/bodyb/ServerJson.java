@@ -23,8 +23,8 @@ public class ServerJson {
 	public static final int ALREADY_EXISTS = 2;
 	public static final int INVALID = 3;
 	
-	//public static final String address = "http://10.0.2.2/koh/remote";
-	public static final String address = "http://fitmaestro.com/remote";
+	public static final String address = "http://10.0.2.2/koh/remote";
+	//public static final String address = "http://fitmaestro.com/remote";
 	
 	public JSONObject getServerData(JSONObject jsonIn) throws JSONException, ClientProtocolException, IOException {
 
@@ -181,6 +181,30 @@ public class ServerJson {
 			if(result.equals("FINISHUPDATED")){
 				return jsonAnswer.getJSONObject("data");	
 			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		return null;
+	}
+	
+	public JSONObject getPublicExercises(String authKey){
+		JSONObject jsonSend = new JSONObject();
+
+		try {
+			jsonSend.put("what", "PUBLICEXERCISES");
+			jsonSend.put("authkey", authKey);
+			
+			return getServerData(jsonSend);
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -218,6 +219,31 @@ public class ServerJson {
 		}
 
 		
+		return null;
+	}
+
+	public JSONObject importExercises(String authKey, JSONArray toImport) {
+
+		JSONObject jsonSend = new JSONObject();
+		
+		try {
+			jsonSend.put("what", "IMPORTEXERCISES");
+			jsonSend.put("authkey", authKey);
+			jsonSend.put("data", toImport);
+			return getServerData(jsonSend);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
 		return null;
 	}
 }

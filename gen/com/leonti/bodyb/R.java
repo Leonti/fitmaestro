@@ -237,6 +237,7 @@ public final class R {
         public static final int exercise_removed_from_session=0x7f050052;
         public static final int exercise_removed_from_set=0x7f05002d;
         public static final int exercises=0x7f050005;
+        public static final int exercises_imported=0x7f050077;
         public static final int exercising=0x7f050072;
         public static final int fetching=0x7f050074;
         public static final int fitmaestro=0x7f050073;
@@ -244,6 +245,8 @@ public final class R {
         public static final int group=0x7f050014;
         public static final int group_deleted=0x7f050025;
         public static final int group_edited=0x7f050027;
+        public static final int import_exercises=0x7f050075;
+        public static final int importing_exercises=0x7f050076;
         public static final int in_progress=0x7f05006f;
         public static final int invalid_credentials=0x7f050043;
         public static final int kg=0x7f050035;

@@ -117,6 +117,9 @@
 <string name="exercising">Exercising</string>
 <string name="fitmaestro">Fitmaestro.com</string>
 <string name="fetching">Please wait, fetching...</string>
+<string name="import_exercises">Import exercises</string>
+<string name="importing_exercises">Importing exercises</string>
+<string name="exercises_imported">Exercises imported</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

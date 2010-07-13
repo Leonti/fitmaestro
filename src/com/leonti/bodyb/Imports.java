@@ -33,4 +33,10 @@ public class Imports {
 		return jsonExercises;
 	}
 
+	public JSONObject importExercises(JSONArray toImport) {
+		String authKey = mDbHelper.getAuthKey();
+		ServerJson Js = new ServerJson();
+		return Js.importExercises(authKey, toImport);
+	}
+
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.leonti.bodyb"
+      package="com.leonti.fitmaestro"
       android:versionCode="1"
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".BodyB"
+        <activity android:name=".FitMaestro"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -12,10 +12,9 @@
             </intent-filter>
         </activity>
 
-	<activity android:label="@string/app_name" android:name=".Group"></activity>
+
 	<activity android:label="@string/app_name" android:name=".GroupEdit"></activity>
-	<activity android:label="@string/app_name" android:name=".ExcercisesList"></activity>
-	<activity android:label="@string/app_name" android:name=".ExcerciseEdit"></activity>
+	<activity android:label="@string/app_name" android:name=".ExerciseEdit"></activity>
 	<activity android:label="@string/app_name" android:name=".SetsList"></activity>
 	<activity android:label="@string/app_name" android:name=".SetEdit"></activity>
 	<activity android:label="@string/app_name" android:name=".ExercisesList"></activity>

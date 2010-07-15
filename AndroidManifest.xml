@@ -41,7 +41,8 @@
 	<activity android:label="@string/app_name" android:name=".SessionTabs"></activity>
 	<activity android:label="@string/app_name" android:name=".Account"></activity>
 	<activity android:label="@string/app_name" android:name=".Downloads"></activity> 
-	<activity android:label="@string/app_name" android:name=".ImportExercises"></activity>             
+	<activity android:label="@string/app_name" android:name=".ImportExercises"></activity>      
+	<activity android:label="@string/app_name" android:name=".ImportPrograms"></activity>        
 </application>
     <uses-sdk android:minSdkVersion="3" />
 

@@ -32,8 +32,8 @@ public class Downloads extends Activity {
 	                startActivity(i);
 	                break;
 				case PROGRAMS_POS:
-					//Intent i1 = new Intent(Downloads.this, ImportPrograms.class);
-	                //startActivity(i1); 
+					Intent i1 = new Intent(Downloads.this, ImportPrograms.class);
+	                startActivity(i1); 
 	                break;
 				}
 			}

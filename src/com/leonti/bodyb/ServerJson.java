@@ -221,6 +221,30 @@ public class ServerJson {
 		
 		return null;
 	}
+	
+	public JSONObject getPublicPrograms(String authKey){
+		JSONObject jsonSend = new JSONObject();
+
+		try {
+			jsonSend.put("what", "PUBLICPROGRAMS");
+			jsonSend.put("authkey", authKey);
+			
+			return getServerData(jsonSend);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		return null;
+	}
 
 	public JSONObject importExercises(String authKey, JSONArray toImport) {
 
@@ -246,4 +270,30 @@ public class ServerJson {
 
 		return null;
 	}
+	
+	public JSONObject importPrograms(String authKey, JSONArray toImport) {
+
+		JSONObject jsonSend = new JSONObject();
+		
+		try {
+			jsonSend.put("what", "IMPORTPROGRAMS");
+			jsonSend.put("authkey", authKey);
+			jsonSend.put("data", toImport);
+			return getServerData(jsonSend);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		return null;
+	}
+	
 }

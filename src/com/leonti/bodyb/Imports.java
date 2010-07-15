@@ -32,11 +32,24 @@ public class Imports {
 		
 		return jsonExercises;
 	}
+	
+	public JSONArray getPublicPrograms() throws JSONException{
+		
+		String authKey = mDbHelper.getAuthKey();
+		ServerJson Js = new ServerJson();
+		return  Js.getPublicPrograms(authKey).getJSONArray("data");
+	}
 
 	public JSONObject importExercises(JSONArray toImport) {
 		String authKey = mDbHelper.getAuthKey();
 		ServerJson Js = new ServerJson();
 		return Js.importExercises(authKey, toImport);
+	}
+	
+	public JSONObject importPrograms(JSONArray toImport) {
+		String authKey = mDbHelper.getAuthKey();
+		ServerJson Js = new ServerJson();
+		return Js.importPrograms(authKey, toImport);
 	}
 
 }

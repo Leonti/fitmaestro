@@ -34,8 +34,8 @@ public class SessionView extends ListActivity {
     
     private static final int ADD_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
-    private static final int DONE_ID = Menu.FIRST + 1;
-    private static final int INPROGRESS_ID = Menu.FIRST + 2;
+    private static final int DONE_ID = Menu.FIRST + 2;
+    private static final int INPROGRESS_ID = Menu.FIRST + 3;
     
     private static final int ACTIVITY_ADD = 0;
 
@@ -125,6 +125,7 @@ public class SessionView extends ListActivity {
     	finish();
     }
     private void markDone() {
+    	Log.i("Updating", "Updatingg");
     	mDbHelper.updateSessionStatus(mRowId, "DONE");
     	finish();
     }
@@ -134,8 +135,8 @@ public class SessionView extends ListActivity {
     		ContextMenuInfo menuInfo) {
     	AdapterView.AdapterContextMenuInfo info;
 
-        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        String title = ((TextView) info.targetView).getText().toString();
+       // info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        String title = "Dyg";
         menu.setHeaderTitle(title);        
         menu.add(0, DELETE_ID, 0, R.string.remove_from_session); 
     }

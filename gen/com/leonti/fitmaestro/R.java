@@ -242,8 +242,9 @@ public final class R {
         public static final int group_deleted=0x7f050025;
         public static final int group_edited=0x7f050027;
         public static final int import_exercises=0x7f050075;
+        public static final int import_programs=0x7f050078;
         public static final int importing_exercises=0x7f050076;
-        public static final int importing_programs=0x7f050078;
+        public static final int importing_programs=0x7f050079;
         public static final int in_progress=0x7f05006f;
         public static final int invalid_credentials=0x7f050043;
         public static final int kg=0x7f050035;
@@ -264,7 +265,7 @@ public final class R {
         public static final int plan_added=0x7f05004e;
         public static final int program_edited=0x7f05004c;
         public static final int programs=0x7f050004;
-        public static final int programs_imported=0x7f050079;
+        public static final int programs_imported=0x7f05007a;
         public static final int register=0x7f05003b;
         public static final int remove_from_session=0x7f050051;
         public static final int remove_from_set=0x7f05002c;

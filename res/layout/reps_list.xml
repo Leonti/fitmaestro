@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/LinearLayoutSL"
-	android:orientation="vertical" 
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent" 
-	xmlns:android="http://schemas.android.com/apk/res/android">
-<ListView android:id="@+id/android:list" android:layout_width="fill_parent" android:layout_height="wrap_content"></ListView>
-  	<TextView android:id="@+id/android:empty"
-          android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="No Reps!"/>
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+	<TableLayout android:id="@+id/reps_table"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<TableRow android:background="#00ff00" android:layout_margin="2dip">
+			<TextView android:text="reps" android:background="#0000ff"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:layout_margin="2dip"
+				android:layout_weight="1.0" android:gravity="center" />
+			<TextView android:text="x" android:id="@+id/x_col"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:background="#0000ff"
+				android:layout_margin="2dip" android:gravity="center" />
+			<TextView android:text="percentage" android:id="@+id/percentage_col"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:background="#0000ff"
+				android:layout_margin="2dip" android:layout_weight="1.0"
+				android:gravity="center" />
+		</TableRow>
+
+	</TableLayout>
+	<ListView android:id="@+id/android:list" android:layout_width="fill_parent"
+		android:layout_height="wrap_content"></ListView>
+	<TextView android:id="@+id/android:empty"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:text="No Reps!" />
 </LinearLayout>

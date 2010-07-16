@@ -15,41 +15,40 @@ import android.widget.Toast;
 
 public class SynchronizationView extends Activity {
 
-    private ExcercisesDbAdapter mDbHelper;
-    private TextView mMessageText; 
-    private int mResult;
-    
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	private ExcercisesDbAdapter mDbHelper;
+	private TextView mMessageText;
+	private int mResult;
 
-        
-        setContentView(R.layout.synchronization);
-       
-        mDbHelper = new ExcercisesDbAdapter(this);
-        mDbHelper.open();
-        
-        // for now
-        mMessageText = (TextView) findViewById(R.id.TextMessage);
-        
-        // check if user is authenticated, if not - go to login screen
-        if(mDbHelper.getAuthKey().equals("")){
-            Intent i = new Intent(this, Login.class);
-            startActivity(i);
-        }else{
-            new PerformSync().execute();	
-        }
-       
-     }
-    
-    private class PerformSync extends AsyncTask<Void, Integer, Long> {
-    	
-    	private ProgressDialog mProgress = new ProgressDialog(SynchronizationView.this);
-    	
-    	
-        protected Long doInBackground(Void... arg0) {
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        	Synchronization sync = new Synchronization(SynchronizationView.this);
+		setContentView(R.layout.synchronization);
+
+		mDbHelper = new ExcercisesDbAdapter(this);
+		mDbHelper.open();
+
+		// for now
+		mMessageText = (TextView) findViewById(R.id.TextMessage);
+
+		// check if user is authenticated, if not - go to login screen
+		if (mDbHelper.getAuthKey().equals("")) {
+			Intent i = new Intent(this, Login.class);
+			startActivity(i);
+		} else {
+			new PerformSync().execute();
+		}
+
+	}
+
+	private class PerformSync extends AsyncTask<Void, Integer, Long> {
+
+		private ProgressDialog mProgress = new ProgressDialog(
+				SynchronizationView.this);
+
+		protected Long doInBackground(Void... arg0) {
+
+			Synchronization sync = new Synchronization(SynchronizationView.this);
 			try {
 				mResult = sync.startSynchronization();
 			} catch (JSONException e) {
@@ -57,47 +56,48 @@ public class SynchronizationView extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-            return Long.valueOf(1);
-        }
-        
-        protected void onPreExecute(){
 
-        	mProgress.setMessage(getString(R.string.synchronizing));  
-        	mProgress.show();  
+			return Long.valueOf(1);
+		}
 
-        	onStartSync();        	
-        }
+		protected void onPreExecute() {
 
-        protected void onProgressUpdate(Integer... progress) {
-        	Log.i("PROGRESS: ", String.valueOf(progress[0]));
-           // setProgressPercent(progress[0]);
-        }
+			mProgress.setMessage(getString(R.string.synchronizing));
+			mProgress.show();
 
-        protected void onPostExecute(Long result) {
-        	mProgress.dismiss();
-        	onEndSync(result);
-        	if(mResult == ServerJson.NO_CONNECTION){
-        		Toast.makeText(SynchronizationView.this, R.string.no_connection, Toast.LENGTH_LONG).show(); 
-        	}
-           // showDialog("Downloaded " + result + " bytes");
-        }
+			onStartSync();
+		}
 
-    }
-    
-    private void onStartSync(){
-    	Log.i("PREEXECUTE: ", "PREEXECUTE");
- //   	mMessageText.setText("Sychronization started. Please wait...(Nice wait animation is going on :)");
-    }
-    
-    private void onEndSync(Long result){
-    	Log.i("SYNCRONIZATION DONE: ", String.valueOf(result));
-    	if(mResult == ServerJson.SUCCESS){
-        	mMessageText.setText(R.string.synchronization_finished);    		
-    	}else{
-    		mMessageText.setText(R.string.synchronization_failed);
-    	}
+		protected void onProgressUpdate(Integer... progress) {
+			Log.i("PROGRESS: ", String.valueOf(progress[0]));
+			// setProgressPercent(progress[0]);
+		}
 
-    }
+		protected void onPostExecute(Long result) {
+			mProgress.dismiss();
+			onEndSync(result);
+			if (mResult == ServerJson.NO_CONNECTION) {
+				Toast.makeText(SynchronizationView.this,
+						R.string.no_connection, Toast.LENGTH_LONG).show();
+			}
+			// showDialog("Downloaded " + result + " bytes");
+		}
+
+	}
+
+	private void onStartSync() {
+		Log.i("PREEXECUTE: ", "PREEXECUTE");
+		// mMessageText.setText("Sychronization started. Please wait...(Nice wait animation is going on :)");
+	}
+
+	private void onEndSync(Long result) {
+		Log.i("SYNCRONIZATION DONE: ", String.valueOf(result));
+		if (mResult == ServerJson.SUCCESS) {
+			mMessageText.setText(R.string.synchronization_finished);
+		} else {
+			mMessageText.setText(R.string.synchronization_failed);
+		}
+
+	}
 
 }

@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/LinearLayout01" 
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent" 
-	android:orientation="vertical" 
-	xmlns:android="http://schemas.android.com/apk/res/android">
-	
-		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:id="@+id/exercise_name"
-		    android:layout_width="fill_parent"
-		    android:layout_height="?android:attr/listPreferredItemHeight"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:gravity="center_vertical"
-		    android:paddingLeft="5dip"
-		    android:singleLine="true"
-		/>
-<TableLayout android:id="@+id/reps_table" android:layout_width="wrap_content" android:layout_height="wrap_content">
-         <TableRow android:background="#00ff00" android:layout_margin="2dip">
-              <TextView android:text="pl. reps"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="x" android:id="@+id/x_col" android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="pl. weight" android:id="@+id/planned_weight_col" android:background="#0000ff" android:layout_margin="2dip" />
-              
-              <TextView android:text="reps"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="x" android:id="@+id/x_done_col" android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="weight" android:id="@+id/weight_col" android:background="#0000ff" android:layout_margin="2dip" />
-    	</TableRow>
-</TableLayout>
+<LinearLayout android:id="@+id/LinearLayout01"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/exercise_name" android:layout_width="fill_parent"
+		android:layout_height="?android:attr/listPreferredItemHeight"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:gravity="center_vertical" android:paddingLeft="5dip"
+		android:singleLine="true" />
+	<TableLayout android:id="@+id/reps_table"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<TableRow android:background="#00ff00" android:layout_margin="2dip">
+			<TextView android:text="pl. reps" android:background="#0000ff"
+				android:layout_margin="2dip" android:layout_weight="1.0"
+				android:gravity="center" />
+			<TextView android:text="x" android:id="@+id/x_col"
+				android:background="#0000ff" android:layout_margin="2dip"
+				android:gravity="center" android:paddingLeft="3dip"
+				android:paddingRight="3dip" />
+			<TextView android:text="pl. weight" android:id="@+id/planned_weight_col"
+				android:background="#0000ff" android:layout_margin="2dip"
+				android:layout_weight="1.0" android:gravity="center" />
+
+			<TextView android:text="reps" android:background="#0000ff"
+				android:layout_margin="2dip" android:layout_weight="1.0"
+				android:gravity="center" />
+			<TextView android:text="x" android:id="@+id/x_done_col"
+				android:background="#0000ff" android:layout_margin="2dip"
+				android:gravity="center" android:paddingLeft="3dip"
+				android:paddingRight="3dip" />
+			<TextView android:text="weight" android:id="@+id/weight_col"
+				android:background="#0000ff" android:layout_margin="2dip"
+				android:layout_weight="1.0" android:gravity="center" />
+		</TableRow>
+	</TableLayout>
 
 
 </LinearLayout>

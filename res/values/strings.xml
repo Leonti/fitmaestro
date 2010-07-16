@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">BodyB</string><string name="start_program">Start Program</string>
+<string name="app_name">FitMaestro</string>
+<string name="start_program">Start Program</string>
 <string name="sessions">Sessions</string>
 <string name="sets">Sets</string>
 <string name="programs">Programs</string>
@@ -120,6 +121,7 @@
 <string name="import_exercises">Import exercises</string>
 <string name="importing_exercises">Importing exercises</string>
 <string name="exercises_imported">Exercises imported</string>
+<string name="import_programs">Import programs</string>
 <string name="importing_programs">Importing programs</string>
 <string name="programs_imported">Programs imported</string>
 

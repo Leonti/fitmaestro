@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/program_table"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:stretchColumns="0,1,2,3,4,5,6" 
-    android:background="#000000">
+	android:id="@+id/program_table" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+	android:background="#000000">
 
-         
-         <TableRow android:background="#00ff00" android:layout_margin="2dip">
-              <TextView android:text="@string/mon"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="@string/tue"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="@string/wed"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="@string/thu"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="@string/fri"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="@string/sat"  android:background="#0000ff" android:layout_margin="2dip" />
-              <TextView android:text="@string/sun"  android:background="#0000ff" android:layout_margin="2dip" />
-    	</TableRow>
+
+	<TableRow android:background="#00ff00" android:layout_margin="2dip">
+		<TextView android:text="@string/mon" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+		<TextView android:text="@string/tue" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+		<TextView android:text="@string/wed" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+		<TextView android:text="@string/thu" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+		<TextView android:text="@string/fri" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+		<TextView android:text="@string/sat" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+		<TextView android:text="@string/sun" android:background="#0000ff"
+			android:layout_margin="2dip" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:gravity="center" android:layout_weight="1.0"/>
+	</TableRow>
 
 </TableLayout>

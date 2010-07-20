@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -242,48 +243,63 @@ public class SessionView extends ListActivity {
 				tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 						LayoutParams.WRAP_CONTENT));
 
+				
+				LayoutParams plannedRepsTxtLP = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				plannedRepsTxtLP.gravity = Gravity.CENTER;	
+				LayoutParams xTxtLP = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				xTxtLP.gravity = Gravity.CENTER;
+				LayoutParams plannedWeightTxtLP = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				plannedWeightTxtLP.gravity = Gravity.CENTER;
+
+				LayoutParams repsTxtLP = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				repsTxtLP.gravity = Gravity.CENTER;		
+				LayoutParams xTxt2LP = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				xTxt2LP.gravity = Gravity.CENTER;
+				LayoutParams weightTxtLP = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				weightTxtLP.gravity = Gravity.CENTER;
+
 				// planned reps
 				String plannedReps = sessionRepsList.get(i).get("planned_reps");
 				TextView plannedRepsTxt = new TextView(SessionView.this);
 				plannedRepsTxt.setText(plannedReps);
-				plannedRepsTxt.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(plannedRepsTxt);
+				plannedRepsTxt.setGravity(Gravity.CENTER);
+				tr.addView(plannedRepsTxt, plannedRepsTxtLP);
 
 				TextView xTxt = new TextView(SessionView.this);
 				xTxt.setText("x");
-				xTxt.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-						LayoutParams.WRAP_CONTENT));
-				tr.addView(xTxt);
+				xTxt.setGravity(Gravity.CENTER);
+				tr.addView(xTxt, xTxtLP);
 
 				String plannedWeight = sessionRepsList.get(i).get(
 						"planned_weight");
 				TextView plannedWeightTxt = new TextView(SessionView.this);
 				plannedWeightTxt.setText(plannedWeight);
-				plannedWeightTxt.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(plannedWeightTxt);
+				plannedWeightTxt.setGravity(Gravity.CENTER);
+				tr.addView(plannedWeightTxt, plannedWeightTxtLP);
 
 				// done reps
 				String reps = sessionRepsList.get(i).get("reps");
 				TextView repsTxt = new TextView(SessionView.this);
 				repsTxt.setText(reps);
-				repsTxt.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(repsTxt);
+				repsTxt.setGravity(Gravity.CENTER);
+				tr.addView(repsTxt, repsTxtLP);
 
 				TextView xTxt2 = new TextView(SessionView.this);
 				xTxt2.setText("x");
-				xTxt2.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(xTxt2);
+				xTxt2.setGravity(Gravity.CENTER);
+				tr.addView(xTxt2, xTxt2LP);
 
 				String weight = sessionRepsList.get(i).get("weight");
 				TextView weightTxt = new TextView(SessionView.this);
 				weightTxt.setText(weight);
-				weightTxt.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(weightTxt);
+				weightTxt.setGravity(Gravity.CENTER);
+				tr.addView(weightTxt, weightTxtLP);
 
 				// Add row to TableLayout.
 

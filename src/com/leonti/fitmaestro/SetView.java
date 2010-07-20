@@ -1,15 +1,15 @@
 package com.leonti.fitmaestro;
 
-import com.leonti.fitmaestro.R;
-
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -212,6 +212,8 @@ public class SetView extends ListActivity {
 			mActivity = activity;
 
 		}
+		
+		
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
@@ -257,31 +259,37 @@ public class SetView extends ListActivity {
 
 				// Create a new row to be added.
 				TableRow tr = new TableRow(SetView.this);
-				tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-						LayoutParams.WRAP_CONTENT));
-
+				LayoutParams trLayoutParams = new LayoutParams(LayoutParams.FILL_PARENT,
+						LayoutParams.WRAP_CONTENT, 1);
+				
+				LayoutParams valueLayoutParamsReps = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				valueLayoutParamsReps.gravity = Gravity.CENTER;				
+				LayoutParams valueLayoutParamsPercentage = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				valueLayoutParamsPercentage.gravity = Gravity.CENTER;
+				
 				TextView repsTxt = new TextView(SetView.this);
 				repsTxt.setText(reps);
-				repsTxt.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(repsTxt);
+				repsTxt.setGravity(Gravity.CENTER);
+				tr.addView(repsTxt, valueLayoutParamsReps);
 
+				LayoutParams xLayoutParams = new LayoutParams(
+						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				xLayoutParams.gravity = Gravity.CENTER;
 				TextView xTxt = new TextView(SetView.this);
-				xTxt.setText("x");
-				xTxt.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-						LayoutParams.WRAP_CONTENT));
+				xTxt.setText("x");				
+				xTxt.setLayoutParams(xLayoutParams);
 				tr.addView(xTxt);
 
 				TextView percentageTxt = new TextView(SetView.this);
 				percentageTxt.setText(percentage);
-				percentageTxt.setLayoutParams(new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				tr.addView(percentageTxt);
+				percentageTxt.setGravity(Gravity.CENTER);
+				tr.addView(percentageTxt, valueLayoutParamsPercentage);
 
 				// Add row to TableLayout.
 
-				repsTable.addView(tr, new TableLayout.LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+				repsTable.addView(tr, trLayoutParams);
 
 				// if 0 - own weight - don't show percentage values
 				if (exType == Long.valueOf(0)) {

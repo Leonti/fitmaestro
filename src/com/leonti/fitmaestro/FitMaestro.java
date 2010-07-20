@@ -4,6 +4,7 @@ import com.leonti.fitmaestro.R;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,14 +35,15 @@ public class FitMaestro extends TabActivity {
 		TabHost tabHost = getTabHost();
 		LayoutInflater.from(this).inflate(R.layout.main,
 				tabHost.getTabContentView(), true);
+		Resources res = getResources(); // Resource object to get Drawables
 
 		tabHost
 				.addTab(tabHost.newTabSpec("tab1").setIndicator(
-						getString(R.string.exercising)).setContent(
+						getString(R.string.exercising), res.getDrawable(R.drawable.tab_exercising)).setContent(
 						R.id.tab_exercising));
 		tabHost
 				.addTab(tabHost.newTabSpec("tab2").setIndicator(
-						getString(R.string.fitmaestro)).setContent(
+						getString(R.string.fitmaestro), res.getDrawable(R.drawable.tab_fitmaestro)).setContent(
 						R.id.tab_fitmaestro));
 
 		ListView listViewExercising = (ListView) findViewById(R.id.ListView_exercising);

@@ -134,7 +134,8 @@ public class SessionRepsList extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, INSERT_ID, 0, R.string.add_entry);
+		MenuItem insert = menu.add(0, INSERT_ID, 0, R.string.add_entry);
+		insert.setIcon(android.R.drawable.ic_menu_add);
 		return true;
 	}
 

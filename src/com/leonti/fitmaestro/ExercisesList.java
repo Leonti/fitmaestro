@@ -1,7 +1,5 @@
 package com.leonti.fitmaestro;
 
-import com.leonti.fitmaestro.R;
-
 import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -73,8 +71,10 @@ public class ExercisesList extends ExpandableListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, INSERT_GROUP_ID, 0, R.string.add_group);
-		menu.add(0, INSERT_EXERCISE_ID, 1, R.string.add_excercise);
+		MenuItem insertGroup = menu.add(0, INSERT_GROUP_ID, 0, R.string.add_group);
+		insertGroup.setIcon(android.R.drawable.ic_menu_add);
+		MenuItem insertExercise = menu.add(0, INSERT_EXERCISE_ID, 1, R.string.add_excercise);
+		insertExercise.setIcon(android.R.drawable.ic_menu_add);
 		return true;
 	}
 

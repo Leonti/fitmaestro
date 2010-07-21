@@ -1,5 +1,10 @@
 package com.leonti.fitmaestro;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.leonti.fitmaestro.R;
 
 import android.app.TabActivity;
@@ -13,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 
 public class FitMaestro extends TabActivity {
@@ -47,6 +53,41 @@ public class FitMaestro extends TabActivity {
 						R.id.tab_fitmaestro));
 
 		ListView listViewExercising = (ListView) findViewById(R.id.ListView_exercising);
+		
+		// initialize the List of Maps
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		String exercisingTitles[] = getResources().getStringArray(R.array.exercising_tab);
+		String exercisingDescs[] = getResources().getStringArray(R.array.exercising_tab_descs);
+		
+		for(int i=0; i<exercisingTitles.length; i++){
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("title", exercisingTitles[i]);
+			map.put("desc", exercisingDescs[i]);
+			list.add(map);	
+		}
+		String[] from = {"title", "desc"};
+		int[] to = {R.id.title, R.id.desc};
+
+		SimpleAdapter exercisingAdapter = new SimpleAdapter(this, list, R.layout.row_with_description, from, to);
+		listViewExercising.setAdapter(exercisingAdapter);
+		
+		ListView listViewFitmaestro = (ListView) findViewById(R.id.ListView_fitmaestro);
+		
+		// initialize the List of Maps
+		List<Map<String, String>> listFitmaestro = new ArrayList<Map<String, String>>();
+		String fitmaestroTitles[] = getResources().getStringArray(R.array.fitmaestro_tab);
+		String fitmaestroDescs[] = getResources().getStringArray(R.array.fitmaestro_tab_descs);
+
+		for(int i=0; i<fitmaestroTitles.length; i++){
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("title", fitmaestroTitles[i]);
+			map.put("desc", fitmaestroDescs[i]);
+			listFitmaestro.add(map);	
+		}
+
+		SimpleAdapter fitmaestroAdapter = new SimpleAdapter(this, listFitmaestro, R.layout.row_with_description, from, to);
+		listViewFitmaestro.setAdapter(fitmaestroAdapter);
+		
 		listViewExercising
 				.setOnItemClickListener(new ListView.OnItemClickListener() {
 
@@ -63,7 +104,7 @@ public class FitMaestro extends TabActivity {
 							break;
 						case WORKOUTS_POS:
 							Intent i1 = new Intent(FitMaestro.this,
-									SetsList.class);
+									WorkoutsList.class);
 							startActivity(i1);
 							break;
 						case PROGRAMS_POS:
@@ -85,7 +126,6 @@ public class FitMaestro extends TabActivity {
 					}
 				});
 
-		ListView listViewFitmaestro = (ListView) findViewById(R.id.ListView_fitmaestro);
 		listViewFitmaestro
 				.setOnItemClickListener(new ListView.OnItemClickListener() {
 

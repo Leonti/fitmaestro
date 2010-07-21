@@ -24,7 +24,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TableRow.LayoutParams;
 
-public class SetView extends ListActivity {
+public class WorkoutView extends ListActivity {
 
 	private ExcercisesDbAdapter mDbHelper;
 	private Cursor mExercisesForSetCursor;
@@ -258,7 +258,7 @@ public class SetView extends ListActivity {
 								.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
 
 				// Create a new row to be added.
-				TableRow tr = new TableRow(SetView.this);
+				TableRow tr = new TableRow(WorkoutView.this);
 				LayoutParams trLayoutParams = new LayoutParams(LayoutParams.FILL_PARENT,
 						LayoutParams.WRAP_CONTENT, 1);
 				
@@ -269,7 +269,7 @@ public class SetView extends ListActivity {
 						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
 				valueLayoutParamsPercentage.gravity = Gravity.CENTER;
 				
-				TextView repsTxt = new TextView(SetView.this);
+				TextView repsTxt = new TextView(WorkoutView.this);
 				repsTxt.setText(reps);
 				repsTxt.setGravity(Gravity.CENTER);
 				tr.addView(repsTxt, valueLayoutParamsReps);
@@ -277,12 +277,12 @@ public class SetView extends ListActivity {
 				LayoutParams xLayoutParams = new LayoutParams(
 						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				xLayoutParams.gravity = Gravity.CENTER;
-				TextView xTxt = new TextView(SetView.this);
+				TextView xTxt = new TextView(WorkoutView.this);
 				xTxt.setText("x");				
 				xTxt.setLayoutParams(xLayoutParams);
 				tr.addView(xTxt);
 
-				TextView percentageTxt = new TextView(SetView.this);
+				TextView percentageTxt = new TextView(WorkoutView.this);
 				percentageTxt.setText(percentage);
 				percentageTxt.setGravity(Gravity.CENTER);
 				tr.addView(percentageTxt, valueLayoutParamsPercentage);

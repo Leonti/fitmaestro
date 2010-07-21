@@ -2,15 +2,27 @@
 <resources>
 	<string-array name="exercising_tab">
 		<item>Exercises</item>
-		<item>Sets</item>
+		<item>Workouts</item>
 		<item>Programs</item>
 		<item>Sessions</item>
 		<item>Measurements</item>
+	</string-array>
+	<string-array name="exercising_tab_descs">
+		<item>List of exercises by groups</item>
+		<item>Planned sets of exercises</item>
+		<item>Workout programs</item>
+		<item>Workout sessions - data you enter during actual workout</item>
+		<item>Body weight, waist size, etc.</item>
 	</string-array>
 	<string-array name="fitmaestro_tab">
 		<item>Account</item>
 		<item>Synchronization</item>
 		<item>Imports</item>
+	</string-array>
+		<string-array name="fitmaestro_tab_descs">
+		<item>Login into your account or set one up</item>
+		<item>Synchronize phone data with your Fitmaestro.com account</item>
+		<item>Import exercises and programs</item>
 	</string-array>
 	<string-array name="imports">
 		<item>Import Exercises</item>

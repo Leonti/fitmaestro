@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,15 +31,23 @@ public class SynchronizationView extends Activity {
 		mDbHelper.open();
 
 		// for now
-		mMessageText = (TextView) findViewById(R.id.TextMessage);
+		mMessageText = (TextView) findViewById(R.id.TextResult);
+		
+		Button btnStart = (Button) findViewById(R.id.btnStart);
+		btnStart.setOnClickListener(new View.OnClickListener() {
 
-		// check if user is authenticated, if not - go to login screen
-		if (mDbHelper.getAuthKey().equals("")) {
-			Intent i = new Intent(this, Login.class);
-			startActivity(i);
-		} else {
-			new PerformSync().execute();
-		}
+			public void onClick(View view) {
+				
+				// check if user is authenticated, if not - go to login screen
+				if (mDbHelper.getAuthKey().equals("")) {
+					Intent i = new Intent(SynchronizationView.this, Login.class);
+					startActivity(i);
+				} else {
+					new PerformSync().execute();
+				}
+			}
+
+		});
 
 	}
 

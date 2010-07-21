@@ -9,10 +9,12 @@ package com.leonti.fitmaestro;
 
 public final class R {
     public static final class array {
-        public static final int account=0x7f040003;
+        public static final int account=0x7f040005;
         public static final int exercising_tab=0x7f040000;
-        public static final int fitmaestro_tab=0x7f040001;
-        public static final int imports=0x7f040002;
+        public static final int exercising_tab_descs=0x7f040001;
+        public static final int fitmaestro_tab=0x7f040002;
+        public static final int fitmaestro_tab_descs=0x7f040003;
+        public static final int imports=0x7f040004;
     }
     public static final class attr {
     }
@@ -20,13 +22,19 @@ public final class R {
         public static final int numeric_width=0x7f060000;
     }
     public static final class drawable {
-        public static final int dumbbell=0x7f020000;
-        public static final int dumbbell_unselected=0x7f020001;
-        public static final int icon=0x7f020002;
-        public static final int tab_exercising=0x7f020003;
-        public static final int tab_fitmaestro=0x7f020004;
-        public static final int web=0x7f020005;
-        public static final int web_unselected=0x7f020006;
+        public static final int done=0x7f020000;
+        public static final int done_unselected=0x7f020001;
+        public static final int dumbbell=0x7f020002;
+        public static final int dumbbell_unselected=0x7f020003;
+        public static final int icon=0x7f020004;
+        public static final int running=0x7f020005;
+        public static final int running_unselected=0x7f020006;
+        public static final int tab_current=0x7f020007;
+        public static final int tab_done=0x7f020008;
+        public static final int tab_exercising=0x7f020009;
+        public static final int tab_fitmaestro=0x7f02000a;
+        public static final int web=0x7f02000b;
+        public static final int web_unselected=0x7f02000c;
     }
     public static final class id {
         public static final int Chronometer01=0x7f070005;
@@ -53,9 +61,11 @@ public final class R {
         public static final int ListView_fitmaestro=0x7f07004a;
         public static final int ListView_imports=0x7f070038;
         public static final int TextMessage=0x7f070069;
+        public static final int TextResult=0x7f07006b;
         public static final int TextView01=0x7f07000e;
         public static final int TextView02=0x7f07001f;
         public static final int TextView03=0x7f070053;
+        public static final int btnStart=0x7f07006a;
         public static final int button_by_exercise=0x7f07003a;
         public static final int button_by_set=0x7f070039;
         public static final int button_day_done=0x7f07005e;
@@ -174,18 +184,19 @@ public final class R {
         public static final int register=0x7f030022;
         public static final int reps_list=0x7f030023;
         public static final int reps_list_row=0x7f030024;
-        public static final int select_day=0x7f030025;
-        public static final int session_list=0x7f030026;
-        public static final int session_list_row=0x7f030027;
-        public static final int session_reps_list=0x7f030028;
-        public static final int session_reps_list_row=0x7f030029;
-        public static final int sessionview_list=0x7f03002a;
-        public static final int sessionview_list_row=0x7f03002b;
-        public static final int set_list=0x7f03002c;
-        public static final int set_list_row=0x7f03002d;
-        public static final int setview_list=0x7f03002e;
-        public static final int setview_list_row=0x7f03002f;
-        public static final int synchronization=0x7f030030;
+        public static final int row_with_description=0x7f030025;
+        public static final int select_day=0x7f030026;
+        public static final int session_list=0x7f030027;
+        public static final int session_list_row=0x7f030028;
+        public static final int session_reps_list=0x7f030029;
+        public static final int session_reps_list_row=0x7f03002a;
+        public static final int sessionview_list=0x7f03002b;
+        public static final int sessionview_list_row=0x7f03002c;
+        public static final int set_list=0x7f03002d;
+        public static final int set_list_row=0x7f03002e;
+        public static final int setview_list=0x7f03002f;
+        public static final int setview_list_row=0x7f030030;
+        public static final int synchronization=0x7f030031;
     }
     public static final class string {
         public static final int account_created=0x7f05003f;
@@ -293,8 +304,10 @@ public final class R {
         public static final int sets=0x7f050003;
         public static final int start_program=0x7f050001;
         public static final int start_session=0x7f050059;
+        public static final int start_synchronization=0x7f05007c;
         public static final int stop=0x7f050065;
         public static final int sun=0x7f050061;
+        public static final int sync_message=0x7f05007b;
         public static final int synchronization_failed=0x7f050063;
         public static final int synchronization_finished=0x7f050062;
         public static final int synchronize=0x7f050044;

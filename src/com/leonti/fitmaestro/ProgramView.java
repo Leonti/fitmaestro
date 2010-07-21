@@ -123,7 +123,7 @@ public class ProgramView extends Activity {
 					if (dayClickedData.get("set_id") != null) {
 						Log.i("HASH DATA SET_ID", dayClickedData.get("set_id")
 								.toString());
-						Intent i = new Intent(ProgramView.this, SetView.class);
+						Intent i = new Intent(ProgramView.this, WorkoutView.class);
 						i.putExtra(ExcercisesDbAdapter.KEY_ROWID,
 								dayClickedData.get("set_id"));
 						i.putExtra("programs_connector_id", dayClickedData
@@ -144,7 +144,7 @@ public class ProgramView extends Activity {
 	}
 
 	private void addSet() {
-		Intent i = new Intent(this, SetEdit.class);
+		Intent i = new Intent(this, WorkoutEdit.class);
 		i.putExtra("program_id", mRowId);
 		i.putExtra("day_number", mDayNumber);
 		startActivityForResult(i, ACTIVITY_ADD_SET);

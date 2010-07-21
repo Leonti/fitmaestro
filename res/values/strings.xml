@@ -4,7 +4,7 @@
 <string name="app_name">FitMaestro</string>
 <string name="start_program">Start Program</string>
 <string name="sessions">Sessions</string>
-<string name="sets">Sets</string>
+<string name="sets">Workouts</string>
 <string name="programs">Programs</string>
 <string name="exercises">Exercises</string>
 <string name="excercise_log">Excercise Log</string>
@@ -27,13 +27,13 @@
 <string name="max_weight">Max Weight</string>
 <string name="add_group">Add Group</string>
 <string name="add_excercise">Add Excercise</string>
-<string name="select_set">Select Set</string>
+<string name="select_set">Select Workout</string>
 <string name="select_group">Select Group</string>
 <string name="delete_group">Delete Group</string>
 <string name="with_weight">With Weight</string>
 <string name="own_weight">Own Weight</string>
-<string name="add_set">Add Set</string>
-<string name="delete_set">Delete Set</string>
+<string name="add_set">Add Workout</string>
+<string name="delete_set">Delete Workout</string>
 <string name="delete_exercise">Delete Exercise</string>
 <string name="edit_exercise">Edit Exercise</string>
 <string name="edit_group">Edit Group</string>
@@ -41,12 +41,12 @@
 <string name="group_deleted">Group Deleted</string>
 <string name="exercise_edited">Exercise Edited</string>
 <string name="group_edited">Group Edited</string>
-<string name="edit_set">Edit Set</string>
-<string name="set_edited">Set Edited</string>
+<string name="edit_set">Edit Workout</string>
+<string name="set_edited">Workout Edited</string>
 <string name="add_remove_excercises">Add/Remove Exercises</string>
-<string name="add_exercise_to_set">Add Exercise To Set</string>
-<string name="remove_from_set">Remove From Set</string>
-<string name="exercise_removed_from_set">Exercise removed from set</string>
+<string name="add_exercise_to_set">Add Exercise To Workout</string>
+<string name="remove_from_set">Remove From Workout</string>
+<string name="exercise_removed_from_set">Exercise Removed From Workout</string>
 <string name="add_entry">Add Entry</string>
 <string name="log_entry_edited">Log Entry Edited</string>
 <string name="edit_log_entry">Edit Log Entry</string>
@@ -55,7 +55,7 @@
 <string name="times_row">Times: </string>
 <string name="weight_row">Weight: </string>
 <string name="kg">kg</string>
-<string name="by_set">By Set</string>
+<string name="by_set">By Workout</string>
 <string name="by_exercise">By Exercise</string>
 <string name="email">Email:</string>
 <string name="password">Password:</string>
@@ -124,6 +124,8 @@
 <string name="import_programs">Import programs</string>
 <string name="importing_programs">Importing programs</string>
 <string name="programs_imported">Programs imported</string>
+<string name="sync_message">Synchronization will update your data on the site and on the phone depending which data you edited/added last.</string>
+<string name="start_synchronization">Start Synchronization</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

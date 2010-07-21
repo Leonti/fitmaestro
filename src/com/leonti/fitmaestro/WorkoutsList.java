@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class SetsList extends ListActivity {
+public class WorkoutsList extends ListActivity {
 
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
@@ -71,12 +71,12 @@ public class SetsList extends ListActivity {
 	}
 
 	private void createSet() {
-		Intent i = new Intent(this, SetEdit.class);
+		Intent i = new Intent(this, WorkoutEdit.class);
 		startActivityForResult(i, ACTIVITY_CREATE);
 	}
 
 	private void editSet(long id) {
-		Intent i = new Intent(this, SetEdit.class);
+		Intent i = new Intent(this, WorkoutEdit.class);
 		i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
@@ -129,7 +129,7 @@ public class SetsList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, SetView.class);
+		Intent i = new Intent(this, WorkoutView.class);
 		i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
 		startActivityForResult(i, 5);
 	}

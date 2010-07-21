@@ -14,7 +14,6 @@
 	    >
 	<ListView android:id="@+id/ListView_exercising" android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:entries="@array/exercising_tab"
 		></ListView>	
 	</LinearLayout>
 	
@@ -27,7 +26,6 @@
 
 	<ListView android:id="@+id/ListView_fitmaestro" android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:entries="@array/fitmaestro_tab"
 		></ListView>
 </LinearLayout>
 

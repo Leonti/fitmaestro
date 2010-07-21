@@ -21,7 +21,7 @@ public class LogChooser extends Activity {
 		btnBySet.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(LogChooser.this, SetsList.class);
+				Intent i = new Intent(LogChooser.this, WorkoutsList.class);
 				startActivity(i);
 			}
 		});

@@ -79,7 +79,8 @@
 <string name="delete_program">Delete program</string>
 <string name="program_edited">Program edited</string>
 <string name="edit_program">Edit program</string>
-<string name="plan_added">Plan added</string>
+<string name="plan_added">Workout Plan added</string>
+<string name="plan_removed">Workout Plan Removed</string>
 <string name="add_session">Add session</string>
 <string name="add_exercise_to_session">Add Exercise to session</string>
 <string name="remove_from_session">Remove from session</string>
@@ -126,6 +127,8 @@
 <string name="programs_imported">Programs imported</string>
 <string name="sync_message">Synchronization will update your data on the site and on the phone depending which data you edited/added last.</string>
 <string name="start_synchronization">Start Synchronization</string>
+<string name="remove_from_program">Remove Workout</string>
+<string name="add_week">Add week</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

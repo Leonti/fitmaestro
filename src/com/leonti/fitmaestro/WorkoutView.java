@@ -88,7 +88,8 @@ public class WorkoutView extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, ADD_ID, 0, R.string.add_exercise_to_set);
+		MenuItem insert = menu.add(0, ADD_ID, 0, R.string.add_exercise_to_set);
+		insert.setIcon(android.R.drawable.ic_menu_add);
 		menu.add(0, START_SESSION_ID, 0, R.string.start_session);
 		return true;
 	}

@@ -93,7 +93,9 @@ public class SessionView extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, ADD_ID, 0, R.string.add_exercise_to_session);
+		MenuItem insert = menu.add(0, ADD_ID, 0, R.string.add_exercise_to_session);
+		insert.setIcon(android.R.drawable.ic_menu_add);
+		
 		if (mStatus.equals("DONE")) {
 			menu.add(0, INPROGRESS_ID, 0, R.string.set_inprogress);
 		} else {

@@ -867,6 +867,20 @@ public class ExcercisesDbAdapter {
 		return mDb.update(DATABASE_PROGRAMS_TABLE, args, KEY_ROWID + "="
 				+ rowId, null) > 0;
 	}
+	
+	public Long getProgramMaxDay(long programId) throws SQLException {
+		Cursor mCursor = mDb.rawQuery("SELECT MAX(" + KEY_DAY_NUMBER + ") AS max_day " +
+
+				"FROM " + DATABASE_PROGRAMS_CONNECTOR_TABLE + 
+				" WHERE " + KEY_DELETED + " = 0 AND " + KEY_PROGRAMID + " = ? "
+				, new String[] { String.valueOf(programId) });
+
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+		}
+		
+		return mCursor.getLong(mCursor.getColumnIndex("max_day"));
+	}
 
 	public Cursor fetchProgramSets(long programId) {
 		return mDb.query(DATABASE_PROGRAMS_CONNECTOR_TABLE, null, KEY_DELETED
@@ -882,6 +896,15 @@ public class ExcercisesDbAdapter {
 
 		return mDb.insert(DATABASE_PROGRAMS_CONNECTOR_TABLE, null,
 				initialValues);
+	}
+	
+	public boolean removeSetFromProgram(long rowId) {
+		
+		ContentValues args = new ContentValues();
+		args.put(KEY_DELETED, 1);
+
+		return mDb.update(DATABASE_PROGRAMS_CONNECTOR_TABLE, args, KEY_ROWID + "="
+				+ rowId, null) > 0;
 	}
 
 	// END of PROGRAMS methods

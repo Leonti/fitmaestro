@@ -7,14 +7,21 @@ import com.leonti.fitmaestro.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TableRow.LayoutParams;
 
 public class ProgramView extends Activity {
@@ -23,8 +30,11 @@ public class ProgramView extends Activity {
 	private Long mRowId;
 	private Long mDayNumber;
 	private Cursor mProgramSetsCursor;
+	private TableLayout mTl;
 
 	private static final int ACTIVITY_ADD_SET = 0;
+	private static final int ADD_WEEK_ID = Menu.FIRST;
+	private static final int DELETE_ID = Menu.FIRST + 1;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -56,26 +66,101 @@ public class ProgramView extends Activity {
 		mProgramSetsCursor.moveToFirst();
 
 		/* Find Tablelayout defined in main.xml */
-		TableLayout tl = (TableLayout) findViewById(R.id.program_table);
-		tl.removeViews(1, tl.getChildCount() - 1);
-		addWeek(tl, 1);
-		addWeek(tl, 8);
-		addWeek(tl, 15);
+		mTl = (TableLayout) findViewById(R.id.program_table);
+
+		mTl.removeViews(0, mTl.getChildCount());
+
+		
+		Log.i("PROGRAM DAYS: ", String.valueOf(mDbHelper.getProgramMaxDay(mRowId)));
+		
+		// getting number of weeks for the program - 28 days by default(4 weeks) or the max days for the program
+		long weeks = new Double(Math.ceil(Math.max((double) 28, (double) mDbHelper.getProgramMaxDay(mRowId)) / 7)).longValue();
+		Log.i("PROGRAM WEEKS: ", String.valueOf(weeks));
+		
+		for(long i = 0; i < weeks; i++){
+			addWeek(mTl, i*7 + 1);
+		}
+	}
+	
+	@Override
+    public void onCreateContextMenu(ContextMenu menu,View v,ContextMenuInfo info)
+    {
+		HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
+		.getTag();
+		Long workoutId = dayClickedData.get("set_id");
+		Cursor workout = mDbHelper.fetchSet(workoutId);
+		String workoutTitle = workout.getString(workout
+				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE));
+		
+		Log.i("WORKOUT_ID - context", dayClickedData.get("set_id")
+				.toString());
+		
+	     menu.setHeaderTitle(workoutTitle);
+	     MenuItem remove = menu.add(0, DELETE_ID, 0, R.string.remove_from_program);
+	     Intent menuIntent = new Intent();
+	     menuIntent.putExtra("workout_id", workoutId);
+	     menuIntent.putExtra("programs_connector_id", dayClickedData.get("programs_connector_id"));
+	     remove.setIntent(menuIntent);
+    }
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		
+		Intent menuIntent = item.getIntent();
+		Bundle extras = menuIntent.getExtras();
+		switch (item.getItemId()) {
+		case DELETE_ID:
+			
+			Log.i("WORKOUT ID TO DELETE", extras.get("workout_id").toString());
+			Log.i("PROGRAMS CONNECTOR TO DELETE", extras.get("programs_connector_id").toString());
+
+			// First we remove workout from program and then delete workout itself			
+			mDbHelper.removeSetFromProgram(extras.getLong("programs_connector_id"));
+			mDbHelper.deleteSet(extras.getLong("workout_id"));
+			Toast.makeText(this, R.string.plan_removed, Toast.LENGTH_SHORT)
+			.show();
+			fillData();
+			return true;
+		}
+		
+		return super.onContextItemSelected(item);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem insert = menu.add(0, ADD_WEEK_ID, 0, R.string.add_week);
+		insert.setIcon(android.R.drawable.ic_menu_add);
+		return true;
 	}
 
-	public void addWeek(TableLayout tl, int startDay) {
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+		case ADD_WEEK_ID:
+			long currentWeeks = mTl.getChildCount();
+			Log.i("WEEKS COUNT: ", String.valueOf(currentWeeks));
+			
+			addWeek(mTl, currentWeeks*7+1);
+			return true;
+		}
+
+		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	public void addWeek(TableLayout tl, long startDay) {
 
 		/* Create a new row to be added. */
 		TableRow tr = new TableRow(this);
 		tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT));
 
-		for (int i = startDay; i < startDay + 7; i++) {
+		for (long i = startDay; i < startDay + 7; i++) {
 
 			HashMap<String, Long> dayData = new HashMap<String, Long>();
 			dayData.put("day_number", Long.valueOf(i));
 
-			String toAdd = "";
+			boolean match = false;
 			if (mProgramSetsCursor.getCount() > 0) {
 				// check if we have this day in the db
 				Long dayNumber = mProgramSetsCursor
@@ -84,7 +169,7 @@ public class ProgramView extends Activity {
 
 				if (Long.valueOf(i) == dayNumber) {
 					Log.i("DAY_NUMBER MATCH: ", Long.toString(dayNumber));
-					toAdd = "(!)";
+					match = true;
 					Long setId = mProgramSetsCursor
 							.getLong(mProgramSetsCursor
 									.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SETID));
@@ -103,11 +188,24 @@ public class ProgramView extends Activity {
 
 			/* Create a TextView to be the row-content. */
 			TextView day = new TextView(this);
-			day.setText(Integer.toString(i) + toAdd);
-			day.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-					LayoutParams.WRAP_CONTENT));
+			day.setText("\n\n\n" + Long.toString(i));
+			
+			LayoutParams dayEntryLP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
+			dayEntryLP.setMargins(1, 1, 1, 1);
+
+			day.setLayoutParams(dayEntryLP);
+			if(match){
+				day.setBackgroundColor(Color.YELLOW);
+				registerForContextMenu(day);
+			}else{
+				day.setBackgroundColor(Color.WHITE);
+			}
+			day.setPadding(2, 2, 2, 2);
+			// day.setTextAppearance(this, android.R.attr.textAppearanceLarge);
 
 			day.setTag(dayData);
+			
 			day.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -123,6 +221,10 @@ public class ProgramView extends Activity {
 					if (dayClickedData.get("set_id") != null) {
 						Log.i("HASH DATA SET_ID", dayClickedData.get("set_id")
 								.toString());
+
+						Log.i("HASH DATA CONNECTOR ID:", dayClickedData.get(
+						"programs_connector_id").toString());
+						
 						Intent i = new Intent(ProgramView.this, WorkoutView.class);
 						i.putExtra(ExcercisesDbAdapter.KEY_ROWID,
 								dayClickedData.get("set_id"));
@@ -134,6 +236,33 @@ public class ProgramView extends Activity {
 					}
 				}
 			});
+			
+			
+			day.setOnLongClickListener(new OnLongClickListener(){
+
+				@Override
+				public boolean onLongClick(View v) {
+					HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
+					.getTag();
+
+					Log.i("HASH DATA DAY NUMBER FROM LONG CLICK", dayClickedData.get(
+					"day_number").toString());
+
+					// if there is a workout attached - return false, so context menu can be proceed
+					// if it's an empty day - just return true and menu will not show
+					mDayNumber = dayClickedData.get("day_number");
+					if (dayClickedData.get("set_id") != null) {
+						Log.i("HASH DATA SET_ID", dayClickedData.get("set_id")
+								.toString());
+						return false;	
+					}else{
+						return true;
+					}
+					
+				}
+				
+			});
+			
 			/* Add TextView to row. */
 			tr.addView(day);
 		}
@@ -158,8 +287,12 @@ public class ProgramView extends Activity {
 
 		switch (requestCode) {
 		case ACTIVITY_ADD_SET:
-			Toast.makeText(this, R.string.plan_added, Toast.LENGTH_SHORT)
-					.show();
+			Log.i("RESULT CODE: ", String.valueOf(resultCode));
+			if(resultCode == RESULT_OK){
+				Toast.makeText(this, R.string.plan_added, Toast.LENGTH_SHORT)
+				.show();
+			}
+			
 			break;
 		}
 	}

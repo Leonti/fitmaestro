@@ -80,6 +80,11 @@ public class RepsList extends ListActivity {
 
 		Log.i(TAG, mExType.toString() + mMaxWeight.toString()
 				+ mMaxReps.toString());
+		
+		if(mExType == 0){
+			findViewById(R.id.x_col).setVisibility(View.GONE);
+			findViewById(R.id.percentage_col).setVisibility(View.GONE);
+		}
 
 		mRepsForConnectorCursor = mDbHelper
 				.fetchRepsForConnector(mSetConnectorId);
@@ -309,8 +314,6 @@ public class RepsList extends ListActivity {
 			super.bindView(view, context, cursor);
 
 			if (mExType == 0) {
-				view.findViewById(R.id.x_col).setVisibility(View.GONE);
-				view.findViewById(R.id.percentage_col).setVisibility(View.GONE);
 				view.findViewById(R.id.x_col_value).setVisibility(View.GONE);
 				view.findViewById(R.id.percentage_value).setVisibility(
 						View.GONE);

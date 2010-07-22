@@ -113,6 +113,14 @@ public class SessionRepsList extends ListActivity {
 		Cursor exerciseCursor = (Cursor) mDbHelper.fetchExercise(mExerciseId);
 		mExType = exerciseCursor.getLong(exerciseCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
+		
+		if(mExType == 0){
+			findViewById(R.id.x_col).setVisibility(View.GONE);
+			findViewById(R.id.planned_weight_col).setVisibility(
+					View.GONE);
+			findViewById(R.id.x_done_col).setVisibility(View.GONE);
+			findViewById(R.id.weight_col).setVisibility(View.GONE);
+		}
 
 		SessionRepsArray repsArray = new SessionRepsArray(this, mSessionId,
 				mExerciseId, mSessionConnectorId);
@@ -429,11 +437,6 @@ public class SessionRepsList extends ListActivity {
 			// plannedReps.setText("Dyg: " + String.valueOf(position) );
 
 			if (mExType == 0) {
-				view.findViewById(R.id.x_col).setVisibility(View.GONE);
-				view.findViewById(R.id.planned_weight_col).setVisibility(
-						View.GONE);
-				view.findViewById(R.id.x_done_col).setVisibility(View.GONE);
-				view.findViewById(R.id.weight_col).setVisibility(View.GONE);
 
 				view.findViewById(R.id.planned_weight_value).setVisibility(
 						View.GONE);

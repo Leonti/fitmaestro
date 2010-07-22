@@ -125,21 +125,23 @@ public class WorkoutEdit extends Activity {
 				if (id > 0) {
 					mRowId = id;
 				}
+				
+				// adding this set to program (if id provided)
+				// doing it here because we attach workout to program only on creation
+				if (mProgramId != null && mProgramId > 0) {
+					mDbHelper.addSetToProgram(mProgramId, mRowId, mDayNumber);
+
+					Log.i("Edit Set", "Set added to program with id: "
+							+ Long.toString(mProgramId) + " and day_number: "
+							+ Long.toString(mDayNumber) + " and set_id: "
+							+ Long.toString(mRowId));
+				}
+				
 			}
 		} else {
 			mDbHelper.updateSet(mRowId, title, desc, 0);
 		}
 
-		if (mProgramId != null && mProgramId > 0) {
-			mDbHelper.addSetToProgram(mProgramId, mRowId, mDayNumber);
-
-			Log.i("Edit Set", "Set added to program with id: "
-					+ Long.toString(mProgramId) + " and day_number: "
-					+ Long.toString(mDayNumber) + " and set_id: "
-					+ Long.toString(mRowId));
-		}
-
-		// adding this set to program (if id provided)
 	}
 
 }

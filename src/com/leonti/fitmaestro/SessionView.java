@@ -51,14 +51,14 @@ public class SessionView extends ListActivity {
 		mRowId = savedInstanceState != null ? savedInstanceState
 				.getLong(ExcercisesDbAdapter.KEY_ROWID) : null;
 
-		if (mRowId == null && extras != null) {
-			mRowId = extras.getLong(ExcercisesDbAdapter.KEY_ROWID);
-		}
+				if (mRowId == null && extras != null) {
+					mRowId = extras.getLong(ExcercisesDbAdapter.KEY_ROWID);
+				}
 
-		mDbHelper = new ExcercisesDbAdapter(this);
-		mDbHelper.open();
-		fillData();
-		registerForContextMenu(getListView());
+				mDbHelper = new ExcercisesDbAdapter(this);
+				mDbHelper.open();
+				fillData();
+				registerForContextMenu(getListView());
 	}
 
 	private void fillData() {
@@ -84,10 +84,10 @@ public class SessionView extends ListActivity {
 		Bundle extras = intent.getExtras();
 		Long ExerciseId = extras != null ? extras
 				.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
-		mDbHelper.addExerciseToSession(mRowId, ExerciseId);
-		fillData();
-		Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
-		Log.i("SESSION ID FROM ACTIVITY: ", String.valueOf(mRowId));
+				mDbHelper.addExerciseToSession(mRowId, ExerciseId);
+				fillData();
+				Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
+				Log.i("SESSION ID FROM ACTIVITY: ", String.valueOf(mRowId));
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class SessionView extends ListActivity {
 		super.onCreateOptionsMenu(menu);
 		MenuItem insert = menu.add(0, ADD_ID, 0, R.string.add_exercise_to_session);
 		insert.setIcon(android.R.drawable.ic_menu_add);
-		
+
 		if (mStatus.equals("DONE")) {
 			menu.add(0, INPROGRESS_ID, 0, R.string.set_inprogress);
 		} else {
@@ -144,7 +144,7 @@ public class SessionView extends ListActivity {
 		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
 		TextView exerciseName = (TextView) info.targetView
-				.findViewById(R.id.exercise_name);
+		.findViewById(R.id.exercise_name);
 		String title = exerciseName.getText().toString();
 		menu.setHeaderTitle(title);
 		menu.add(0, DELETE_ID, 0, R.string.remove_from_session);
@@ -155,7 +155,7 @@ public class SessionView extends ListActivity {
 		switch (item.getItemId()) {
 		case DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-					.getMenuInfo();
+			.getMenuInfo();
 			mDbHelper.deleteExerciseFromSession(info.id);
 			fillData();
 			Toast.makeText(this, R.string.exercise_removed_from_session,
@@ -212,111 +212,9 @@ public class SessionView extends ListActivity {
 			SessionRepsArray repsArray = new SessionRepsArray(SessionView.this,
 					sessionId, exerciseId, sessionsConnectorId);
 			ArrayList<HashMap<String, String>> sessionRepsList = repsArray
-					.getRepsArray();
+			.getRepsArray();
 
-			TableLayout repsTable = (TableLayout) view
-					.findViewById(R.id.reps_table);
-
-			repsTable.removeViews(1, repsTable.getChildCount() - 1);
-
-			// if 0 - own weight - don't show percentage values
-			if (exType == Long.valueOf(0)) {
-				repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);
-				repsTable.findViewById(R.id.planned_weight_col).setVisibility(
-						View.GONE);
-				repsTable.findViewById(R.id.x_done_col)
-						.setVisibility(View.GONE);
-				repsTable.findViewById(R.id.weight_col)
-						.setVisibility(View.GONE);
-			} else {
-				repsTable.findViewById(R.id.x_col).setVisibility(View.VISIBLE);
-				repsTable.findViewById(R.id.planned_weight_col).setVisibility(
-						View.VISIBLE);
-				repsTable.findViewById(R.id.x_done_col).setVisibility(
-						View.VISIBLE);
-				repsTable.findViewById(R.id.weight_col).setVisibility(
-						View.VISIBLE);
-			}
-
-			for (int i = 0; i < sessionRepsList.size(); i++) {
-
-				// Create a new row to be added.
-				TableRow tr = new TableRow(SessionView.this);
-				tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-						LayoutParams.WRAP_CONTENT));
-
-				
-				LayoutParams plannedRepsTxtLP = new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
-				plannedRepsTxtLP.gravity = Gravity.CENTER;	
-				LayoutParams xTxtLP = new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
-				xTxtLP.gravity = Gravity.CENTER;
-				LayoutParams plannedWeightTxtLP = new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
-				plannedWeightTxtLP.gravity = Gravity.CENTER;
-
-				LayoutParams repsTxtLP = new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
-				repsTxtLP.gravity = Gravity.CENTER;		
-				LayoutParams xTxt2LP = new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
-				xTxt2LP.gravity = Gravity.CENTER;
-				LayoutParams weightTxtLP = new LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
-				weightTxtLP.gravity = Gravity.CENTER;
-
-				// planned reps
-				String plannedReps = sessionRepsList.get(i).get("planned_reps");
-				TextView plannedRepsTxt = new TextView(SessionView.this);
-				plannedRepsTxt.setText(plannedReps);
-				plannedRepsTxt.setGravity(Gravity.CENTER);
-				tr.addView(plannedRepsTxt, plannedRepsTxtLP);
-
-				TextView xTxt = new TextView(SessionView.this);
-				xTxt.setText("x");
-				xTxt.setGravity(Gravity.CENTER);
-				tr.addView(xTxt, xTxtLP);
-
-				String plannedWeight = sessionRepsList.get(i).get(
-						"planned_weight");
-				TextView plannedWeightTxt = new TextView(SessionView.this);
-				plannedWeightTxt.setText(plannedWeight);
-				plannedWeightTxt.setGravity(Gravity.CENTER);
-				tr.addView(plannedWeightTxt, plannedWeightTxtLP);
-
-				// done reps
-				String reps = sessionRepsList.get(i).get("reps");
-				TextView repsTxt = new TextView(SessionView.this);
-				repsTxt.setText(reps);
-				repsTxt.setGravity(Gravity.CENTER);
-				tr.addView(repsTxt, repsTxtLP);
-
-				TextView xTxt2 = new TextView(SessionView.this);
-				xTxt2.setText("x");
-				xTxt2.setGravity(Gravity.CENTER);
-				tr.addView(xTxt2, xTxt2LP);
-
-				String weight = sessionRepsList.get(i).get("weight");
-				TextView weightTxt = new TextView(SessionView.this);
-				weightTxt.setText(weight);
-				weightTxt.setGravity(Gravity.CENTER);
-				tr.addView(weightTxt, weightTxtLP);
-
-				// Add row to TableLayout.
-
-				repsTable.addView(tr, new TableLayout.LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-
-				// if 0 - own weight - don't show percentage values
-				if (exType == Long.valueOf(0)) {
-					xTxt.setVisibility(View.GONE);
-					plannedWeightTxt.setVisibility(View.GONE);
-					xTxt2.setVisibility(View.GONE);
-					weightTxt.setVisibility(View.GONE);
-				}
-
-			}
+			repsArray.drawTable(SessionView.this, view, sessionRepsList, exType);
 
 		}
 

@@ -80,6 +80,11 @@ public class WorkoutEdit extends Activity {
 
 		if (mProgramId != null && mProgramId > 0) {
 			Log.i("Edit Set", "Have program Id " + Long.toString(mProgramId));
+			
+			// we are adding this workout to a program - title can be prepopulated and hidden
+			mTitleText.setText(String.valueOf(mDayNumber) + " day (" + String.valueOf(mProgramId) + ")");
+			findViewById(R.id.text_name).setVisibility(View.GONE);
+			findViewById(R.id.edit_name).setVisibility(View.GONE);
 		}
 	}
 

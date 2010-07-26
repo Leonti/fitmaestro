@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+  
+
+<TextView android:text="@string/stats_type_description" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<Button android:text="@string/type_max_value" android:id="@+id/btn_max" android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
+<TextView android:text="@string/type_max_value_desc" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<Button android:text="@string/type_sum" android:id="@+id/btn_sums" android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
+<TextView android:text="@string/type_sum_desc" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+</LinearLayout>

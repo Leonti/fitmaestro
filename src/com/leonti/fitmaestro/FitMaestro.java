@@ -28,6 +28,7 @@ public class FitMaestro extends TabActivity {
 	private static final int PROGRAMS_POS = 2;
 	private static final int SESSIONS_POS = 3;
 	private static final int MEASUREMENTS_POS = 4;
+	private static final int STATISTICS_POS = 5;
 
 	private static final int ACCOUNT_POS = 0;
 	private static final int SYNCHRONIZE_POS = 1;
@@ -121,6 +122,11 @@ public class FitMaestro extends TabActivity {
 							Intent i4 = new Intent(FitMaestro.this,
 									MeasurementsList.class);
 							startActivity(i4);
+							break;
+						case STATISTICS_POS:
+							Intent i5 = new Intent(FitMaestro.this,
+									Statistics.class);
+							startActivity(i5);
 							break;
 						}
 					}

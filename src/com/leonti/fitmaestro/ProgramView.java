@@ -5,7 +5,10 @@ import java.util.HashMap;
 import com.leonti.fitmaestro.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,8 +36,11 @@ public class ProgramView extends Activity {
 	private TableLayout mTl;
 
 	private static final int ACTIVITY_ADD_SET = 0;
+	private static final int ACTIVITY_EDIT_SET = 1;
 	private static final int ADD_WEEK_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
+	private static final int EDIT_ID = Menu.FIRST + 2;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -87,19 +93,19 @@ public class ProgramView extends Activity {
     {
 		HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
 		.getTag();
-		Long workoutId = dayClickedData.get("set_id");
-		Cursor workout = mDbHelper.fetchSet(workoutId);
-		String workoutTitle = workout.getString(workout
-				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE));
 		
 		Log.i("WORKOUT_ID - context", dayClickedData.get("set_id")
 				.toString());
-		
-	     menu.setHeaderTitle(workoutTitle);
-	     MenuItem remove = menu.add(0, DELETE_ID, 0, R.string.remove_from_program);
+				
+	     menu.setHeaderTitle(dayClickedData.get("day_number").toString() + " day");
+	     
 	     Intent menuIntent = new Intent();
-	     menuIntent.putExtra("workout_id", workoutId);
+	     menuIntent.putExtra("workout_id", dayClickedData.get("set_id"));
 	     menuIntent.putExtra("programs_connector_id", dayClickedData.get("programs_connector_id"));
+	     
+	     MenuItem edit = menu.add(0, EDIT_ID, 0, R.string.edit_workout);
+	     edit.setIntent(menuIntent);
+	     MenuItem remove = menu.add(0, DELETE_ID, 0, R.string.remove_from_program);
 	     remove.setIntent(menuIntent);
     }
 	
@@ -109,6 +115,15 @@ public class ProgramView extends Activity {
 		Intent menuIntent = item.getIntent();
 		Bundle extras = menuIntent.getExtras();
 		switch (item.getItemId()) {
+		
+		case EDIT_ID:
+			Intent i = new Intent(this, WorkoutEdit.class);
+			i.putExtra("program_id", mRowId);
+			i.putExtra("day_number", mDayNumber);
+			i.putExtra(ExcercisesDbAdapter.KEY_ROWID, extras.getLong("workout_id"));
+			startActivityForResult(i, ACTIVITY_EDIT_SET);
+			return true;
+			
 		case DELETE_ID:
 			
 			Log.i("WORKOUT ID TO DELETE", extras.get("workout_id").toString());
@@ -211,7 +226,7 @@ public class ProgramView extends Activity {
 				public void onClick(View v) {
 					Log.i("Listener: ", mRowId + " " + v.getTag().toString());
 
-					HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
+					final HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
 							.getTag();
 
 					Log.i("HASH DATA DAY NUMBER", dayClickedData.get(
@@ -225,14 +240,36 @@ public class ProgramView extends Activity {
 						Log.i("HASH DATA CONNECTOR ID:", dayClickedData.get(
 						"programs_connector_id").toString());
 						
+
 						Intent i = new Intent(ProgramView.this, WorkoutView.class);
 						i.putExtra(ExcercisesDbAdapter.KEY_ROWID,
 								dayClickedData.get("set_id"));
 						i.putExtra("programs_connector_id", dayClickedData
 								.get("programs_connector_id"));
-						startActivityForResult(i, 5);
+						startActivityForResult(i, 5);		
 					} else {
-						addSet();
+						
+					    new AlertDialog.Builder(ProgramView.this)
+					      .setMessage(R.string.create_workout)
+					      .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+																
+									addSet();	
+								}})
+					      .setOnCancelListener(new OnCancelListener() {
+					        public void onCancel(DialogInterface dialog) {
+					          
+					        }})
+					      .setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+
+									/* User clicked cancel so do some stuff */
+								}
+							})
+					      .show();
 					}
 				}
 			});
@@ -292,6 +329,13 @@ public class ProgramView extends Activity {
 				Toast.makeText(this, R.string.plan_added, Toast.LENGTH_SHORT)
 				.show();
 			}
+			
+			break;
+		case ACTIVITY_EDIT_SET:
+			Log.i("RESULT CODE: ", String.valueOf(resultCode));
+
+			Toast.makeText(this, R.string.set_edited, Toast.LENGTH_SHORT)
+			.show();
 			
 			break;
 		}

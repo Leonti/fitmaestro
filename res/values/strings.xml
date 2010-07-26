@@ -129,6 +129,24 @@
 <string name="start_synchronization">Start Synchronization</string>
 <string name="remove_from_program">Remove Workout</string>
 <string name="add_week">Add week</string>
+<string name="create">Create</string>
+<string name="create_workout">Create workout for this day?</string>
+<string name="edit_workout">Edit workout</string>
+<string name="change">Change</string>
+<string name="exercise">Exercise:</string>
+<string name="start_date">Start date:</string>
+<string name="end_date">End date:</string>
+<string name="statistics_type">Statistics type:</string>
+<string name="get_stats">Get statistics!</string>
+<string name="max_value">Max value:</string>
+<string name="sum">Sum:</string>
+<string name="stats_type_description">Please select values you want your chart to be created with:</string>
+<string name="type_max_value">By max values</string>
+<string name="type_sum">By sums</string>
+<string name="type_max_value_desc">Create chart using max values for the exercise for each workout session</string>
+<string name="type_sum_desc">Create chart using sums of total workout for each session.</string>
+<string name="get_chart">Get Chart</string>
+<string name="choose_stats_title">Choose chart values</string>
 
 <dimen name="numeric_width">100dip</dimen>
 </resources>

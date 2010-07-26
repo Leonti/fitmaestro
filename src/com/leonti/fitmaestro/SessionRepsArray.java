@@ -3,9 +3,16 @@ package com.leonti.fitmaestro;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.TableRow.LayoutParams;
 
 public class SessionRepsArray {
 
@@ -128,6 +135,112 @@ public class SessionRepsArray {
 		}
 
 		return mSessionRepsList;
+	}
+	
+	public void drawTable(Activity activity, View view, ArrayList<HashMap<String, String>> sessionRepsList, Long exType){
+		TableLayout repsTable = (TableLayout) view
+		.findViewById(R.id.reps_table);
+
+		repsTable.removeViews(1, repsTable.getChildCount() - 1);
+
+		// if 0 - own weight - don't show percentage values
+		if (exType == Long.valueOf(0)) {
+			repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);
+			repsTable.findViewById(R.id.planned_weight_col).setVisibility(
+					View.GONE);
+			repsTable.findViewById(R.id.x_done_col)
+			.setVisibility(View.GONE);
+			repsTable.findViewById(R.id.weight_col)
+			.setVisibility(View.GONE);
+		} else {
+			repsTable.findViewById(R.id.x_col).setVisibility(View.VISIBLE);
+			repsTable.findViewById(R.id.planned_weight_col).setVisibility(
+					View.VISIBLE);
+			repsTable.findViewById(R.id.x_done_col).setVisibility(
+					View.VISIBLE);
+			repsTable.findViewById(R.id.weight_col).setVisibility(
+					View.VISIBLE);
+		}
+
+		for (int i = 0; i < sessionRepsList.size(); i++) {
+
+			// Create a new row to be added.
+			TableRow tr = new TableRow(activity);
+			tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+					LayoutParams.WRAP_CONTENT));
+
+
+			LayoutParams plannedRepsTxtLP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+			plannedRepsTxtLP.gravity = Gravity.CENTER;	
+			LayoutParams xTxtLP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+			xTxtLP.gravity = Gravity.CENTER;
+			LayoutParams plannedWeightTxtLP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+			plannedWeightTxtLP.gravity = Gravity.CENTER;
+
+			LayoutParams repsTxtLP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+			repsTxtLP.gravity = Gravity.CENTER;		
+			LayoutParams xTxt2LP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+			xTxt2LP.gravity = Gravity.CENTER;
+			LayoutParams weightTxtLP = new LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+			weightTxtLP.gravity = Gravity.CENTER;
+
+			// planned reps
+			String plannedReps = sessionRepsList.get(i).get("planned_reps");
+			TextView plannedRepsTxt = new TextView(activity);
+			plannedRepsTxt.setText(plannedReps);
+			plannedRepsTxt.setGravity(Gravity.CENTER);
+			tr.addView(plannedRepsTxt, plannedRepsTxtLP);
+
+			TextView xTxt = new TextView(activity);
+			xTxt.setText("x");
+			xTxt.setGravity(Gravity.CENTER);
+			tr.addView(xTxt, xTxtLP);
+
+			String plannedWeight = sessionRepsList.get(i).get(
+					"planned_weight");
+			TextView plannedWeightTxt = new TextView(activity);
+			plannedWeightTxt.setText(plannedWeight);
+			plannedWeightTxt.setGravity(Gravity.CENTER);
+			tr.addView(plannedWeightTxt, plannedWeightTxtLP);
+
+			// done reps
+			String reps = sessionRepsList.get(i).get("reps");
+			TextView repsTxt = new TextView(activity);
+			repsTxt.setText(reps);
+			repsTxt.setGravity(Gravity.CENTER);
+			tr.addView(repsTxt, repsTxtLP);
+
+			TextView xTxt2 = new TextView(activity);
+			xTxt2.setText("x");
+			xTxt2.setGravity(Gravity.CENTER);
+			tr.addView(xTxt2, xTxt2LP);
+
+			String weight = sessionRepsList.get(i).get("weight");
+			TextView weightTxt = new TextView(activity);
+			weightTxt.setText(weight);
+			weightTxt.setGravity(Gravity.CENTER);
+			tr.addView(weightTxt, weightTxtLP);
+
+			// Add row to TableLayout.
+
+			repsTable.addView(tr, new TableLayout.LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+			// if 0 - own weight - don't show percentage values
+			if (exType == Long.valueOf(0)) {
+				xTxt.setVisibility(View.GONE);
+				plannedWeightTxt.setVisibility(View.GONE);
+				xTxt2.setVisibility(View.GONE);
+				weightTxt.setVisibility(View.GONE);
+			}
+
+		}
 	}
 
 }

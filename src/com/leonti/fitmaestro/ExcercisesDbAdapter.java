@@ -675,6 +675,46 @@ public class ExcercisesDbAdapter {
 		return mCursor;
 
 	}
+	
+	public Cursor fetchStatsForExercise(long exerciseId, String donestart,
+			String doneend, int exType) throws SQLException {
+
+		//"SELECT SUM(`reps` * `weight`), MAX(`weight`), `session_id`, `done`, `title` FROM `log` LEFT JOIN `sessions` ON `session_id` = `sessions`.`id` WHERE `exercise_id` = 147 AND `done` BETWEEN '2010-04-04' AND '2010-06-09' AND `log`.deleted='0' GROUP BY `session_id` ORDER BY `session_id` DESC"
+
+		String sumPart = "reps * weight";
+		String maxPart = "weight";
+		
+		// for own weight - we can get stats only for repetitions
+		if(exType == 0){
+			sumPart = "reps";
+			maxPart = "reps";		
+		}
+		
+		Cursor mCursor = mDb.rawQuery("SELECT " + DATABASE_LOG_TABLE + "."
+				+ KEY_ROWID + " AS _id, SUM(" + sumPart + ") AS sum, MAX(" + maxPart + ") AS max, " 
+				+ DATABASE_LOG_TABLE + "." + KEY_SESSIONID + " AS " + KEY_SESSIONID + ", "
+				+ DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_ROWID + " AS " + KEY_SESSIONS_CONNECTORID + ", "
+				+ KEY_DONE + ", " + KEY_TITLE
+				+ " FROM " + DATABASE_LOG_TABLE 
+				+ " LEFT JOIN " + DATABASE_SESSIONS_TABLE
+				+ " ON " + DATABASE_LOG_TABLE + "." + KEY_SESSIONID + "=" + DATABASE_SESSIONS_TABLE + "." + KEY_ROWID
+				+ " LEFT JOIN " + DATABASE_SESSIONS_CONNECTOR_TABLE 
+				+ " ON " + DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_EXERCISEID + " = " 
+				+ DATABASE_LOG_TABLE + "." + KEY_EXERCISEID + " AND " 
+				+ DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_SESSIONID + " = " 
+				+ DATABASE_LOG_TABLE + "." + KEY_SESSIONID + " AND " 
+				+ DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_DELETED + " =0"
+				+ " WHERE " + DATABASE_LOG_TABLE + "." + KEY_EXERCISEID + "=" + String.valueOf(exerciseId) + " AND '"
+				+ donestart + "' < " + KEY_DONE + " AND " + KEY_DONE + " < '"
+				+ doneend + "' AND " + DATABASE_LOG_TABLE + "." + KEY_DELETED
+				+ "=0 AND " + DATABASE_SESSIONS_CONNECTOR_TABLE + "." + KEY_DELETED 
+				+ "=0 GROUP BY " + KEY_SESSIONID + " ORDER BY " + KEY_SESSIONID + " DESC", null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+
+	}
 
 	public boolean updateLogEntry(long rowId, float weight, int times) {
 		ContentValues args = new ContentValues();
@@ -920,7 +960,7 @@ public class ExcercisesDbAdapter {
 
 		return mDb.query(DATABASE_SESSIONS_TABLE, null, KEY_DELETED + "=0 AND "
 				+ KEY_STATUS + "= ?", new String[] { filter }, null, null,
-				null, null);
+				KEY_ROWID + " DESC", null);
 	}
 
 	public Cursor fetchSession(long rowId) throws SQLException {

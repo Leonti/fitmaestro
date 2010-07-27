@@ -35,4 +35,10 @@
 		<item>Register</item>
 	</string-array>	
 	
+	<string-array name="stats_params">
+		<item>Exercise:</item>
+		<item>Start date:</item>
+		<item>End date:</item>
+	</string-array>	
+	
 </resources>

@@ -15,6 +15,7 @@ public final class R {
         public static final int fitmaestro_tab=0x7f040002;
         public static final int fitmaestro_tab_descs=0x7f040003;
         public static final int imports=0x7f040004;
+        public static final int stats_params=0x7f040006;
     }
     public static final class attr {
     }
@@ -41,6 +42,7 @@ public final class R {
     }
     public static final class id {
         public static final int Chronometer01=0x7f080004;
+        public static final int ImageView01=0x7f08006e;
         public static final int LinearLayout01=0x7f08000f;
         public static final int LinearLayout02=0x7f080010;
         public static final int LinearLayout03=0x7f080013;
@@ -63,14 +65,14 @@ public final class R {
         public static final int ListView_fitmaestro=0x7f08003e;
         public static final int ListView_imports=0x7f080037;
         public static final int ScrollView01=0x7f080048;
-        public static final int TextMessage=0x7f08006e;
-        public static final int TextResult=0x7f080070;
+        public static final int TextMessage=0x7f080071;
+        public static final int TextResult=0x7f080073;
         public static final int TextView01=0x7f08000d;
         public static final int TextView02=0x7f08001e;
         public static final int TextView03=0x7f08004a;
-        public static final int btnStart=0x7f08006f;
-        public static final int btn_max=0x7f08006c;
-        public static final int btn_sums=0x7f08006d;
+        public static final int btnStart=0x7f080072;
+        public static final int btn_max=0x7f08006f;
+        public static final int btn_sums=0x7f080070;
         public static final int button_ex_by_group=0x7f080007;
         public static final int button_ex_by_rating=0x7f080008;
         public static final int button_login=0x7f08003a;
@@ -84,6 +86,7 @@ public final class R {
         public static final int check1=0x7f080035;
         public static final int counter=0x7f080005;
         public static final int desc=0x7f080034;
+        public static final int desc_txt=0x7f08006d;
         public static final int editText_percentage=0x7f080027;
         public static final int editText_reps=0x7f080024;
         public static final int editText_value=0x7f080020;
@@ -123,6 +126,7 @@ public final class R {
         public static final int spinner_group=0x7f080019;
         public static final int spinner_set=0x7f080030;
         public static final int start_date_change=0x7f080066;
+        public static final int stats_selector=0x7f08006c;
         public static final int sum_caption=0x7f080056;
         public static final int sum_txt=0x7f080057;
         public static final int tab_exercising=0x7f08003b;
@@ -201,8 +205,10 @@ public final class R {
         public static final int statistics=0x7f03002b;
         public static final int stats_list=0x7f03002c;
         public static final int stats_list_row=0x7f03002d;
-        public static final int stats_type_chooser=0x7f03002e;
-        public static final int synchronization=0x7f03002f;
+        public static final int stats_selector_list=0x7f03002e;
+        public static final int stats_selector_list_row=0x7f03002f;
+        public static final int stats_type_chooser=0x7f030030;
+        public static final int synchronization=0x7f030031;
     }
     public static final class string {
         public static final int account_created=0x7f05003f;
@@ -292,6 +298,7 @@ public final class R {
         public static final int mon=0x7f05005c;
         public static final int name=0x7f050011;
         public static final int no_connection=0x7f050041;
+        public static final int none_selected=0x7f050098;
         public static final int own_weight=0x7f05001e;
         public static final int password=0x7f050039;
         public static final int password_missmatch=0x7f05003d;

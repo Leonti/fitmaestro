@@ -1,19 +1,28 @@
 package com.leonti.fitmaestro;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.leonti.fitmaestro.R;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class Statistics extends Activity {
@@ -27,49 +36,62 @@ public class Statistics extends Activity {
     
     private Calendar mStartDate;
     private Calendar mEndDate;
+    private paramsAdapter mParamsAdapter;
     
     static final int START_DATE_DIALOG_ID = 0;
     static final int END_DATE_DIALOG_ID = 1;
     static final int ACTIVITY_CHANGE_EX = 2;
     
+	private static final int EXERCISE_POS = 0;
+	private static final int START_POS = 1;
+	private static final int END_POS = 2;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.statistics);
+        setContentView(R.layout.stats_selector_list);
 
-        mExerciseDisplay = (TextView) findViewById(R.id.txt_exercise);
-        mStartDateDisplay = (TextView) findViewById(R.id.txt_start_date);
-        mEndDateDisplay = (TextView) findViewById(R.id.txt_end_date);
-        
+        ListView statsParameters = (ListView) findViewById(R.id.stats_selector);	
+		String paramTitles[] = getResources().getStringArray(R.array.stats_params);
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		for(int i=0; i<paramTitles.length; i++){
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("desc", paramTitles[i]);
+			list.add(map);	
+		}
+		String[] from = {"desc"};
+		int[] to = {R.id.desc_txt};
+
+		mParamsAdapter = new paramsAdapter(this, list, R.layout.stats_selector_list_row, from, to);
+		statsParameters.setAdapter(mParamsAdapter);
+		
+		statsParameters
+		.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v,
+					int position, long id) {
+
+				Log.v("ITEM POSITION", String.valueOf(position));
+				switch (position) {
+				case EXERCISE_POS:
+					changeExercise();
+					break;
+				case START_POS:
+					showDialog(START_DATE_DIALOG_ID);
+					break;
+				case END_POS:
+					showDialog(END_DATE_DIALOG_ID);
+					break;
+				}
+			}
+		});
+		
+		
 		mDbHelper = new ExcercisesDbAdapter(this);
 		mDbHelper.open();
- 
-        Button changeExercise = (Button) findViewById(R.id.exercise_change);
-        changeExercise.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-            	changeExercise();
-            }
-        });
-        
-        Button changeStartDate = (Button) findViewById(R.id.start_date_change);
-        changeStartDate.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                showDialog(START_DATE_DIALOG_ID);
-            }
-        });
-        
-        Button changeEndDate = (Button) findViewById(R.id.end_date_change);
-        changeEndDate.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                showDialog(END_DATE_DIALOG_ID);
-            }
-        });
-
-        
+		
         mBtnGetStats = (Button) findViewById(R.id.get_stats);
         mBtnGetStats.setOnClickListener(new View.OnClickListener() {
 
@@ -77,16 +99,49 @@ public class Statistics extends Activity {
                getStats();
             }
         });
-
+        
         initValues(savedInstanceState);
-        updateDates();
-        updateExercise();
     }
+    
     
 	@Override
 	protected void onDestroy() {
 		mDbHelper.close();
 		super.onDestroy();
+	}
+	
+	private class paramsAdapter extends SimpleAdapter{
+
+		public paramsAdapter(Context context,
+				List<? extends Map<String, ?>> data, int resource,
+				String[] from, int[] to) {
+			super(context, data, resource, from, to);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public View getView(int position, View  convertView, ViewGroup  parent){
+			View view = super.getView(position, convertView, parent);
+			
+			TextView currentTitle = (TextView) view.findViewById(R.id.title);
+			switch(position){
+			case EXERCISE_POS:
+		        mExerciseDisplay = currentTitle;
+		        updateExercise();
+				break;
+			case START_POS:
+		        mStartDateDisplay = currentTitle;
+		        updateStartDate();
+				break;
+			case END_POS:
+		        mEndDateDisplay = currentTitle;
+		        updateEndDate();
+				break;
+			}
+			
+			return view;
+		}
+		
 	}
     
     private void initValues(Bundle savedInstanceState){
@@ -157,7 +212,7 @@ public class Statistics extends Activity {
         }
     }    
 
-    private void updateDates() {
+    private void updateStartDate() {
     	
         mStartDateDisplay.setText(
             new StringBuilder()
@@ -165,6 +220,10 @@ public class Statistics extends Activity {
                     .append(mStartDate.get(Calendar.MONTH) + 1).append("-")
                     .append(mStartDate.get(Calendar.DAY_OF_MONTH)).append("-")
                     .append(mStartDate.get(Calendar.YEAR)).append(" "));
+        
+    }
+    
+    private void updateEndDate() {
         
         mEndDateDisplay.setText(
                 new StringBuilder()
@@ -183,6 +242,8 @@ public class Statistics extends Activity {
     		mExerciseDisplay.setText(exercise.getString(exercise
 					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE)));
     		mBtnGetStats.setEnabled(true);
+    	}else{
+    		mExerciseDisplay.setText(R.string.none_selected);
     	}
     	
     }
@@ -196,7 +257,7 @@ public class Statistics extends Activity {
                     mStartDate.set(Calendar.YEAR, year);
                     mStartDate.set(Calendar.MONTH, monthOfYear);
                     mStartDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    updateDates();
+                    mParamsAdapter.notifyDataSetChanged();
                 }
     };
     
@@ -209,7 +270,7 @@ public class Statistics extends Activity {
 	                mEndDate.set(Calendar.YEAR, year);
 	                mEndDate.set(Calendar.MONTH, monthOfYear);
 	                mEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-	                updateDates();
+	                mParamsAdapter.notifyDataSetChanged();
             }
     };
     
@@ -225,11 +286,13 @@ public class Statistics extends Activity {
 		
 		switch (requestCode) {
 		case ACTIVITY_CHANGE_EX:
-			Bundle extras = intent.getExtras();
-			mExerciseId = extras != null ? extras
-					.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
-			updateExercise();
-			Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(mExerciseId));
+			if(resultCode == RESULT_OK){
+				Bundle extras = intent.getExtras();
+				mExerciseId = extras != null ? extras
+						.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
+				mParamsAdapter.notifyDataSetChanged();
+				Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(mExerciseId));
+			}
 			break;
 		}
 		

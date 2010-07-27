@@ -81,13 +81,16 @@ public class WorkoutView extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		Bundle extras = intent.getExtras();
-		Long ExerciseId = extras != null ? extras
-				.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
-		mDbHelper.addExerciseToSet(mSetId, ExerciseId, 0);
-		fillData();
-		Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
-		Log.i("SET ID FROM ACTIVITY: ", String.valueOf(mSetId));
+		
+		if(resultCode == RESULT_OK){
+			Bundle extras = intent.getExtras();
+			Long ExerciseId = extras != null ? extras
+					.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
+			mDbHelper.addExerciseToSet(mSetId, ExerciseId);
+			fillData();
+			Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
+			Log.i("SET ID FROM ACTIVITY: ", String.valueOf(mSetId));
+		}
 	}
 
 	@Override

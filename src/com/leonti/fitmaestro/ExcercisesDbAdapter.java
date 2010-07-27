@@ -478,13 +478,24 @@ public class ExcercisesDbAdapter {
 		return mDb.insert(DATABASE_SETS_TABLE, null, initialValues);
 	}
 
-	public long addExerciseToSet(long set_id, long exercise_id, long site_id) {
+	public long addExerciseToSet(long setId, long exerciseId) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(KEY_SETID, set_id);
-		initialValues.put(KEY_EXERCISEID, exercise_id);
-		initialValues.put(KEY_SITEID, site_id);
+		initialValues.put(KEY_SETID, setId);
+		initialValues.put(KEY_EXERCISEID, exerciseId);
+		
+		// check if exercise is already there - if it is - do not add
+		Cursor mCursor =
+			mDb.query(true, DATABASE_SETS_CONNECTOR_TABLE, null, 
+					KEY_EXERCISEID + "=? AND " + KEY_SETID + "=? AND " + KEY_DELETED + "=0",
+					new String[]{String.valueOf(exerciseId), String.valueOf(setId)}, null, null, null, null);
 
-		return mDb.insert(DATABASE_SETS_CONNECTOR_TABLE, null, initialValues);
+		if(mCursor.getCount() > 0){
+			Log.i("ALREADY ADDED:", "Exercise already added");
+			return 1;
+		}else{
+			return mDb.insert(DATABASE_SETS_CONNECTOR_TABLE, null, initialValues);	
+		}
+
 	}
 
 	public boolean deleteSet(long rowId) {
@@ -1063,15 +1074,24 @@ public class ExcercisesDbAdapter {
 
 	}
 
-	public long addExerciseToSession(long session_id, long exercise_id) {
+	public long addExerciseToSession(long sessionId, long exerciseId) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(KEY_SESSIONID, session_id);
-		initialValues.put(KEY_EXERCISEID, exercise_id);
+		initialValues.put(KEY_SESSIONID, sessionId);
+		initialValues.put(KEY_EXERCISEID, exerciseId);
 
-		// add here reps adding
+		// check if exercise is already there - if it is - do not add
+		Cursor mCursor =
+			mDb.query(true, DATABASE_SESSIONS_CONNECTOR_TABLE, null, 
+					KEY_EXERCISEID + "=? AND " + KEY_SESSIONID + "=? AND " + KEY_DELETED + "=0",
+					new String[]{String.valueOf(exerciseId), String.valueOf(sessionId)}, null, null, null, null);
 
-		return mDb.insert(DATABASE_SESSIONS_CONNECTOR_TABLE, null,
-				initialValues);
+		if(mCursor.getCount() > 0){
+			Log.i("ALREADY ADDED:", "Exercise already added");
+			return 1;
+		}else{
+			return mDb.insert(DATABASE_SESSIONS_CONNECTOR_TABLE, null,
+					initialValues);	
+		}
 	}
 
 	public boolean deleteExerciseFromSession(long rowId) {
@@ -1238,7 +1258,7 @@ public class ExcercisesDbAdapter {
 
 		return mDb.query(DATABASE_MEASUREMENTS_LOG_TABLE, null,
 				KEY_MEASUREMENT_TYPEID + "=" + typeId + " AND " + KEY_DELETED
-						+ "=0", null, null, null, null, null);
+						+ "=0", null, null, null, KEY_ROWID + " DESC", null);
 
 	}
 

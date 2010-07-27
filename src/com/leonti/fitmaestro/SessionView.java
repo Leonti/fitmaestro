@@ -84,13 +84,15 @@ public class SessionView extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		Bundle extras = intent.getExtras();
-		Long ExerciseId = extras != null ? extras
-				.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
-				mDbHelper.addExerciseToSession(mRowId, ExerciseId);
-				fillData();
-				Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
-				Log.i("SESSION ID FROM ACTIVITY: ", String.valueOf(mRowId));
+		if(resultCode == RESULT_OK){
+			Bundle extras = intent.getExtras();
+			Long ExerciseId = extras != null ? extras
+					.getLong(ExcercisesDbAdapter.KEY_EXERCISEID) : null;
+			mDbHelper.addExerciseToSession(mRowId, ExerciseId);
+			fillData();
+			Log.i("EXERCISE ID FROM ACTIVITY: ", String.valueOf(ExerciseId));
+			Log.i("SESSION ID FROM ACTIVITY: ", String.valueOf(mRowId));
+		}
 	}
 
 	@Override

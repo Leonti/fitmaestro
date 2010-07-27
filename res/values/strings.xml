@@ -153,7 +153,7 @@
 <string name="planned_weight_table">pl. weight</string>
 <string name="weight_table">weight</string>
 <string name="percentage_table">percentage</string>
-
+<string name="none_selected">None selected</string>
 
 <dimen name="numeric_width">100dip</dimen>
 <color name="tables_header">#0000ff</color>

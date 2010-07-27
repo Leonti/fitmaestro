@@ -235,6 +235,17 @@ public class WorkoutView extends ListActivity {
 			TableLayout repsTable = (TableLayout) view
 					.findViewById(R.id.reps_table);
 			repsTable.removeViews(1, repsTable.getChildCount() - 1);
+			
+			
+			// if there is no results - we just started - don't show the header
+			if(repsForConnectorCursor.getCount() == 0){
+				repsTable.findViewById(R.id.reps_table_header).setVisibility(
+						View.GONE);
+				Log.i("REPS COUNT: ", "Count is zero");
+			}else{
+				repsTable.findViewById(R.id.reps_table_header).setVisibility(
+						View.VISIBLE);
+			}
 
 			// if 0 - own weight - don't show percentage values
 			if (exType == Long.valueOf(0)) {
@@ -247,7 +258,7 @@ public class WorkoutView extends ListActivity {
 						View.VISIBLE);
 			}
 
-			repsForConnectorCursor.moveToFirst();
+			repsForConnectorCursor.moveToFirst();			
 			for (int i = 0; i < repsForConnectorCursor.getCount(); i++) {
 
 				String reps = repsForConnectorCursor

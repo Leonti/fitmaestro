@@ -66,7 +66,7 @@ public class StatsList extends ListActivity {
 		mDbHelper.open();
 		
 		iso8601Format = new SimpleDateFormat("yyyy-MM-dd");
-		iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		//iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         initValues(savedInstanceState);
         fillData();

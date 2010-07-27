@@ -715,6 +715,28 @@ public class ExcercisesDbAdapter {
 		return mCursor;
 
 	}
+	
+	public Cursor getTotalsForExercise(long exerciseId, long sessionId, int exType){
+		
+		String sumPart = "reps * weight";
+		String maxPart = "weight";
+		
+		// for own weight - we can get stats only for repetitions
+		if(exType == 0){
+			sumPart = "reps";
+			maxPart = "reps";		
+		}
+		
+		Cursor mCursor = mDb.rawQuery("SELECT SUM(" + sumPart + ") AS sum, MAX(" + maxPart + ") AS max FROM " + DATABASE_LOG_TABLE + " WHERE " + KEY_EXERCISEID + " = " 
+				+ String.valueOf(exerciseId) + " AND " + KEY_SESSIONID + "=" 
+				+ String.valueOf(sessionId) + " AND " 
+				+ KEY_DELETED
+				+ "=0", null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+	}
 
 	public boolean updateLogEntry(long rowId, float weight, int times) {
 		ContentValues args = new ContentValues();
@@ -1153,7 +1175,6 @@ public class ExcercisesDbAdapter {
 	// END of session_connector methods
 
 	// MEASUREMENTS methods
-	// GROUPS methods
 	public long createMeasurementType(String title, String units, String desc) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_TITLE, title);

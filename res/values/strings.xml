@@ -147,6 +147,14 @@
 <string name="type_sum_desc">Create chart using sums of total workout for each session.</string>
 <string name="get_chart">Get Chart</string>
 <string name="choose_stats_title">Choose chart values</string>
+<string name="view_stats">View exercise stats</string>
+<string name="reps_table">reps</string>
+<string name="planned_reps_table">pl. reps</string>
+<string name="planned_weight_table">pl. weight</string>
+<string name="weight_table">weight</string>
+<string name="percentage_table">percentage</string>
+
 
 <dimen name="numeric_width">100dip</dimen>
+<color name="tables_header">#0000ff</color>
 </resources>

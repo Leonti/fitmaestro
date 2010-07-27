@@ -3,8 +3,6 @@ package com.leonti.fitmaestro;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.leonti.fitmaestro.R;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -27,6 +25,7 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -44,6 +43,8 @@ public class SessionRepsList extends ListActivity {
 	private Long mSessionRepsId;
 	private Long mLastChronometerBase;
 	private Chronometer mCounter = null;
+	private TextView sumTxt;
+	private TextView maxTxt;
 
 	ArrayList<HashMap<String, String>> mSessionRepsList = new ArrayList<HashMap<String, String>>();
 
@@ -53,6 +54,7 @@ public class SessionRepsList extends ListActivity {
 	private static final int DIALOG_CHRONOMETER = 3;
 	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
+	private static final int VIEW_STATS_ID = Menu.FIRST + 2;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -121,7 +123,21 @@ public class SessionRepsList extends ListActivity {
 			findViewById(R.id.x_done_col).setVisibility(View.GONE);
 			findViewById(R.id.weight_col).setVisibility(View.GONE);
 		}
-
+		
+		// getting max and total values for session
+		// R.id.sum_txt, R.id.max_txt
+		String maxValue = "0";
+		String sumValue = "0";
+		Cursor totalsCursor = mDbHelper.getTotalsForExercise(mExerciseId, mSessionId, mExType.intValue());
+		if(totalsCursor.getCount() > 0){
+			maxValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("max")));
+			sumValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("sum")));
+		}
+		maxTxt = (TextView) findViewById(R.id.max_txt);
+		sumTxt = (TextView) findViewById(R.id.sum_txt);
+		maxTxt.setText(maxValue);
+		sumTxt.setText(sumValue);
+		
 		SessionRepsArray repsArray = new SessionRepsArray(this, mSessionId,
 				mExerciseId, mSessionConnectorId);
 		mSessionRepsList = repsArray.getRepsArray();
@@ -144,6 +160,7 @@ public class SessionRepsList extends ListActivity {
 		super.onCreateOptionsMenu(menu);
 		MenuItem insert = menu.add(0, INSERT_ID, 0, R.string.add_entry);
 		insert.setIcon(android.R.drawable.ic_menu_add);
+		menu.add(0, VIEW_STATS_ID, 0, R.string.view_stats);
 		return true;
 	}
 
@@ -152,6 +169,9 @@ public class SessionRepsList extends ListActivity {
 		switch (item.getItemId()) {
 		case INSERT_ID:
 			createEntry();
+			return true;
+		case VIEW_STATS_ID:
+			viewStats();
 			return true;
 		}
 
@@ -162,6 +182,13 @@ public class SessionRepsList extends ListActivity {
 		mListPosition = null;
 		showDialog(DIALOG_EDIT_REPS);
 		populateRepsDialog();
+	}
+	
+	private void viewStats(){
+		Intent i = new Intent(this,
+				Statistics.class);
+		i.putExtra(ExcercisesDbAdapter.KEY_ROWID, mExerciseId);
+		startActivity(i);
 	}
 
 	@Override

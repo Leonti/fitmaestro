@@ -3,14 +3,18 @@ package com.leonti.fitmaestro;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import com.leonti.fitmaestro.R;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -36,11 +40,13 @@ public class MeasLogEntries extends ListActivity {
 
 	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
+	private static final int CHART_ID = Menu.FIRST + 2;
 
 	private ExcercisesDbAdapter mDbHelper;
 	private Cursor mMeasLogCursor;
 	private Long mMeasurementId;
 	private Long mMeasLogId;
+	private String unitsName;
 	DateFormat iso8601Format;
 	DateFormat iso8601FormatLocal;
 	private Dialog mEditValueDialog;
@@ -50,7 +56,7 @@ public class MeasLogEntries extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.log_entries_list);
+		setContentView(R.layout.meas_log_list);
 
 		mMeasurementId = savedInstanceState != null ? savedInstanceState
 				.getLong(ExcercisesDbAdapter.KEY_ROWID) : null;
@@ -69,31 +75,56 @@ public class MeasLogEntries extends ListActivity {
 		fillData();
 		registerForContextMenu(getListView());
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		outState.putLong(ExcercisesDbAdapter.KEY_ROWID, mMeasurementId);
+	}
 
 	private void fillData() {
 
-		/*
-		 * Calendar beginning = Calendar.getInstance();
-		 * beginning.set(Calendar.HOUR_OF_DAY, 0);
-		 * beginning.set(Calendar.MINUTE, 0); beginning.set(Calendar.SECOND, 0);
-		 * Calendar ending = (Calendar) beginning.clone();
-		 * ending.add(Calendar.DAY_OF_YEAR, + 1);
-		 * 
-		 * String begin = iso8601Format.format(beginning.getTime()); String end
-		 * = iso8601Format.format(ending.getTime());
-		 */
-
+		Cursor measurement = mDbHelper.fetchMeasurementType(mMeasurementId);
+		startManagingCursor(measurement);
+		unitsName = measurement.getString(measurement
+				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_UNITS));
+		
 		mMeasLogCursor = mDbHelper.fetchMeasLogEntries(mMeasurementId);
 		startManagingCursor(mMeasLogCursor);
 		String[] from = new String[] { ExcercisesDbAdapter.KEY_VALUE,
 				ExcercisesDbAdapter.KEY_DATE };
 		int[] to = new int[] { R.id.meas_value, R.id.entry_time };
-		SimpleCursorAdapter measLog = new SimpleCursorAdapter(this,
+		LogListCursorAdapter measLog = new LogListCursorAdapter(this,
 				R.layout.meas_log_list_row, mMeasLogCursor, from, to);
 		measLog.setViewBinder(new MyViewBinder());
 		setListAdapter(measLog);
-	}
+		
 
+	}
+	protected class LogListCursorAdapter extends SimpleCursorAdapter {
+
+		Activity mActivity;
+
+		public LogListCursorAdapter(Activity activity, int layout,
+				Cursor c, String[] from, int[] to) {
+			super(activity, layout, c, from, to);
+
+			mActivity = activity;
+
+		}
+
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			super.bindView(view, context, cursor);
+
+			Log.i("BIND", "bind view called");
+			TextView units = (TextView) view.findViewById(R.id.units_name);
+			units.setText(unitsName);
+		}
+
+	}
+	
 	public class MyViewBinder implements SimpleCursorAdapter.ViewBinder {
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -125,6 +156,7 @@ public class MeasLogEntries extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, INSERT_ID, 0, R.string.add_entry);
+		menu.add(0, CHART_ID, 0, R.string.get_chart);
 		return true;
 	}
 
@@ -133,6 +165,9 @@ public class MeasLogEntries extends ListActivity {
 		switch (item.getItemId()) {
 		case INSERT_ID:
 			createEntry();
+			return true;
+		case CHART_ID:
+			drawChart();
 			return true;
 		}
 
@@ -286,4 +321,9 @@ public class MeasLogEntries extends ListActivity {
 			valueText.setText("");
 		}
 	}
+	
+	public void drawChart(){
+		
+	}
+	
 }

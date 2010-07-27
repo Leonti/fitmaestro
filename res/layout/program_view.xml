@@ -7,37 +7,37 @@
 	<LinearLayout android:id="@+id/LinearLayout02"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		
-		<TextView android:text="@string/mon" android:background="#0000ff"
+		<TextView android:text="@string/mon" android:background="@color/tables_header"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"
 			android:layout_weight="1.0" />
-		<TextView android:text="@string/tue" android:background="#0000ff"
+		<TextView android:text="@string/tue" android:background="@color/tables_header"
 		android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"
 			android:layout_weight="1.0" />
-		<TextView android:text="@string/wed" android:background="#0000ff"
+		<TextView android:text="@string/wed" android:background="@color/tables_header"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"
 			android:layout_weight="1.0" />
-		<TextView android:text="@string/thu" android:background="#0000ff"
+		<TextView android:text="@string/thu" android:background="@color/tables_header"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"
 			android:layout_weight="1.0" />
-		<TextView android:text="@string/fri" android:background="#0000ff"
+		<TextView android:text="@string/fri" android:background="@color/tables_header"
 		android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"
 			android:layout_weight="1.0" />
-		<TextView android:text="@string/sat" android:background="#0000ff"
+		<TextView android:text="@string/sat" android:background="@color/tables_header"
 		android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"
 			android:layout_weight="1.0" />
-		<TextView android:text="@string/sun" android:background="#0000ff"
+		<TextView android:text="@string/sun" android:background="@color/tables_header"
 		android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="0dip" android:gravity="center"

@@ -143,6 +143,18 @@ public class SessionRepsArray {
 
 		repsTable.removeViews(1, repsTable.getChildCount() - 1);
 
+		// if there is no results - we just started - don't show the header
+		// is irrelevant for stats display - we always have at least 1 result
+		// probably the check should be disabled for efficiency
+		if(sessionRepsList.size() == 0){
+			repsTable.findViewById(R.id.reps_table_header).setVisibility(
+					View.GONE);
+			Log.i("REPS COUNT: ", "Count is zero");
+		}else{
+			repsTable.findViewById(R.id.reps_table_header).setVisibility(
+					View.VISIBLE);
+		}
+		
 		// if 0 - own weight - don't show percentage values
 		if (exType == Long.valueOf(0)) {
 			repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);

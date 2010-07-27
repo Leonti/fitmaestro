@@ -5,74 +5,73 @@
 	android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<LinearLayout android:id="@+id/LinearLayout01"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
->
-		
-	<LinearLayout android:id="@+id/LinearLayout01"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical">
-		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/session_name" android:layout_width="fill_parent"
-			android:text="21 May 2010" android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:gravity="center_vertical" android:paddingLeft="5dip"
-			android:singleLine="true" />
+		android:layout_width="wrap_content" android:layout_height="wrap_content">
 
-		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:text="21 May 2010" android:id="@+id/session_date"
+		<LinearLayout android:id="@+id/LinearLayout01"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:gravity="center_vertical" android:paddingLeft="5dip"
-			android:singleLine="true" />
-	</LinearLayout>
+			android:orientation="vertical">
+			<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/session_name" android:layout_width="fill_parent"
+				android:text="21 May 2010" android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:gravity="center_vertical" android:paddingLeft="5dip"
+				android:singleLine="true" />
 
-	<LinearLayout android:id="@+id/LinearLayout01"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical">
-
-		<LinearLayout android:id="@+id/LinearLayout01"
-			android:layout_width="fill_parent" android:layout_height="wrap_content">
-			<TextView android:text="@string/max_value" android:id="@+id/max_caption"
-				android:layout_width="wrap_content" android:layout_height="wrap_content" />
-			<TextView android:text="80" android:id="@+id/max_txt"
-				android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+				android:text="21 May 2010" android:id="@+id/session_date"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:gravity="center_vertical" android:paddingLeft="5dip"
+				android:singleLine="true" />
 		</LinearLayout>
 
 		<LinearLayout android:id="@+id/LinearLayout01"
-			android:layout_width="fill_parent" android:layout_height="wrap_content">
-			<TextView android:text="@string/sum" android:id="@+id/sum_caption"
-				android:layout_width="wrap_content" android:layout_height="wrap_content" />
-			<TextView android:text="2045" android:id="@+id/sum_txt"
-				android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<LinearLayout android:id="@+id/LinearLayout01"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TextView android:text="@string/max_value" android:id="@+id/max_caption"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+				<TextView android:text="80" android:id="@+id/max_txt"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			</LinearLayout>
+
+			<LinearLayout android:id="@+id/LinearLayout01"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TextView android:text="@string/sum" android:id="@+id/sum_caption"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+				<TextView android:text="2045" android:id="@+id/sum_txt"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			</LinearLayout>
+
 		</LinearLayout>
 
 	</LinearLayout>
-	
-	</LinearLayout>	
 
 
 	<TableLayout android:id="@+id/reps_table"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<TableRow android:background="#00ff00" android:layout_margin="2dip">
-			<TextView android:text="pl. reps" android:background="#0000ff"
-				android:layout_margin="2dip" android:layout_weight="1.0"
+		<TableRow android:id="@+id/reps_table_header">
+			<TextView android:text="@string/planned_reps_table" android:background="@color/tables_header"
+				 android:layout_weight="1.0"
 				android:gravity="center" />
 			<TextView android:text="x" android:id="@+id/x_col"
-				android:background="#0000ff" android:layout_margin="2dip"
+				android:background="@color/tables_header"
 				android:gravity="center" android:paddingLeft="3dip"
 				android:paddingRight="3dip" />
-			<TextView android:text="pl. weight" android:id="@+id/planned_weight_col"
-				android:background="#0000ff" android:layout_margin="2dip"
+			<TextView android:text="@string/planned_weight_table" android:id="@+id/planned_weight_col"
+				android:background="@color/tables_header"
 				android:layout_weight="1.0" android:gravity="center" />
 
-			<TextView android:text="reps" android:background="#0000ff"
-				android:layout_margin="2dip" android:layout_weight="1.0"
+			<TextView android:text="@string/reps_table" android:background="@color/tables_header"
+				android:layout_weight="1.0"
 				android:gravity="center" />
 			<TextView android:text="x" android:id="@+id/x_done_col"
-				android:background="#0000ff" android:layout_margin="2dip"
+				android:background="@color/tables_header"
 				android:gravity="center" android:paddingLeft="3dip"
 				android:paddingRight="3dip" />
-			<TextView android:text="weight" android:id="@+id/weight_col"
-				android:background="#0000ff" android:layout_margin="2dip"
+			<TextView android:text="@string/weight_table" android:id="@+id/weight_col"
+				android:background="@color/tables_header"
 				android:layout_weight="1.0" android:gravity="center" />
 		</TableRow>
 	</TableLayout>

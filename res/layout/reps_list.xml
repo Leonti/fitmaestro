@@ -4,19 +4,19 @@
 	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
 	<TableLayout android:id="@+id/reps_table"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<TableRow android:background="#00ff00" android:layout_margin="2dip">
-			<TextView android:text="reps" android:background="#0000ff"
+		<TableRow>
+			<TextView android:text="@string/reps_table" android:background="@color/tables_header"
 				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip" android:layout_margin="2dip"
+				android:padding="3dip"
 				android:layout_weight="1.0" android:gravity="center" />
 			<TextView android:text="x" android:id="@+id/x_col"
 				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip" android:background="#0000ff"
-				android:layout_margin="2dip" android:gravity="center" />
-			<TextView android:text="percentage" android:id="@+id/percentage_col"
+				android:padding="3dip" android:background="@color/tables_header"
+				android:gravity="center" />
+			<TextView android:text="@string/percentage_table" android:id="@+id/percentage_col"
 				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip" android:background="#0000ff"
-				android:layout_margin="2dip" android:layout_weight="1.0"
+				android:padding="3dip" android:background="@color/tables_header"
+				android:layout_weight="1.0"
 				android:gravity="center" />
 		</TableRow>
 

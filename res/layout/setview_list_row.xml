@@ -16,16 +16,16 @@
 	    android:singleLine="true"
 		/>
 		<TableLayout android:id="@+id/reps_table" android:layout_width="fill_parent" android:layout_height="wrap_content">
-			<TableRow android:background="#00ff00" android:layout_margin="2dip">
-				<TextView android:text="reps" android:background="#0000ff"
-					android:layout_margin="2dip" android:layout_weight="1.0"
+			<TableRow android:id="@+id/reps_table_header">
+				<TextView android:text="@string/reps_table" android:background="@color/tables_header"
+					android:layout_weight="1.0"
 					android:gravity="center" />
 				<TextView android:text="x" android:id="@+id/x_col"
-					android:background="#0000ff" android:layout_margin="2dip"
+					android:background="@color/tables_header"
 					android:gravity="center" android:paddingLeft="3dip"
 					android:paddingRight="3dip" />
-				<TextView android:text="percentage" android:id="@+id/percentage_col"
-					android:background="#0000ff" android:layout_margin="2dip"
+				<TextView android:text="@string/percentage_table" android:id="@+id/percentage_col"
+					android:background="@color/tables_header"
 					android:layout_weight="1.0" android:gravity="center" />
 			</TableRow>
 		</TableLayout>

@@ -57,6 +57,12 @@ public class SessionEdit extends Activity {
 
 		});
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void populateFields() {
 		if (mRowId != null && mRowId > 0) {
@@ -113,16 +119,5 @@ public class SessionEdit extends Activity {
 		} else {
 			mDbHelper.updateSession(mRowId, title, desc, "INPROGRESS");
 		}
-
-		/*
-		 * if (mProgramId != null && mProgramId > 0){
-		 * mDbHelper.addSetToProgram(mProgramId, mRowId, mDayNumber);
-		 * 
-		 * Log.i("Edit Set", "Set added to program with id: " +
-		 * Long.toString(mProgramId) + " and day_number: " +
-		 * Long.toString(mDayNumber) + " and set_id: " + Long.toString(mRowId));
-		 * }
-		 */
-		// adding this set to program (if id provided)
 	}
 }

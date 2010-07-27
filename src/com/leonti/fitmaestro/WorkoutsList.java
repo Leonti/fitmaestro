@@ -40,6 +40,12 @@ public class WorkoutsList extends ListActivity {
 		fillData();
 		registerForContextMenu(getListView());
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void fillData() {
 		mSetsCursor = mDbHelper.fetchFreeSets();

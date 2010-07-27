@@ -1,8 +1,5 @@
 package com.leonti.fitmaestro;
 
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

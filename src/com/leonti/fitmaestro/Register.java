@@ -45,6 +45,11 @@ public class Register extends Activity {
 			}
 		});
 	}
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	public int registerUser(String email, String password, String repeatPassword) {
 		Log.i("DYG", email + " " + password + " " + repeatPassword);

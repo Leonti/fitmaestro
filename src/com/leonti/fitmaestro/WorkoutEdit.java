@@ -64,6 +64,12 @@ public class WorkoutEdit extends Activity {
 
 		});
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void populateFields() {
 		if (mRowId != null && mRowId > 0) {
@@ -87,17 +93,6 @@ public class WorkoutEdit extends Activity {
 			findViewById(R.id.edit_name).setVisibility(View.GONE);
 		}
 	}
-
-	/*
-	 * private void fillExcercises(){ Cursor ExcercisesCursor =
-	 * mDbHelper.fetchExcercisesForGroup(1); //for now
-	 * startManagingCursor(ExcercisesCursor); String[] from = new
-	 * String[]{ExcercisesDbAdapter.KEY_TITLE}; int[] to = new
-	 * int[]{R.id.excercise_name}; SimpleCursorAdapter adapter = new
-	 * SimpleCursorAdapter(this, R.layout.excercise_list_set_row,
-	 * ExcercisesCursor, from, to); ListView exList = (ListView)
-	 * findViewById(R.id.ex_list); exList.setAdapter(adapter); }
-	 */
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {

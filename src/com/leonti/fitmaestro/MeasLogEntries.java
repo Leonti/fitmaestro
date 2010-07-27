@@ -3,13 +3,9 @@ package com.leonti.fitmaestro;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.TimeZone;
-
 import com.leonti.fitmaestro.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -74,6 +69,12 @@ public class MeasLogEntries extends ListActivity {
 
 		fillData();
 		registerForContextMenu(getListView());
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
 	}
 	
 	@Override
@@ -180,12 +181,6 @@ public class MeasLogEntries extends ListActivity {
 		populateEntryDialog();
 	}
 
-	private void editEntry(long id) {
-		/*
-		 * mMeasLogId = id; showDialog(DIALOG_EDIT_MEAS); populateEntryDialog();
-		 */
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
@@ -203,8 +198,6 @@ public class MeasLogEntries extends ListActivity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
-		AdapterView.AdapterContextMenuInfo info;
-		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
 		TextView measLogEntry = (TextView) view.findViewById(R.id.meas_value);
 		String title = measLogEntry.getText().toString();
@@ -234,13 +227,6 @@ public class MeasLogEntries extends ListActivity {
 		mMeasLogId = id;
 		showDialog(DIALOG_EDIT_MEAS);
 		populateEntryDialog();
-
-		/*
-		 * Intent i = new Intent(this, SetView.class);
-		 * i.putExtra(ExcercisesDbAdapter.KEY_ROWID, id);
-		 * startActivityForResult(i, 5);
-		 */
-		// SHOW ADDITIONAL INFO FOR THIS LOG ENTRY
 	}
 
 	@Override
@@ -313,6 +299,7 @@ public class MeasLogEntries extends ListActivity {
 		// editing entry - prepopulating
 		if (mMeasLogId != null) {
 			Cursor MeasLogEntryCursor = mDbHelper.fetchMeasLogEntry(mMeasLogId);
+			startManagingCursor(MeasLogEntryCursor);
 			String value = MeasLogEntryCursor.getString(MeasLogEntryCursor
 					.getColumnIndex(ExcercisesDbAdapter.KEY_VALUE));
 			valueText.setText(value);

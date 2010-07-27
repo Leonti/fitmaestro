@@ -49,6 +49,12 @@ public class MeasurementEdit extends Activity {
 
 		});
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void populateFields() {
 

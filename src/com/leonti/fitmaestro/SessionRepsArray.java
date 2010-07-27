@@ -18,12 +18,6 @@ public class SessionRepsArray {
 
 	private final Context mCtx;
 	private ExcercisesDbAdapter mDbHelper;
-
-	private Cursor mRepsForSessionCursor;
-
-	// free - without sets detail predefined
-	private Cursor mFreeRepsForSessionCursor;
-
 	private Long mSessionId;
 	private Long mExerciseId;
 	private Long mSessionsConnectorId;
@@ -95,6 +89,8 @@ public class SessionRepsArray {
 					item.put("reps", "not_done");
 					item.put("weight", "not_done");
 				}
+				
+				sessionDoneReps.close();
 
 				item.put("session_detail_id", sessionDetailId.toString());
 				item.put("planned_reps", planned_reps.toString());
@@ -103,23 +99,25 @@ public class SessionRepsArray {
 
 				sessionReps.moveToNext();
 			}
+			
+			sessionReps.close();
 		}
 
-		mFreeRepsForSessionCursor = mDbHelper.fetchFreeSessionReps(mSessionId,
+		Cursor freeRepsForSessionCursor = mDbHelper.fetchFreeSessionReps(mSessionId,
 				mExerciseId);
-		mFreeRepsForSessionCursor.moveToFirst();
-		for (int i = 0; i < mFreeRepsForSessionCursor.getCount(); i++) {
+		freeRepsForSessionCursor.moveToFirst();
+		for (int i = 0; i < freeRepsForSessionCursor.getCount(); i++) {
 
-			Long repsId = mFreeRepsForSessionCursor
-					.getLong(mFreeRepsForSessionCursor
+			Long repsId = freeRepsForSessionCursor
+					.getLong(freeRepsForSessionCursor
 							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
 
-			Long reps = mFreeRepsForSessionCursor
-					.getLong(mFreeRepsForSessionCursor
+			Long reps = freeRepsForSessionCursor
+					.getLong(freeRepsForSessionCursor
 							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
 
-			Float weight = mFreeRepsForSessionCursor
-					.getFloat(mFreeRepsForSessionCursor
+			Float weight = freeRepsForSessionCursor
+					.getFloat(freeRepsForSessionCursor
 							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_WEIGHT));
 
 			HashMap<String, String> item = new HashMap<String, String>();
@@ -131,9 +129,11 @@ public class SessionRepsArray {
 			item.put("planned_weight", "extra");
 			mSessionRepsList.add(item);
 
-			mFreeRepsForSessionCursor.moveToNext();
+			freeRepsForSessionCursor.moveToNext();
 		}
+		freeRepsForSessionCursor.close();
 
+		mDbHelper.close();
 		return mSessionRepsList;
 	}
 	

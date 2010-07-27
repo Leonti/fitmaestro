@@ -5,12 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
-
-import com.leonti.fitmaestro.SessionView.SessionViewCursorAdapter;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,22 +15,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.TableRow.LayoutParams;
 
 public class StatsList extends ListActivity {
 
@@ -71,6 +58,12 @@ public class StatsList extends ListActivity {
         initValues(savedInstanceState);
         fillData();
     }
+    
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
     
     private void initValues(Bundle savedInstanceState){
         
@@ -111,6 +104,7 @@ public class StatsList extends ListActivity {
 	public void fillData(){
 		
 		Cursor exerciseCursor = (Cursor) mDbHelper.fetchExercise(mExerciseId);
+		startManagingCursor(exerciseCursor);
 		mExType = exerciseCursor.getInt(exerciseCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
 		
@@ -118,9 +112,7 @@ public class StatsList extends ListActivity {
 		String end = iso8601Format.format(mEndDate.getTime());
 		
 		mStatsCursor = mDbHelper.fetchStatsForExercise(mExerciseId, begin,
-				end, mExType);
-		
-		
+				end, mExType);		
 		startManagingCursor(mStatsCursor);
 		String[] from = new String[] { ExcercisesDbAdapter.KEY_TITLE, ExcercisesDbAdapter.KEY_DONE, "sum", "max"};
 		int[] to = new int[] { R.id.session_name, R.id.session_date, R.id.sum_txt, R.id.max_txt };

@@ -7,7 +7,6 @@ import com.leonti.fitmaestro.R;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,17 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Statistics extends Activity {
 
     private TextView mExerciseDisplay;
     private TextView mStartDateDisplay;
     private TextView mEndDateDisplay; 
-    private TextView mStatsDisplay; 
-    private TextView mStatsDescDisplay;
-    private String[] mStatTypes;
-    private String[] mStatDescs;
     private Long mExerciseId;
 	private ExcercisesDbAdapter mDbHelper;
 	private Button mBtnGetStats;
@@ -47,11 +41,6 @@ public class Statistics extends Activity {
         mExerciseDisplay = (TextView) findViewById(R.id.txt_exercise);
         mStartDateDisplay = (TextView) findViewById(R.id.txt_start_date);
         mEndDateDisplay = (TextView) findViewById(R.id.txt_end_date);
-        mStatsDisplay = (TextView) findViewById(R.id.txt_stats_type);
-        mStatsDescDisplay = (TextView) findViewById(R.id.txt_stats_desc);
-        
-        mStatTypes = getResources().getStringArray(R.array.stat_types);
-        mStatDescs = getResources().getStringArray(R.array.stat_types_desc);
         
 		mDbHelper = new ExcercisesDbAdapter(this);
 		mDbHelper.open();
@@ -79,14 +68,7 @@ public class Statistics extends Activity {
                 showDialog(END_DATE_DIALOG_ID);
             }
         });
-        
-        Button changeStatsType = (Button) findViewById(R.id.stats_change);
-        changeStatsType.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-               // showDialog(END_DATE_DIALOG_ID);
-            }
-        });
         
         mBtnGetStats = (Button) findViewById(R.id.get_stats);
         mBtnGetStats.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +82,12 @@ public class Statistics extends Activity {
         updateDates();
         updateExercise();
     }
+    
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
     
     private void initValues(Bundle savedInstanceState){
     
@@ -190,8 +178,9 @@ public class Statistics extends Activity {
     public void updateExercise(){
     	
     	if(mExerciseId != null){
-    		Cursor excercise = mDbHelper.fetchExercise(mExerciseId);
-    		mExerciseDisplay.setText(excercise.getString(excercise
+    		Cursor exercise = mDbHelper.fetchExercise(mExerciseId);
+    		startManagingCursor(exercise);
+    		mExerciseDisplay.setText(exercise.getString(exercise
 					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TITLE)));
     		mBtnGetStats.setEnabled(true);
     	}

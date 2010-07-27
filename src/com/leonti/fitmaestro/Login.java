@@ -39,6 +39,12 @@ public class Login extends Activity {
 			}
 		});
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private class PerformLogin extends AsyncTask<String, Integer, Long> {
 		protected Long doInBackground(String... userData) {

@@ -1,14 +1,10 @@
 package com.leonti.fitmaestro;
 
-import java.util.Calendar;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
 
 public class Chart extends Activity {
 

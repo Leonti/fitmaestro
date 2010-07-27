@@ -13,7 +13,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +20,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.TableRow.LayoutParams;
 
 public class SessionView extends ListActivity {
 
@@ -60,10 +56,17 @@ public class SessionView extends ListActivity {
 				fillData();
 				registerForContextMenu(getListView());
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void fillData() {
 
 		Cursor session = mDbHelper.fetchSession(mRowId);
+		startManagingCursor(session);
 		mStatus = session.getString(session
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_STATUS));
 

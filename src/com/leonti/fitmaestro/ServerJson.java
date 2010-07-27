@@ -43,13 +43,6 @@ public class ServerJson {
 
 		JSONObject jsonResponse = new JSONObject(response);
 
-		/*
-		 * JSONArray serverData1 = jsonResponse.getJSONArray("data1"); JSONArray
-		 * serverData2 = jsonResponse.getJSONArray("data2"); for(int i = 0; i <
-		 * serverData1.length() && i < serverData2.length(); i++) { //Do
-		 * something with the data }
-		 */
-
 		return jsonResponse;
 	}
 

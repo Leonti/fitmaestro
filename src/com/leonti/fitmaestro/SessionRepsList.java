@@ -76,17 +76,15 @@ public class SessionRepsList extends ListActivity {
 		registerForContextMenu(getListView());
 
 		// restoring chronometer counter
-
 		mLastChronometerBase = savedInstanceState != null ? savedInstanceState
 				.getLong("last_chronometer_base") : null;
 
-		/*
-		 * // we have saved state so restore counter if(mLastChronometerBase !=
-		 * null){ Log.i("CHRONOMETER VALUE RESTORED:",
-		 * String.valueOf(mLastChronometerBase)); mCounter = (Chronometer)
-		 * mCounterDialog.findViewById(R.id.counter);
-		 * startCounter(mLastChronometerBase); }
-		 */
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
 	}
 
 	@Override
@@ -105,14 +103,16 @@ public class SessionRepsList extends ListActivity {
 
 	private void fillData() {
 
-		Cursor SessionConnectorCursor = mDbHelper
+		Cursor sessionConnectorCursor = mDbHelper
 				.fetchSessionConnector(mSessionConnectorId);
-		mSessionId = SessionConnectorCursor.getLong(SessionConnectorCursor
+		startManagingCursor(sessionConnectorCursor);
+		mSessionId = sessionConnectorCursor.getLong(sessionConnectorCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_SESSIONID));
-		mExerciseId = SessionConnectorCursor.getLong(SessionConnectorCursor
+		mExerciseId = sessionConnectorCursor.getLong(sessionConnectorCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_EXERCISEID));
 
 		Cursor exerciseCursor = (Cursor) mDbHelper.fetchExercise(mExerciseId);
+		startManagingCursor(exerciseCursor);
 		mExType = exerciseCursor.getLong(exerciseCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
 		
@@ -129,6 +129,7 @@ public class SessionRepsList extends ListActivity {
 		String maxValue = "0";
 		String sumValue = "0";
 		Cursor totalsCursor = mDbHelper.getTotalsForExercise(mExerciseId, mSessionId, mExType.intValue());
+		startManagingCursor(totalsCursor);
 		if(totalsCursor.getCount() > 0){
 			maxValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("max")));
 			sumValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("sum")));

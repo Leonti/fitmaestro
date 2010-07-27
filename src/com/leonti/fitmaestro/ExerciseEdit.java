@@ -91,6 +91,12 @@ public class ExerciseEdit extends Activity {
 		});
 
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void populateFields() {
 

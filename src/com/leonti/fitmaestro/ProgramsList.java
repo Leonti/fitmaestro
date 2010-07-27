@@ -40,6 +40,12 @@ public class ProgramsList extends ListActivity {
 		fillData();
 		registerForContextMenu(getListView());
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void fillData() {
 		mProgramsCursor = mDbHelper.fetchAllPrograms();

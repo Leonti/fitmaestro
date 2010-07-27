@@ -50,6 +50,12 @@ public class SessionsList extends ListActivity {
 		fillData();
 		registerForContextMenu(getListView());
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {

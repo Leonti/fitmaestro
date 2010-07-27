@@ -43,6 +43,12 @@ public class ExercisesList extends ExpandableListActivity {
 		fillData();
 		registerForContextMenu(getExpandableListView());
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void fillData() {
 		mGroupsCursor = mDbHelper.fetchAllGroups();

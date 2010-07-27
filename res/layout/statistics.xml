@@ -62,28 +62,5 @@
 	</LinearLayout>
 
 
-
-	<LinearLayout android:id="@+id/LinearLayout01"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-
-			<LinearLayout android:id="@+id/LinearLayout01"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical"
-						  android:layout_weight="1.0" >			
-		<TextView android:text="@string/statistics_type" android:id="@+id/TextView01"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-			<TextView android:text="Max values" android:id="@+id/txt_stats_type"
-	android:textAppearance="?android:attr/textAppearanceLarge"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	<TextView android:text="Maximum exercise value for the session" android:id="@+id/txt_stats_desc"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	</LinearLayout>
-		
-		<Button android:text="@string/change" android:id="@+id/stats_change"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:gravity="center_vertical|right"></Button>
-	</LinearLayout>
-
-
 <Button android:text="@string/get_stats" android:enabled="false" android:id="@+id/get_stats" android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
 </LinearLayout>

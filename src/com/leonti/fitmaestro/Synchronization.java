@@ -303,6 +303,7 @@ public class Synchronization {
 					itemReturn.put("site_id", siteId);
 					itemsReturn.put(itemReturn);
 				}
+				itemCursor.close();
 			} else { // it's already on the phone, so we need to update it
 
 				mDbHelper.updateItem(table, updateFields, rowId);

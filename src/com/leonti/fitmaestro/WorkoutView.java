@@ -5,7 +5,6 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -60,6 +59,12 @@ public class WorkoutView extends ListActivity {
 		mDbHelper.open();
 		fillData();
 		registerForContextMenu(getListView());
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
 	}
 
 	private void fillData() {
@@ -138,6 +143,7 @@ public class WorkoutView extends ListActivity {
 
 			Cursor repsForConnectorCursor = mDbHelper
 					.fetchRepsForConnector(setsConnectorId);
+			startManagingCursor(repsForConnectorCursor);
 
 			repsForConnectorCursor.moveToFirst();
 			for (int j = 0; j < repsForConnectorCursor.getCount(); j++) {
@@ -230,7 +236,8 @@ public class WorkoutView extends ListActivity {
 
 			Cursor repsForConnectorCursor = mDbHelper
 					.fetchRepsForConnector(setsConnectorId);
-
+			startManagingCursor(repsForConnectorCursor);
+			
 			// remove all rows except for the first one
 			TableLayout repsTable = (TableLayout) view
 					.findViewById(R.id.reps_table);

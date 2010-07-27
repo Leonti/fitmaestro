@@ -24,7 +24,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TableRow.LayoutParams;
 
 public class ProgramView extends Activity {
@@ -64,6 +63,12 @@ public class ProgramView extends Activity {
 		 * registerForContextMenu(getListView());
 		 */
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private void fillData() {
 		Log.i("FILL", "filling program view");
@@ -91,6 +96,7 @@ public class ProgramView extends Activity {
 	@Override
     public void onCreateContextMenu(ContextMenu menu,View v,ContextMenuInfo info)
     {
+		@SuppressWarnings("unchecked")
 		HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
 		.getTag();
 		
@@ -226,6 +232,7 @@ public class ProgramView extends Activity {
 				public void onClick(View v) {
 					Log.i("Listener: ", mRowId + " " + v.getTag().toString());
 
+					@SuppressWarnings("unchecked")
 					final HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
 							.getTag();
 
@@ -279,6 +286,8 @@ public class ProgramView extends Activity {
 
 				@Override
 				public boolean onLongClick(View v) {
+					
+					@SuppressWarnings("unchecked")
 					HashMap<String, Long> dayClickedData = (HashMap<String, Long>) v
 					.getTag();
 

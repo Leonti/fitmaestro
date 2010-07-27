@@ -35,13 +35,4 @@
 		<item>Register</item>
 	</string-array>	
 	
-	<string-array name="stat_types">
-		<item>Meximum values</item>
-		<item>Session sums</item>
-	</string-array>
-	<string-array name="stat_types_desc">
-		<item>Maximum values for the session</item>
-		<item>Register</item>
-	</string-array>	
-	
 </resources>

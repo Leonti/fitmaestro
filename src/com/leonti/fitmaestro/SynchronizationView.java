@@ -50,6 +50,12 @@ public class SynchronizationView extends Activity {
 		});
 
 	}
+	
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
 
 	private class PerformSync extends AsyncTask<Void, Integer, Long> {
 

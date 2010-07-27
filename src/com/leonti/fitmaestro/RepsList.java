@@ -35,10 +35,8 @@ public class RepsList extends ListActivity {
 	private Float mMaxWeight;
 	private Long mMaxReps;
 	private Long mListPosition;
-
 	private Dialog mEditRepsDialog;
 
-	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
 	private static final int DIALOG_EDIT_REPS = 2;
 	private static final int INSERT_ID = Menu.FIRST;
@@ -67,10 +65,17 @@ public class RepsList extends ListActivity {
 		registerForContextMenu(getListView());
 	}
 
+	@Override
+	protected void onDestroy() {
+		mDbHelper.close();
+		super.onDestroy();
+	}
+	
 	private void fillData() {
 
 		Cursor exerciseCursor = mDbHelper
 				.fetchExerciseForSetsConnector(mSetConnectorId);
+		startManagingCursor(exerciseCursor);
 		mExType = exerciseCursor.getLong(exerciseCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
 		mMaxReps = exerciseCursor.getLong(exerciseCursor

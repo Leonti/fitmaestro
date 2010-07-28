@@ -1261,6 +1261,31 @@ public class ExcercisesDbAdapter {
 						+ "=0", null, null, null, KEY_ROWID + " DESC", null);
 
 	}
+	
+	public Cursor fetchMeasLogEntriesForDates(long typeId, String begin, String end) throws SQLException {
+
+		return mDb.query(true, DATABASE_MEASUREMENTS_LOG_TABLE, null, 
+				KEY_MEASUREMENT_TYPEID + "=" + typeId 
+				+ " AND '" + begin + "' < " + KEY_DATE
+				+ " AND " + KEY_DATE + " < '" + end + "' AND "
+				+ KEY_DELETED + "=0", null, null, null, KEY_ROWID + " DESC", null);
+
+	}
+	
+	public Cursor fetchMaxMeasForDates(long typeId, String begin, String end) throws SQLException {
+	
+		Cursor cursor = mDb.rawQuery( "SELECT MAX(" + KEY_VALUE + ") AS max FROM "
+				+ DATABASE_MEASUREMENTS_LOG_TABLE + " WHERE " 
+				+ KEY_MEASUREMENT_TYPEID + "=" + typeId 
+				+ " AND '" + begin + "' < " + KEY_DATE
+				+ " AND " + KEY_DATE + " < '" + end + "' AND "
+				+ KEY_DELETED + "=0", null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+		return cursor;
+
+	}
 
 	public long createMeasLogEntry(long type_id, float value) {
 		ContentValues initialValues = new ContentValues();

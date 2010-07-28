@@ -156,7 +156,8 @@ public class MeasLogEntries extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, INSERT_ID, 0, R.string.add_entry);
+		MenuItem insert = menu.add(0, INSERT_ID, 0, R.string.add_entry);
+		insert.setIcon(android.R.drawable.ic_menu_add);
 		menu.add(0, CHART_ID, 0, R.string.get_chart);
 		return true;
 	}
@@ -310,7 +311,9 @@ public class MeasLogEntries extends ListActivity {
 	}
 	
 	public void drawChart(){
-		
+		Intent i = new Intent(this, MeasStats.class);
+		i.putExtra(ExcercisesDbAdapter.KEY_ROWID, mMeasurementId);
+		startActivity(i);
 	}
 	
 }

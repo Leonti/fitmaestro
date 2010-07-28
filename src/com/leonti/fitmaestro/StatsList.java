@@ -244,8 +244,13 @@ public class StatsList extends ListActivity {
 		
 		// we use it later to determine chart height in landscape position
 		// we need to take into account that we already can be in landscape position
-		// FIX! FIX! FIX!
-		Long displayWidth = Long.valueOf(screen.getWidth() - statusBarHeight);
+		
+		Long displayWidth;	
+		if(mWinMgr.getDefaultDisplay().getOrientation() == 1){
+			displayWidth = Long.valueOf(screen.getHeight());
+		}else{
+			displayWidth = Long.valueOf(screen.getWidth() - statusBarHeight);
+		}
 		
 		Calendar currentDay = (Calendar) mStartDate.clone();
 		int currentMonth = currentDay.get(Calendar.MONTH);

@@ -9,9 +9,11 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -45,6 +47,8 @@ public class SessionRepsList extends ListActivity {
 	private Chronometer mCounter = null;
 	private TextView sumTxt;
 	private TextView maxTxt;
+	private SharedPreferences mPrefs;
+	private String mUnits;
 
 	ArrayList<HashMap<String, String>> mSessionRepsList = new ArrayList<HashMap<String, String>>();
 
@@ -62,6 +66,9 @@ public class SessionRepsList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.session_reps_list);
 
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mUnits = mPrefs.getString("units", "default");
+		
 		mSessionConnectorId = savedInstanceState != null ? savedInstanceState
 				.getLong(ExcercisesDbAdapter.KEY_ROWID) : null;
 		if (mSessionConnectorId == null) {
@@ -131,8 +138,15 @@ public class SessionRepsList extends ListActivity {
 		Cursor totalsCursor = mDbHelper.getTotalsForExercise(mExerciseId, mSessionId, mExType.intValue());
 		startManagingCursor(totalsCursor);
 		if(totalsCursor.getCount() > 0){
-			maxValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("max")));
-			sumValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("sum")));
+			if(mExType == 0){
+				maxValue = String.valueOf(totalsCursor.getLong(totalsCursor.getColumnIndex("max")));
+				sumValue = String.valueOf(totalsCursor.getLong(totalsCursor.getColumnIndex("sum")));				
+			}else{
+				maxValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("max")));
+				sumValue = String.valueOf(totalsCursor.getDouble(totalsCursor.getColumnIndex("sum")));
+				maxValue += " " + mUnits;
+				sumValue += " " + getString(R.string.reps_small) + "*"+ mUnits;
+			}
 		}
 		maxTxt = (TextView) findViewById(R.id.max_txt);
 		sumTxt = (TextView) findViewById(R.id.sum_txt);

@@ -1,19 +1,26 @@
 package com.leonti.fitmaestro;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
@@ -29,17 +36,24 @@ public class WorkoutView extends ListActivity {
 	private Cursor mExercisesForSetCursor;
 	private Long mSetId;
 	private Long mProgramsConnectorId;
+	private SharedPreferences mPrefs;
+	private String mUnits;
+	private Dialog mSessionTitleDialog;
 
 	private static final int ADD_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int START_SESSION_ID = Menu.FIRST + 2;
 	private static final int ACTIVITY_ADD = 0;
+	private static final int DIALOG_SESSION_TITLE = 13;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.setview_list);
 
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mUnits = mPrefs.getString("units", "default");
+		
 		Bundle extras = getIntent().getExtras();
 		mSetId = savedInstanceState != null ? savedInstanceState
 				.getLong(ExcercisesDbAdapter.KEY_ROWID) : null;
@@ -110,7 +124,7 @@ public class WorkoutView extends ListActivity {
 			break;
 
 		case START_SESSION_ID:
-			startSession();
+			showDialog(DIALOG_SESSION_TITLE);
 			break;
 		}
 
@@ -122,12 +136,13 @@ public class WorkoutView extends ListActivity {
 		startActivityForResult(i, ACTIVITY_ADD);
 	}
 
-	private void startSession() {
+	private void startSession(String sessionTitle) {
 
+		Percentages percentages = new Percentages();
 		if (mProgramsConnectorId == null) {
 			mProgramsConnectorId = Long.valueOf(0);
 		}
-		Long sessionId = mDbHelper.createSession("Some session", "Some desc",
+		Long sessionId = mDbHelper.createSession(sessionTitle, getText(R.string.started_from_workout).toString(),
 				mProgramsConnectorId);
 
 		// add exercises to session
@@ -141,6 +156,21 @@ public class WorkoutView extends ListActivity {
 					.getLong(mExercisesForSetCursor
 							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
 
+			// get exercise info to correctly populate session field
+			Long exType = mExercisesForSetCursor.getLong(mExercisesForSetCursor
+					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
+
+			Long maxReps = 0l;
+			Double maxWeight = 0d;
+			if (exType == 0) {
+				maxReps = mExercisesForSetCursor.getLong(mExercisesForSetCursor
+						.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_REPS));
+				
+			} else {
+				maxWeight = mExercisesForSetCursor.getDouble(mExercisesForSetCursor
+						.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_WEIGHT));
+			}
+			
 			long sessionsConnectorId = mDbHelper.addExerciseToSession(
 					sessionId, exerciseId);
 
@@ -151,17 +181,24 @@ public class WorkoutView extends ListActivity {
 			repsForConnectorCursor.moveToFirst();
 			for (int j = 0; j < repsForConnectorCursor.getCount(); j++) {
 
-				Long reps = repsForConnectorCursor
-						.getLong(repsForConnectorCursor
-								.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
-
-				Float percentage = repsForConnectorCursor
-						.getFloat(repsForConnectorCursor
-								.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
+				Double percentage = repsForConnectorCursor
+				.getDouble(repsForConnectorCursor
+						.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
+				Double weight = 0d;
+				Long reps = 0l;
+				
+				if(exType == 0){
+					reps = percentages.getIntValue(percentage, maxReps);
+				}else{
+					weight = percentages.getValue(percentage, maxWeight);
+					reps = repsForConnectorCursor
+					.getLong(repsForConnectorCursor
+							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
+				}
 
 				// adding reps to new session
 				mDbHelper.createSessionRepsEntry(sessionsConnectorId, reps,
-						percentage);
+						weight);
 
 				repsForConnectorCursor.moveToNext();
 
@@ -174,7 +211,44 @@ public class WorkoutView extends ListActivity {
 		i.putExtra(ExcercisesDbAdapter.KEY_ROWID, sessionId);
 		startActivity(i);
 	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
 
+		switch (id) {
+		case DIALOG_SESSION_TITLE:
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View sessionPopup = factory.inflate(R.layout.session_popup,
+					null);
+
+			final EditText sessionTitle = (EditText) sessionPopup.findViewById(R.id.session_title);
+
+			mSessionTitleDialog = new AlertDialog.Builder(this).setTitle(
+					R.string.session_title_caption).setView(sessionPopup)
+					.setPositiveButton(R.string.start,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+
+									/* User clicked OK so do some stuff */
+									if(sessionTitle.getText().length() > 0){
+										startSession(sessionTitle.getText().toString());
+									}
+								}
+							}).setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+
+									/* User clicked cancel so do some stuff */
+								}
+							}).create();
+
+			return mSessionTitleDialog;
+		}
+
+		return null;
+	}
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
@@ -231,6 +305,8 @@ public class WorkoutView extends ListActivity {
 
 			Log.i("BIND", "bind view called");
 
+			Percentages percentages = new Percentages();
+			
 			Long setsConnectorId = cursor.getLong(cursor
 					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
 
@@ -257,15 +333,27 @@ public class WorkoutView extends ListActivity {
 						View.VISIBLE);
 			}
 
+			TextView resultText = (TextView) repsTable.findViewById(R.id.weight_col);
+			
+			Long maxReps = 0l;
+			Double maxWeight = 0d;
+			
 			// if 0 - own weight - don't show percentage values
-			if (exType == Long.valueOf(0)) {
-				repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);
-				repsTable.findViewById(R.id.percentage_col).setVisibility(
+			if (exType == 0) {
+				repsTable.findViewById(R.id.reps_col).setVisibility(
 						View.GONE);
+				repsTable.findViewById(R.id.x_col).setVisibility(View.GONE);
+				resultText.setText(R.string.reps_table);
+				maxReps = cursor.getLong(cursor
+						.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_REPS));
+				
 			} else {
-				repsTable.findViewById(R.id.x_col).setVisibility(View.VISIBLE);
-				repsTable.findViewById(R.id.percentage_col).setVisibility(
+				repsTable.findViewById(R.id.reps_col).setVisibility(
 						View.VISIBLE);
+				repsTable.findViewById(R.id.x_col).setVisibility(View.VISIBLE);
+				resultText.setText(R.string.weight_table);
+				maxWeight = cursor.getDouble(cursor
+						.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_WEIGHT));
 			}
 
 			repsForConnectorCursor.moveToFirst();			
@@ -275,8 +363,8 @@ public class WorkoutView extends ListActivity {
 						.getString(repsForConnectorCursor
 								.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
 
-				String percentage = repsForConnectorCursor
-						.getString(repsForConnectorCursor
+				Double percentage = repsForConnectorCursor
+						.getDouble(repsForConnectorCursor
 								.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
 
 				// Create a new row to be added.
@@ -288,6 +376,9 @@ public class WorkoutView extends ListActivity {
 						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
 				valueLayoutParamsReps.gravity = Gravity.CENTER;				
 				LayoutParams valueLayoutParamsPercentage = new LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
+				valueLayoutParamsPercentage.gravity = Gravity.CENTER;
+				LayoutParams valueLayoutParamsResult = new LayoutParams(
 						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);				
 				valueLayoutParamsPercentage.gravity = Gravity.CENTER;
 				
@@ -305,9 +396,19 @@ public class WorkoutView extends ListActivity {
 				tr.addView(xTxt);
 
 				TextView percentageTxt = new TextView(WorkoutView.this);
-				percentageTxt.setText(percentage);
+				percentageTxt.setText(String.valueOf(percentage) + " %");
 				percentageTxt.setGravity(Gravity.CENTER);
 				tr.addView(percentageTxt, valueLayoutParamsPercentage);
+				
+				TextView resultTxt = new TextView(WorkoutView.this);
+				if(exType == 0){
+					resultTxt.setText(String.valueOf(percentages.getIntValue(percentage, maxReps)));
+				}else{
+					resultTxt.setText(String.valueOf(percentages.getValue(percentage, maxWeight)) + " " + mUnits);
+				}
+				
+				resultTxt.setGravity(Gravity.CENTER);
+				tr.addView(resultTxt, valueLayoutParamsResult);
 
 				// Add row to TableLayout.
 
@@ -316,7 +417,7 @@ public class WorkoutView extends ListActivity {
 				// if 0 - own weight - don't show percentage values
 				if (exType == Long.valueOf(0)) {
 					xTxt.setVisibility(View.GONE);
-					percentageTxt.setVisibility(View.GONE);
+					repsTxt.setVisibility(View.GONE);
 				}
 
 				repsForConnectorCursor.moveToNext();

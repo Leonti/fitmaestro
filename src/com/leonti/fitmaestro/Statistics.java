@@ -236,7 +236,7 @@ public class Statistics extends Activity {
     
     public void updateExercise(){
     	
-    	if(mExerciseId != null){
+    	if(mExerciseId != null && mExerciseId != 0){
     		Cursor exercise = mDbHelper.fetchExercise(mExerciseId);
     		startManagingCursor(exercise);
     		mExerciseDisplay.setText(exercise.getString(exercise

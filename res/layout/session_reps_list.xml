@@ -1,64 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout android:id="@+id/LinearLayoutSL"
-	android:orientation="vertical" 
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent" 
-	xmlns:android="http://schemas.android.com/apk/res/android">
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-		<LinearLayout android:id="@+id/LinearLayout01"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:orientation="vertical">
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="vertical">
 
-			<LinearLayout android:id="@+id/LinearLayout01"
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<TableLayout android:id="@+id/TableLayout01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content">
+			<TableRow android:id="@+id/TableRow01" android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
 				<TextView android:text="@string/max_value" android:id="@+id/max_caption"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:padding="2dip" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
 				<TextView android:text="80" android:id="@+id/max_txt"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
-			</LinearLayout>
-
-			<LinearLayout android:id="@+id/LinearLayout01"
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
+					android:textStyle="bold" android:textAppearance="?android:attr/textAppearanceMedium"
+					android:padding="2dip" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
+			</TableRow>
+			<TableRow android:id="@+id/TableRow02" android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
 				<TextView android:text="@string/sum" android:id="@+id/sum_caption"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:padding="2dip" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
 				<TextView android:text="2045" android:id="@+id/sum_txt"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
-			</LinearLayout>
+					android:textStyle="bold" android:textAppearance="?android:attr/textAppearanceMedium"
+					android:padding="2dip" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
+			</TableRow>
+		</TableLayout>
 
-		</LinearLayout>
-	
-		<TableLayout android:id="@+id/reps_table" android:layout_width="fill_parent" android:layout_height="wrap_content">
+	</LinearLayout>
+
+	<TableLayout android:id="@+id/reps_table"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<TableRow>
-			<TextView android:text="@string/planned_reps_table" android:background="@color/tables_header"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip" 
-				android:layout_weight="1.0" android:gravity="center" />
+			<TextView android:text="@string/planned_reps_table"
+				android:background="@color/tables_header" android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:layout_weight="1.0" android:gravity="center" />
 			<TextView android:text="x" android:id="@+id/x_col"
 				android:background="@color/tables_header" android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip"  android:gravity="center" />
-			<TextView android:text="@string/planned_weight_table" android:id="@+id/planned_weight_col"
-				android:background="@color/tables_header" android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip" 
-				android:layout_weight="1.0" android:gravity="center" />
-	
-			<TextView android:text="@string/reps_table" android:background="#0000ff"
+				android:padding="3dip" android:gravity="center" />
+			<TextView android:text="@string/planned_weight_table"
+				android:id="@+id/planned_weight_col" android:background="@color/tables_header"
 				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip" 
-				android:layout_weight="1.0" android:gravity="center" />
+				android:padding="3dip" android:layout_weight="1.0" android:gravity="center" />
+
+			<TextView android:text="@string/reps_table"
+				android:background="#0000ff" android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:layout_weight="1.0" android:gravity="center" />
 			<TextView android:text="x" android:id="@+id/x_done_col"
 				android:background="@color/tables_header" android:textAppearance="?android:attr/textAppearanceMedium"
 				android:padding="3dip" android:gravity="center" />
 			<TextView android:text="@string/weight_table" android:id="@+id/weight_col"
 				android:background="@color/tables_header" android:textAppearance="?android:attr/textAppearanceMedium"
-				android:padding="3dip"
-				android:layout_weight="1.0" android:gravity="center" />
+				android:padding="3dip" android:layout_weight="1.0" android:gravity="center" />
 		</TableRow>
-</TableLayout>
-<ListView android:id="@+id/android:list" android:layout_width="fill_parent" android:layout_height="wrap_content"></ListView>
-  	<TextView android:id="@+id/android:empty"
-          android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="No Session Reps!"/>
+	</TableLayout>
+	<ListView android:id="@+id/android:list" android:layout_width="fill_parent"
+		android:layout_height="wrap_content"></ListView>
+	<TextView android:id="@+id/android:empty"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:gravity="center_horizontal" android:textAppearance="?android:attr/textAppearanceMedium"
+		android:padding="3dip" android:text="@string/no_session_reps" />
 </LinearLayout>

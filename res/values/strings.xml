@@ -16,7 +16,6 @@
 <string name="select_program">Select Program</string>
 <string name="select_day">Select Day</string>
 <string name="done">Done</string>
-<string name="times">Times</string>
 <string name="weight">Weight</string>
 <string name="name">Name</string>
 <string name="type">Type</string>
@@ -71,6 +70,7 @@
 <string name="invalid_credentials">Invalid credentials!</string>
 <string name="synchronize">Synchronization</string>
 <string name="reps">Reps</string>
+<string name="reps_small">reps</string>
 <string name="percentage">Percentage</string>
 <string name="reps_entry_edited">Reps entry edited</string>
 <string name="edit_reps_entry">Edit reps</string>
@@ -154,6 +154,26 @@
 <string name="weight_table">weight</string>
 <string name="percentage_table">percentage</string>
 <string name="none_selected">None selected</string>
+<string name="no_session_reps">No reps entered yet!</string>
+<string name="no_reps">No reps entered yet!</string>
+<string name="no_programs_avail">No programs available</string>
+<string name="no_entries_for_meas">No entries for this measurement yet!</string>
+<string name="no_measurements">No measurements entered yet!</string>
+<string name="no_programs">No programs entered yet!</string>
+<string name="no_sessions">No sessions started yet!</string>
+<string name="no_exercises">No exercises for this session yet!</string>
+<string name="no_exercises_for_workout">No exercises for this workout yet!</string>
+<string name="no_sets">No workouts entered yet!</string>
+<string name="no_stats">No stats for this period!</string>
+<string name="units_category">Units</string>
+<string name="weight_units">Select weight units</string>
+<string name="weight_units_title">Weight units</string>
+<string name="weight_units_desc">Select weight units to use</string>
+<string name="settings">Settings</string>
+<string name="session_title">Session Title:</string>
+<string name="session_title_caption">Session Title</string>
+<string name="started_from_workout">Started from workout plan</string>
+<string name="start">Start</string>
 
 <dimen name="numeric_width">100dip</dimen>
 <color name="tables_header">#0000ff</color>

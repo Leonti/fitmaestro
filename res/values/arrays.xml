@@ -41,4 +41,12 @@
 		<item>End date:</item>
 	</string-array>	
 	
+	<string-array name="entries_units">
+		<item>Kilograms</item>
+		<item>Pounds</item>
+	</string-array>
+	<string-array name="entries_values_units">
+		<item>kg</item>
+		<item>lb</item>
+	</string-array>	
 </resources>

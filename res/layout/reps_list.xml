@@ -5,7 +5,8 @@
 	<TableLayout android:id="@+id/reps_table"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<TableRow>
-			<TextView android:text="@string/reps_table" android:background="@color/tables_header"
+			<TextView android:text="@string/reps_table" android:id="@+id/reps_col" 
+				android:background="@color/tables_header"
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:padding="3dip"
 				android:layout_weight="1.0" android:gravity="center" />
@@ -18,12 +19,20 @@
 				android:padding="3dip" android:background="@color/tables_header"
 				android:layout_weight="1.0"
 				android:gravity="center" />
+			<TextView android:text="@string/weight_table" android:id="@+id/weight_col"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:background="@color/tables_header"
+				android:layout_weight="1.0"
+				android:gravity="center" />
 		</TableRow>
 
 	</TableLayout>
 	<ListView android:id="@+id/android:list" android:layout_width="fill_parent"
 		android:layout_height="wrap_content"></ListView>
 	<TextView android:id="@+id/android:empty"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="No Reps!" />
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:padding="3dip" 
+		android:text="@string/no_reps" />
 </LinearLayout>

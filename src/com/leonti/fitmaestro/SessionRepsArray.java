@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -22,6 +24,9 @@ public class SessionRepsArray {
 	private Long mExerciseId;
 	private Long mSessionsConnectorId;
 
+	private SharedPreferences mPrefs;
+	private String mUnits;
+	
 	ArrayList<HashMap<String, String>> mSessionRepsList = new ArrayList<HashMap<String, String>>();
 
 	public SessionRepsArray(Context ctx, Long sessionId, Long exerciseId,
@@ -33,6 +38,9 @@ public class SessionRepsArray {
 
 		mDbHelper = new ExcercisesDbAdapter(mCtx);
 		mDbHelper.open();
+		
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		mUnits = mPrefs.getString("units", "default");
 	}
 
 	public ArrayList<HashMap<String, String>> getRepsArray() {
@@ -82,19 +90,19 @@ public class SessionRepsArray {
 
 					item.put("id", id);
 					item.put("reps", reps);
-					item.put("weight", weight);
+					item.put("weight", weight + " " + mUnits);
 
 				} else {
 					item.put("id", null);
-					item.put("reps", "not_done");
-					item.put("weight", "not_done");
+					item.put("reps", "--");
+					item.put("weight", "--");
 				}
 				
 				sessionDoneReps.close();
 
 				item.put("session_detail_id", sessionDetailId.toString());
 				item.put("planned_reps", planned_reps.toString());
-				item.put("planned_weight", planned_percentage.toString());
+				item.put("planned_weight", planned_percentage.toString() + " " + mUnits);
 				mSessionRepsList.add(item);
 
 				sessionReps.moveToNext();
@@ -124,9 +132,9 @@ public class SessionRepsArray {
 
 			item.put("id", repsId.toString());
 			item.put("reps", reps.toString());
-			item.put("weight", weight.toString());
-			item.put("planned_reps", "extra");
-			item.put("planned_weight", "extra");
+			item.put("weight", weight.toString() + " " + mUnits);
+			item.put("planned_reps", "--");
+			item.put("planned_weight", "--");
 			mSessionRepsList.add(item);
 
 			freeRepsForSessionCursor.moveToNext();

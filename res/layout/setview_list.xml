@@ -6,9 +6,11 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	
 	<TextView android:id="@+id/android:empty"
-          android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="No exercises for this workout!"/>
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:padding="3dip" 
+		android:text="@string/no_exercises_for_workout" />
 <ListView android:id="@+id/android:list" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0"></ListView>
 
 </LinearLayout>

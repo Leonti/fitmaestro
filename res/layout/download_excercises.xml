@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/LinearLayoutDE"
-	android:orientation="vertical" 
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent" 
-	xmlns:android="http://schemas.android.com/apk/res/android">
-<Button android:text="@string/by_group" android:id="@+id/button_ex_by_group" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<Button android:text="@string/by_rating" android:id="@+id/button_ex_by_rating" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-</LinearLayout>

@@ -21,5 +21,14 @@
 				<TextView android:text="@string/percentage" android:id="@+id/text_percentage" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 				<EditText android:text="" android:id="@+id/editText_percentage" android:inputType="numberDecimal" android:layout_width="@dimen/numeric_width" android:layout_height="wrap_content"></EditText>
 			</LinearLayout>
+			<LinearLayout android:id="@+id/weight_value_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:orientation="vertical" >
+				<TextView android:text="@string/weight" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+				<TextView android:text="0.0" android:textAppearance="?android:attr/textAppearanceLarge" android:gravity="center_vertical|center_horizontal"  android:id="@+id/weight_value" android:layout_width="fill_parent" android:layout_height="fill_parent"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/reps_value_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:orientation="vertical" >
+				<TextView android:text="@string/reps" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+				<TextView android:text="0" android:textAppearance="?android:attr/textAppearanceLarge" android:gravity="center_vertical|center_horizontal"  android:id="@+id/reps_value" android:layout_width="fill_parent" android:layout_height="fill_parent"></TextView>
+			</LinearLayout>
+			
 		</LinearLayout>
 </LinearLayout>

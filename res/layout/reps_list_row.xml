@@ -12,7 +12,7 @@
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:padding="3dip" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:layout_weight="1.0"
-				android:gravity="center"></TextView>
+				android:gravity="center" />
 			<TextView android:text="x" android:id="@+id/x_col_value"
 				android:gravity="center" android:textAppearance="?android:attr/textAppearanceMedium"
 				android:padding="3dip" />
@@ -20,7 +20,12 @@
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:padding="3dip" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:layout_weight="1.0"
-				android:gravity="center"></TextView>
+				android:gravity="center" />
+			<TextView android:text="" android:id="@+id/result_value"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:padding="3dip" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_weight="1.0"
+				android:gravity="center" />
 		</TableRow>
 	</TableLayout>
 </LinearLayout>

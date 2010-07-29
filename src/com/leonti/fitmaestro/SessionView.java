@@ -9,8 +9,10 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -31,6 +33,7 @@ public class SessionView extends ListActivity {
 	private Long mRowId;
 	private String mStatus;
 
+	
 	private static final int ADD_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int DONE_ID = Menu.FIRST + 2;
@@ -42,7 +45,7 @@ public class SessionView extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sessionview_list);
-
+		
 		Bundle extras = getIntent().getExtras();
 		mRowId = savedInstanceState != null ? savedInstanceState
 				.getLong(ExcercisesDbAdapter.KEY_ROWID) : null;

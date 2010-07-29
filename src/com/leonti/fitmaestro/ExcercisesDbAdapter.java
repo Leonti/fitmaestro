@@ -885,11 +885,13 @@ public class ExcercisesDbAdapter {
 	}
 
 	public long createSessionRepsEntry(long sessions_connector_id, long reps,
-			float percentage) {
+			double weight) {
 		ContentValues initialValues = new ContentValues();
+		
+		// percentage in this context means calculated weight
 		initialValues.put(KEY_SESSIONS_CONNECTORID, sessions_connector_id);
 		initialValues.put(KEY_REPS, reps);
-		initialValues.put(KEY_PERCENTAGE, percentage);
+		initialValues.put(KEY_PERCENTAGE, weight);
 
 		return mDb.insert(DATABASE_SESSIONS_DETAIL_TABLE, null, initialValues);
 	}

@@ -13,6 +13,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -31,6 +33,8 @@ public class FitMaestro extends TabActivity {
 	private static final int ACCOUNT_POS = 0;
 	private static final int SYNCHRONIZE_POS = 1;
 	private static final int DOWNLOADS_POS = 2;
+	
+	private static final int SETTINGS_ID = Menu.FIRST;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -158,5 +162,25 @@ public class FitMaestro extends TabActivity {
 					}
 				});
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem insert = menu.add(0, SETTINGS_ID, 0, R.string.settings);
+		insert.setIcon(android.R.drawable.ic_menu_preferences);
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+		case SETTINGS_ID:
+			Intent i = new Intent(this, Settings.class);
+			startActivity(i);
+			return true;
+		}
+
+		return super.onMenuItemSelected(featureId, item);
 	}
 }

@@ -9,8 +9,12 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -32,11 +36,13 @@ public class RepsList extends ListActivity {
 	private Cursor mRepsForConnectorCursor;
 	private Long mSetConnectorId;
 	private Long mExType;
-	private Float mMaxWeight;
+	private Double mMaxWeight;
 	private Long mMaxReps;
 	private Long mListPosition;
 	private Dialog mEditRepsDialog;
-
+	private SharedPreferences mPrefs;
+	private String mUnits;
+	
 	private static final int ACTIVITY_EDIT = 1;
 	private static final int DIALOG_EDIT_REPS = 2;
 	private static final int INSERT_ID = Menu.FIRST;
@@ -80,15 +86,21 @@ public class RepsList extends ListActivity {
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_TYPE));
 		mMaxReps = exerciseCursor.getLong(exerciseCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_REPS));
-		mMaxWeight = exerciseCursor.getFloat(exerciseCursor
+		mMaxWeight = exerciseCursor.getDouble(exerciseCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_MAX_WEIGHT));
 
 		Log.i(TAG, mExType.toString() + mMaxWeight.toString()
 				+ mMaxReps.toString());
 		
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		Log.i("MEASUREMENT UNITS: ", mPrefs.getString("units", "default"));
+		mUnits = mPrefs.getString("units", "default");
+		
 		if(mExType == 0){
+			findViewById(R.id.reps_col).setVisibility(View.GONE);
 			findViewById(R.id.x_col).setVisibility(View.GONE);
-			findViewById(R.id.percentage_col).setVisibility(View.GONE);
+			TextView resultText = (TextView) findViewById(R.id.weight_col);
+			resultText.setText(R.string.reps_table);
 		}
 
 		mRepsForConnectorCursor = mDbHelper
@@ -205,10 +217,16 @@ public class RepsList extends ListActivity {
 
 			if (mExType == 0) {
 
-				repsEditView.findViewById(R.id.text_percentage).setVisibility(
+				repsEditView.findViewById(R.id.text_times).setVisibility(
 						View.GONE);
-				percentageText.setVisibility(View.GONE);
+				repsText.setVisibility(View.GONE);
 				repsEditView.findViewById(R.id.text_x).setVisibility(View.GONE);
+				repsEditView.findViewById(R.id.weight_value_container).setVisibility(
+						View.GONE);
+			}else{
+				repsEditView.findViewById(R.id.reps_value_container).setVisibility(
+						View.GONE);
+				
 			}
 
 			mEditRepsDialog = new AlertDialog.Builder(this).setTitle(
@@ -277,6 +295,43 @@ public class RepsList extends ListActivity {
 				.findViewById(R.id.editText_reps);
 		EditText percentageText = (EditText) mEditRepsDialog
 				.findViewById(R.id.editText_percentage);
+		final TextView weightValue = (TextView) mEditRepsDialog
+		.findViewById(R.id.weight_value);
+		final TextView repsValue = (TextView) mEditRepsDialog
+		.findViewById(R.id.reps_value);
+		
+		final Percentages percentages = new Percentages();
+		
+		// update value on text Change
+		percentageText.addTextChangedListener(new TextWatcher() {
+
+			@Override
+            public void  afterTextChanged (Editable s){
+                    Log.d("seachScreen", "afterTextChanged" + s.toString());
+                    
+                    Double currentPercentage = s.length() > 0 ? Double.valueOf(s.toString()) : 0;
+                    if(mExType ==0){
+                    	repsValue.setText(String.valueOf(percentages.getIntValue(currentPercentage, mMaxReps)));
+                    }else{
+                    	weightValue.setText(String.valueOf(percentages.getValue(currentPercentage, mMaxWeight)));
+                    }
+            }
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+		}); 
+		
 
 		if (mListPosition != null) {
 			Log.i("LIST POSITION: ", mListPosition.toString());
@@ -285,17 +340,24 @@ public class RepsList extends ListActivity {
 					.setText(mRepsForConnectorCursor
 							.getString(mRepsForConnectorCursor
 									.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS)));
+			Double percentageValue = mRepsForConnectorCursor
+			.getDouble(mRepsForConnectorCursor
+					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
 			percentageText
-					.setText(mRepsForConnectorCursor
-							.getString(mRepsForConnectorCursor
-									.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE)));
+					.setText(String.valueOf(percentageValue));
+			
+			Log.i("MAX WEIGHT: ", String.valueOf(mMaxWeight));
+			weightValue.setText(String.valueOf(percentages.getValue(percentageValue, mMaxWeight)));
+			repsValue.setText(String.valueOf(percentages.getIntValue(percentageValue, mMaxReps)));
+			
 		} else {
-			repsText.setText("");
+			percentageText.setText("");
 
 			// Long.valueOf(0)
 			if (mExType == 0) {
 
-				percentageText.setText("0");
+				repsText.setText("0");
+				
 			} else {
 				percentageText.setText("");
 			}
@@ -318,10 +380,21 @@ public class RepsList extends ListActivity {
 		public void bindView(View view, Context context, Cursor cursor) {
 			super.bindView(view, context, cursor);
 
+			Percentages percentages = new Percentages();
+			TextView weightValue = (TextView) view.findViewById(R.id.result_value);
+			TextView percentageTxt = (TextView) view.findViewById(R.id.percentage_value);
+			Double percentageValue = cursor
+			.getDouble(cursor
+					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PERCENTAGE));
+			percentageTxt.setText(String.valueOf(percentageValue) + " %");
+			
 			if (mExType == 0) {
-				view.findViewById(R.id.x_col_value).setVisibility(View.GONE);
-				view.findViewById(R.id.percentage_value).setVisibility(
+				view.findViewById(R.id.reps_value).setVisibility(
 						View.GONE);
+				view.findViewById(R.id.x_col_value).setVisibility(View.GONE);
+				weightValue.setText(String.valueOf(percentages.getIntValue(percentageValue, mMaxReps)));
+			}else{
+				weightValue.setText(String.valueOf(percentages.getValue(percentageValue, mMaxWeight)) + " " + mUnits);
 			}
 
 		}

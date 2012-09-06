@@ -1,5 +1,11 @@
 package com.leonti.fitmaestro;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,8 +28,10 @@ public class Synchronization {
 	private final Context mCtx;
 	private ExcercisesDbAdapter mDbHelper;
 	DateFormat iso8601Format;
-	public HashMap<String, String> exerciseFields = new HashMap<String, String>();
+	
 	public HashMap<String, String> groupFields = new HashMap<String, String>();
+	public HashMap<String, String> filesFields = new HashMap<String, String>();
+	public HashMap<String, String> exerciseFields = new HashMap<String, String>();
 	public HashMap<String, String> logFields = new HashMap<String, String>();
 	public HashMap<String, String> programFields = new HashMap<String, String>();
 	public HashMap<String, String> programs_connectorFields = new HashMap<String, String>();
@@ -53,6 +61,11 @@ public class Synchronization {
 
 	public void fillHashes() {
 
+		groupFields.put("title", ExcercisesDbAdapter.KEY_TITLE);
+		groupFields.put("desc", ExcercisesDbAdapter.KEY_DESC);
+		
+		filesFields.put("filename", ExcercisesDbAdapter.KEY_FILENAME);
+		
 		exerciseFields.put("title", ExcercisesDbAdapter.KEY_TITLE);
 		exerciseFields.put("desc", ExcercisesDbAdapter.KEY_DESC);
 		exerciseFields.put("group_id", ExcercisesDbAdapter.KEY_GROUPID);
@@ -60,8 +73,7 @@ public class Synchronization {
 		exerciseFields.put("max_weight", ExcercisesDbAdapter.KEY_MAX_WEIGHT);
 		exerciseFields.put("max_reps", ExcercisesDbAdapter.KEY_MAX_REPS);
 
-		groupFields.put("title", ExcercisesDbAdapter.KEY_TITLE);
-		groupFields.put("desc", ExcercisesDbAdapter.KEY_DESC);
+
 
 		logFields.put("exercise_id", ExcercisesDbAdapter.KEY_EXERCISEID);
 		logFields.put("weight", ExcercisesDbAdapter.KEY_WEIGHT);
@@ -158,6 +170,16 @@ public class Synchronization {
 				updateItems(jsonRelationsData);
 				Log.i("Last updated", "Saving last updated!");
 				mDbHelper.setLastUpdated();
+				
+				//everything is good so we need to update files
+				try {
+					
+					Log.i("UPDATING FILES", "updating...");
+					updateFiles();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				Log.i("WTF2", "Second Fuck!");
 			}
@@ -180,6 +202,11 @@ public class Synchronization {
 				ExcercisesDbAdapter.DATABASE_GROUPS_TABLE, groups, groupFields);
 		backData.put("groups", groupsReturn);
 
+		JSONArray files = jsonUpdateData.getJSONArray("files");
+		JSONArray filesReturn = performItemsUpdate(
+				ExcercisesDbAdapter.DATABASE_FILES_TABLE, files, filesFields);
+		backData.put("files", filesReturn);
+		
 		JSONArray exercises = jsonUpdateData.getJSONArray("exercises");
 		JSONArray exercisesReturn = performItemsUpdate(
 				ExcercisesDbAdapter.DATABASE_EXERCISES_TABLE, exercises,
@@ -322,6 +349,9 @@ public class Synchronization {
 			dataToSend.put("groups", prepareItems(
 					ExcercisesDbAdapter.DATABASE_GROUPS_TABLE, groupFields,
 					updated));
+			dataToSend.put("files", prepareItems(
+					ExcercisesDbAdapter.DATABASE_FILES_TABLE, filesFields,
+					updated));
 			dataToSend.put("exercises", prepareItems(
 					ExcercisesDbAdapter.DATABASE_EXERCISES_TABLE,
 					exerciseFields, updated));
@@ -414,6 +444,72 @@ public class Synchronization {
 
 		updatedItems.close();
 		return itemsReturn;
+	}
+	
+	public void updateFiles() throws IOException{
+		Cursor currentFiles = mDbHelper.fetchCurrentFiles();
+		currentFiles.moveToFirst();
+		for (int i = 0; i < currentFiles.getCount(); i++) {
+			String currentFile = currentFiles.getString(currentFiles
+					.getColumnIndex(ExcercisesDbAdapter.KEY_FILENAME));
+			
+			Log.i("CURRENT FILE: ", currentFile);
+			File localFile = new File(currentFile);
+
+			// if file does not exist - download it
+			if(!localFile.exists()){
+				
+				// downloading the file				
+				String remoteFile = ServerJson.address + "files/" + currentFile;
+				Log.i("DOWNLOADING FILE: ", remoteFile);
+				
+			    URL u = new URL(remoteFile);
+			    HttpURLConnection c = (HttpURLConnection) 
+			    u.openConnection();
+			    c.setRequestMethod("GET");
+			    c.setDoOutput(true);
+			    c.connect();
+			    
+			    InputStream in = c.getInputStream();
+			   // localFile.createNewFile();
+			   // FileOutputStream f = new FileOutputStream(localFile);
+
+                FileOutputStream f = mCtx.openFileOutput(currentFile,
+                                                        Context.MODE_WORLD_READABLE);
+			    
+			    byte[] buffer = new byte[1024];
+			    int len1 = 0;
+			    while ( (len1 = in.read(buffer)) > 0 ) {
+			         f.write(buffer,0, len1);
+			    }
+			    f.close();
+			    in.close();
+			}
+			
+			currentFiles.moveToNext();
+		}
+		
+		// go through deleted files and remove them if they exist
+		Cursor deletedFiles = mDbHelper.fetchDeletedFiles();
+		deletedFiles.moveToFirst();
+		for (int i = 0; i < deletedFiles.getCount(); i++) {
+			String deletedFile = deletedFiles.getString(deletedFiles
+					.getColumnIndex(ExcercisesDbAdapter.KEY_FILENAME));
+			
+			Log.i("DELETED FILE: ", deletedFile);
+			File localFile = new File(deletedFile);
+
+			// if file exist - remove it
+			if(localFile.exists()){
+				
+				// removing the file
+				Log.i("REMOVNG FILE: ", deletedFile);
+				mCtx.deleteFile(deletedFile);
+			}
+			
+			currentFiles.moveToNext();
+		}		
+		
 	}
 
 }

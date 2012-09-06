@@ -174,6 +174,13 @@
 <string name="session_title_caption">Session Title</string>
 <string name="started_from_workout">Started from workout plan</string>
 <string name="start">Start</string>
+<string name="default_unit">lb</string>
+<string name="step_category">Weight calculation step</string>
+<string name="select_step">Select step</string>
+<string name="step_title">Calculation step</string>
+<string name="step_desc">Select weight multiplicator for calculating weight.</string>
+<string name="default_step">0.5</string>
+<string name="details">Details</string>
 
 <dimen name="numeric_width">100dip</dimen>
 <color name="tables_header">#0000ff</color>

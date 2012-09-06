@@ -5,7 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class StatsList extends ListActivity {
 
@@ -36,6 +40,7 @@ public class StatsList extends ListActivity {
 	private Long mMaxMaxValue = Long.valueOf(0);
 	private Long mMaxSumValue = Long.valueOf(0);
 	private Dialog mChooserDialog;
+	private DateFormats mDateFormats;
 	
 	DateFormat iso8601Format;
 	private static final int CHART_ID = Menu.FIRST;
@@ -54,7 +59,8 @@ public class StatsList extends ListActivity {
 		
 		iso8601Format = new SimpleDateFormat("yyyy-MM-dd");
 		//iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
+		mDateFormats = new DateFormats(this);
+		
         initValues(savedInstanceState);
         fillData();
     }
@@ -167,7 +173,21 @@ public class StatsList extends ListActivity {
 			ArrayList<HashMap<String, String>> sessionRepsList = repsArray
 			.getRepsArray();
 			repsArray.drawTable(StatsList.this, view, sessionRepsList, Long.valueOf(mExType));
-
+			
+			String finalDateTime;
+			try {
+				finalDateTime = mDateFormats.getWithYear(cursor.getString(cursor
+						.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_DONE)));
+				TextView sessionDate = (TextView) view.findViewById(R.id.session_date);
+				sessionDate.setText(finalDateTime);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 	}
@@ -266,7 +286,7 @@ public class StatsList extends ListActivity {
         long diffDays = diff / (24 * 60 * 60 * 1000);
         Log.i("DAYS DIFFERENCE: ", String.valueOf(diffDays));
 		
-		String monthNames = String.valueOf(currentMonth) + "|";
+		String monthNames = mDateFormats.getMonthName(currentDay.getTime()) + "|";
 		String monthPositions = String.valueOf(0) + ",";
 		String dayLabels = "";
 		String dataValues = "";
@@ -294,7 +314,7 @@ public class StatsList extends ListActivity {
 			if(currentDay.get(Calendar.MONTH) != currentMonth){
 				Log.i("MONTH CHANGE: ", "Month changed!");
 				currentMonth = currentDay.get(Calendar.MONTH);
-				monthNames += String.valueOf(currentMonth) + "|";
+				monthNames += mDateFormats.getMonthName(currentDay.getTime()) + "|";
 				Log.i("DAYS FUCKUP: ", "Day number: " + String.valueOf(dayNumber) + "Days difference: " + String.valueOf(diffDays));
 				monthPositions += String.valueOf(Math.ceil(Double.valueOf(dayNumber)/diffDays*100)) + ",";
 			}

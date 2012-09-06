@@ -42,6 +42,7 @@ public class RepsList extends ListActivity {
 	private Dialog mEditRepsDialog;
 	private SharedPreferences mPrefs;
 	private String mUnits;
+	private Percentages mPercentages;
 	
 	private static final int ACTIVITY_EDIT = 1;
 	private static final int DIALOG_EDIT_REPS = 2;
@@ -67,6 +68,12 @@ public class RepsList extends ListActivity {
 		mDbHelper = new ExcercisesDbAdapter(this);
 		mDbHelper.open();
 
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		Log.i("MEASUREMENT UNITS: ", mPrefs.getString("units", "default"));
+		mUnits = mPrefs.getString("units", getText(R.string.default_unit).toString());
+		Double step = Double.valueOf(mPrefs.getString("step", "0.5"));
+		mPercentages = new Percentages(step);
+
 		fillData();
 		registerForContextMenu(getListView());
 	}
@@ -91,10 +98,6 @@ public class RepsList extends ListActivity {
 
 		Log.i(TAG, mExType.toString() + mMaxWeight.toString()
 				+ mMaxReps.toString());
-		
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		Log.i("MEASUREMENT UNITS: ", mPrefs.getString("units", "default"));
-		mUnits = mPrefs.getString("units", "default");
 		
 		if(mExType == 0){
 			findViewById(R.id.reps_col).setVisibility(View.GONE);
@@ -300,7 +303,7 @@ public class RepsList extends ListActivity {
 		final TextView repsValue = (TextView) mEditRepsDialog
 		.findViewById(R.id.reps_value);
 		
-		final Percentages percentages = new Percentages();
+		//final Percentages percentages = new Percentages();
 		
 		// update value on text Change
 		percentageText.addTextChangedListener(new TextWatcher() {
@@ -311,9 +314,9 @@ public class RepsList extends ListActivity {
                     
                     Double currentPercentage = s.length() > 0 ? Double.valueOf(s.toString()) : 0;
                     if(mExType ==0){
-                    	repsValue.setText(String.valueOf(percentages.getIntValue(currentPercentage, mMaxReps)));
+                    	repsValue.setText(String.valueOf(mPercentages.getIntValue(currentPercentage, mMaxReps)));
                     }else{
-                    	weightValue.setText(String.valueOf(percentages.getValue(currentPercentage, mMaxWeight)));
+                    	weightValue.setText(String.valueOf(mPercentages.getValueWithPrecision(currentPercentage, mMaxWeight)));
                     }
             }
 
@@ -347,8 +350,8 @@ public class RepsList extends ListActivity {
 					.setText(String.valueOf(percentageValue));
 			
 			Log.i("MAX WEIGHT: ", String.valueOf(mMaxWeight));
-			weightValue.setText(String.valueOf(percentages.getValue(percentageValue, mMaxWeight)));
-			repsValue.setText(String.valueOf(percentages.getIntValue(percentageValue, mMaxReps)));
+			weightValue.setText(String.valueOf(mPercentages.getValueWithPrecision(percentageValue, mMaxWeight)));
+			repsValue.setText(String.valueOf(mPercentages.getIntValue(percentageValue, mMaxReps)));
 			
 		} else {
 			percentageText.setText("");
@@ -359,7 +362,9 @@ public class RepsList extends ListActivity {
 				repsText.setText("0");
 				
 			} else {
+				repsText.setText("");
 				percentageText.setText("");
+				repsText.requestFocus();
 			}
 		}
 	}
@@ -380,7 +385,7 @@ public class RepsList extends ListActivity {
 		public void bindView(View view, Context context, Cursor cursor) {
 			super.bindView(view, context, cursor);
 
-			Percentages percentages = new Percentages();
+			//Percentages percentages = new Percentages();
 			TextView weightValue = (TextView) view.findViewById(R.id.result_value);
 			TextView percentageTxt = (TextView) view.findViewById(R.id.percentage_value);
 			Double percentageValue = cursor
@@ -392,9 +397,9 @@ public class RepsList extends ListActivity {
 				view.findViewById(R.id.reps_value).setVisibility(
 						View.GONE);
 				view.findViewById(R.id.x_col_value).setVisibility(View.GONE);
-				weightValue.setText(String.valueOf(percentages.getIntValue(percentageValue, mMaxReps)));
+				weightValue.setText(String.valueOf(mPercentages.getIntValue(percentageValue, mMaxReps)));
 			}else{
-				weightValue.setText(String.valueOf(percentages.getValue(percentageValue, mMaxWeight)) + " " + mUnits);
+				weightValue.setText(String.valueOf(mPercentages.getValueWithPrecision(percentageValue, mMaxWeight)) + " " + mUnits);
 			}
 
 		}

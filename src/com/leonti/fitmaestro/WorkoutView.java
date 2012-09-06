@@ -1,5 +1,7 @@
 package com.leonti.fitmaestro;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,6 +41,8 @@ public class WorkoutView extends ListActivity {
 	private SharedPreferences mPrefs;
 	private String mUnits;
 	private Dialog mSessionTitleDialog;
+	private Percentages mPercentages;
+	private DateFormats mDateFormats;
 
 	private static final int ADD_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
@@ -52,7 +56,7 @@ public class WorkoutView extends ListActivity {
 		setContentView(R.layout.setview_list);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		mUnits = mPrefs.getString("units", "default");
+		mUnits = mPrefs.getString("units", "default");		
 		
 		Bundle extras = getIntent().getExtras();
 		mSetId = savedInstanceState != null ? savedInstanceState
@@ -71,6 +75,12 @@ public class WorkoutView extends ListActivity {
 
 		mDbHelper = new ExcercisesDbAdapter(this);
 		mDbHelper.open();
+	
+		Double step = Double.valueOf(mPrefs.getString("step", "0.5"));
+		Log.i("STEP: ", String.valueOf(step));
+		mPercentages = new Percentages(step);
+		mDateFormats = new DateFormats(this);
+		
 		fillData();
 		registerForContextMenu(getListView());
 	}
@@ -138,7 +148,7 @@ public class WorkoutView extends ListActivity {
 
 	private void startSession(String sessionTitle) {
 
-		Percentages percentages = new Percentages();
+		//Percentages percentages = new Percentages();
 		if (mProgramsConnectorId == null) {
 			mProgramsConnectorId = Long.valueOf(0);
 		}
@@ -188,9 +198,9 @@ public class WorkoutView extends ListActivity {
 				Long reps = 0l;
 				
 				if(exType == 0){
-					reps = percentages.getIntValue(percentage, maxReps);
+					reps = mPercentages.getIntValue(percentage, maxReps);
 				}else{
-					weight = percentages.getValue(percentage, maxWeight);
+					weight = mPercentages.getValueWithPrecision(percentage, maxWeight);
 					reps = repsForConnectorCursor
 					.getLong(repsForConnectorCursor
 							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_REPS));
@@ -222,7 +232,10 @@ public class WorkoutView extends ListActivity {
 					null);
 
 			final EditText sessionTitle = (EditText) sessionPopup.findViewById(R.id.session_title);
-
+			
+			Date date = new Date();
+			sessionTitle.setText(mDateFormats.getWithYearFromDate(date));
+			
 			mSessionTitleDialog = new AlertDialog.Builder(this).setTitle(
 					R.string.session_title_caption).setView(sessionPopup)
 					.setPositiveButton(R.string.start,
@@ -305,7 +318,7 @@ public class WorkoutView extends ListActivity {
 
 			Log.i("BIND", "bind view called");
 
-			Percentages percentages = new Percentages();
+			//Percentages percentages = new Percentages();
 			
 			Long setsConnectorId = cursor.getLong(cursor
 					.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID));
@@ -402,9 +415,9 @@ public class WorkoutView extends ListActivity {
 				
 				TextView resultTxt = new TextView(WorkoutView.this);
 				if(exType == 0){
-					resultTxt.setText(String.valueOf(percentages.getIntValue(percentage, maxReps)));
+					resultTxt.setText(String.valueOf(mPercentages.getIntValue(percentage, maxReps)));
 				}else{
-					resultTxt.setText(String.valueOf(percentages.getValue(percentage, maxWeight)) + " " + mUnits);
+					resultTxt.setText(String.valueOf(mPercentages.getValueWithPrecision(percentage, maxWeight)) + " " + mUnits);
 				}
 				
 				resultTxt.setGravity(Gravity.CENTER);

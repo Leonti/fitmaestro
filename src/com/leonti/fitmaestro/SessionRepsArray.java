@@ -40,7 +40,7 @@ public class SessionRepsArray {
 		mDbHelper.open();
 		
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		mUnits = mPrefs.getString("units", "default");
+		mUnits = mPrefs.getString("units", ctx.getText(R.string.default_unit).toString());
 	}
 
 	public ArrayList<HashMap<String, String>> getRepsArray() {
@@ -90,7 +90,7 @@ public class SessionRepsArray {
 
 					item.put("id", id);
 					item.put("reps", reps);
-					item.put("weight", weight + " " + mUnits);
+					item.put("weight", weight);
 
 				} else {
 					item.put("id", null);
@@ -100,9 +100,10 @@ public class SessionRepsArray {
 				
 				sessionDoneReps.close();
 
+				item.put("planned", "true");
 				item.put("session_detail_id", sessionDetailId.toString());
 				item.put("planned_reps", planned_reps.toString());
-				item.put("planned_weight", planned_percentage.toString() + " " + mUnits);
+				item.put("planned_weight", planned_percentage.toString());
 				mSessionRepsList.add(item);
 
 				sessionReps.moveToNext();
@@ -132,9 +133,10 @@ public class SessionRepsArray {
 
 			item.put("id", repsId.toString());
 			item.put("reps", reps.toString());
-			item.put("weight", weight.toString() + " " + mUnits);
+			item.put("weight", weight.toString());
 			item.put("planned_reps", "--");
 			item.put("planned_weight", "--");
+			item.put("planned", "false");
 			mSessionRepsList.add(item);
 
 			freeRepsForSessionCursor.moveToNext();
@@ -224,7 +226,13 @@ public class SessionRepsArray {
 
 			String plannedWeight = sessionRepsList.get(i).get(
 					"planned_weight");
+
+			// we have planned weight - so we add measurement units
+			if(Boolean.parseBoolean(sessionRepsList.get(i).get("planned")) == true){
+				plannedWeight += " " + mUnits;
+			}
 			TextView plannedWeightTxt = new TextView(activity);
+						
 			plannedWeightTxt.setText(plannedWeight);
 			plannedWeightTxt.setGravity(Gravity.CENTER);
 			tr.addView(plannedWeightTxt, plannedWeightTxtLP);
@@ -243,6 +251,11 @@ public class SessionRepsArray {
 
 			String weight = sessionRepsList.get(i).get("weight");
 			TextView weightTxt = new TextView(activity);
+			
+			// we have a log entry with weight so we add units
+			if(sessionRepsList.get(i).get("id") != null){
+				weight += " " + mUnits;
+			}
 			weightTxt.setText(weight);
 			weightTxt.setGravity(Gravity.CENTER);
 			tr.addView(weightTxt, weightTxtLP);

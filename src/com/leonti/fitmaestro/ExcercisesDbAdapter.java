@@ -45,6 +45,7 @@ public class ExcercisesDbAdapter {
 	public static final String KEY_VALUE = "value";
 	public static final String KEY_UNITS = "units";
 	public static final String KEY_DATE = "date";
+	public static final String KEY_FILENAME = "filename";
 	public static final String KEY_UPDATED = "updated";
 	public static final String KEY_DELETED = "deleted";
 	public static final String KEY_LASTUPDATED = "last_updated";
@@ -64,6 +65,13 @@ public class ExcercisesDbAdapter {
 			+ "updated timestamp default current_timestamp, "
 			+ "deleted integer default 0); ";
 
+	private static final String FILES_CREATE = "create table files "
+			+ "(_id integer primary key autoincrement, "
+			+ "filename text not null, " 
+			+ "site_id integer default 0, "
+			+ "updated timestamp default current_timestamp, "
+			+ "deleted integer default 0); ";
+	
 	private static final String EXERCISES_CREATE = "create table exercises "
 			+ "(_id integer primary key autoincrement, "
 			+ "title text not null, " + "desc text not null, "
@@ -173,8 +181,9 @@ public class ExcercisesDbAdapter {
 
 	private static final String SETTINGS_FILL = "insert into settings (authkey) values ('');";
 
-	private static final String DATABASE_NAME = "data41";
+	private static final String DATABASE_NAME = "data43";
 	public static final String DATABASE_GROUPS_TABLE = "groups";
+	public static final String DATABASE_FILES_TABLE = "files";
 	public static final String DATABASE_EXERCISES_TABLE = "exercises";
 	public static final String DATABASE_SETS_TABLE = "sets";
 	public static final String DATABASE_SETS_CONNECTOR_TABLE = "sets_connector";
@@ -208,6 +217,7 @@ public class ExcercisesDbAdapter {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(GROUPS_CREATE);
+			db.execSQL(FILES_CREATE);
 			db.execSQL(EXERCISES_CREATE);
 			db.execSQL(SETS_CREATE);
 			db.execSQL(SETS_CONNECTOR_CREATE);
@@ -223,7 +233,7 @@ public class ExcercisesDbAdapter {
 			db.execSQL(MEASUREMENTS_LOG_CREATE);
 			db.execSQL(SETTINGS_FILL);
 
-			String[] tables = new String[] { "groups", "exercises", "sets",
+			String[] tables = new String[] { "groups", "files", "exercises", "sets",
 					"sets_connector", "sets_detail", "sessions",
 					"sessions_connector", "sessions_detail", "programs",
 					"programs_connector", "log", "measurement_types",
@@ -519,7 +529,8 @@ public class ExcercisesDbAdapter {
 	public Cursor fetchFreeSets() {
 
 		return mDb.query(DATABASE_SETS_TABLE, new String[] { KEY_ROWID,
-				KEY_TITLE, KEY_DESC, KEY_SITEID }, KEY_DELETED + "=0", null,
+				KEY_TITLE, KEY_DESC, KEY_SITEID }, KEY_DELETED + "=0 AND " + KEY_ROWID 
+				+ " NOT IN (SELECT " + KEY_SETID + " FROM " + DATABASE_PROGRAMS_CONNECTOR_TABLE + ")", null,
 				null, null, null);
 	}
 
@@ -985,7 +996,7 @@ public class ExcercisesDbAdapter {
 	// END of PROGRAMS methods
 
 	// SESSIONS methods
-	public Cursor fetchAllSessions() {
+	public Cursor AllSessions() {
 
 		return mDb.query(DATABASE_SESSIONS_TABLE, null, KEY_DELETED + "=0",
 				null, null, null, null);
@@ -1325,5 +1336,26 @@ public class ExcercisesDbAdapter {
 				+ "=" + rowId, null) > 0;
 	}
 	// END of MEASUREMENTS methods
+	
+	// FILES methods
+	public Cursor fetchCurrentFiles() {
+		return mDb.query(DATABASE_FILES_TABLE, null, KEY_DELETED
+				+ "=0", null, null, null, null);
+	}
+	
+	public Cursor fetchDeletedFiles() {
+		return mDb.query(DATABASE_FILES_TABLE, null, KEY_DELETED
+				+ "=1", null, null, null, null);
+	}
+	
+	public Cursor fetchFile(long rowId) throws SQLException {
 
+		Cursor mCursor = mDb.query(true, DATABASE_FILES_TABLE, null,
+				KEY_ROWID + "=" + rowId, null, null, null, null, null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+	}
+	// END of FILES methods
 }

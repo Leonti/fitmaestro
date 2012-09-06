@@ -67,7 +67,7 @@ public class SessionRepsList extends ListActivity {
 		setContentView(R.layout.session_reps_list);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		mUnits = mPrefs.getString("units", "default");
+		mUnits = mPrefs.getString("units", getText(R.string.default_unit).toString());
 		
 		mSessionConnectorId = savedInstanceState != null ? savedInstanceState
 				.getLong(ExcercisesDbAdapter.KEY_ROWID) : null;
@@ -474,9 +474,24 @@ public class SessionRepsList extends ListActivity {
 			int colorPos = position % colors.length;
 			view.setBackgroundColor(colors[colorPos]);
 
-			// TextView plannedReps = (TextView)
-			// view.findViewById(R.id.planned_reps_value);
-			// plannedReps.setText("Dyg: " + String.valueOf(position) );
+			 TextView plannedWeight = (TextView)
+			 view.findViewById(R.id.planned_weight_value);
+			 
+			 // adding weight units if exercise is planned
+			 if(Boolean.parseBoolean(mSessionRepsList.get(position).get("planned")) == true){
+				 String plannedWeightValue = mSessionRepsList.get(position).get("planned_weight") + " " + mUnits;
+				 plannedWeight.setText(plannedWeightValue);
+			 }
+
+			 TextView weight = (TextView)
+			 view.findViewById(R.id.weight_value);
+			 
+			 // adding weight value if exercise is done
+			 if(mSessionRepsList.get(position).get("id") != null){
+				 String weightValue = mSessionRepsList.get(position).get("weight") + " " + mUnits;
+				 weight.setText(weightValue);
+			 }
+			 //plannedReps.setText("Dyg: " + String.valueOf(position) );
 
 			if (mExType == 0) {
 

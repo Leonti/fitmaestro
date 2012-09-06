@@ -8,12 +8,13 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -242,6 +243,7 @@ public class MeasStats extends Activity {
 	private void getChart(){
 		Intent i = new Intent(this, Chart.class);
 		
+		DateFormats dateFormats = new DateFormats(this);
 		View screen = findViewById(R.id.meas_stats_layout); 
 		WindowManager mWinMgr = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
 		int screenHeight = mWinMgr.getDefaultDisplay().getHeight();
@@ -273,7 +275,7 @@ public class MeasStats extends Activity {
         long diffDays = diff / (24 * 60 * 60 * 1000);
         Log.i("DAYS DIFFERENCE: ", String.valueOf(diffDays));
 		
-		String monthNames = String.valueOf(currentMonth) + "|";
+		String monthNames = dateFormats.getMonthName(currentDay.getTime()) + "|";
 		String monthPositions = String.valueOf(0) + ",";
 		String dayLabels = "";
 		String dataValues = "";
@@ -306,7 +308,7 @@ public class MeasStats extends Activity {
 			if(currentDay.get(Calendar.MONTH) != currentMonth){
 				Log.i("MONTH CHANGE: ", "Month changed!");
 				currentMonth = currentDay.get(Calendar.MONTH);
-				monthNames += String.valueOf(currentMonth) + "|";
+				monthNames += dateFormats.getMonthName(currentDay.getTime()) + "|";
 				Log.i("DAYS FUCKUP: ", "Day number: " + String.valueOf(dayNumber) + "Days difference: " + String.valueOf(diffDays));
 				monthPositions += String.valueOf(Math.ceil(Double.valueOf(dayNumber)/diffDays*100)) + ",";
 			}

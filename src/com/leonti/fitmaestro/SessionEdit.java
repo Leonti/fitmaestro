@@ -1,5 +1,7 @@
 package com.leonti.fitmaestro;
 
+import java.util.Date;
+
 import com.leonti.fitmaestro.R;
 
 import android.app.Activity;
@@ -17,6 +19,7 @@ public class SessionEdit extends Activity {
 	private Long mRowId;
 	private Long mProgramsConnectorId;
 	private ExcercisesDbAdapter mDbHelper;
+	private DateFormats mDateFormats;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,8 @@ public class SessionEdit extends Activity {
 		if (mProgramsConnectorId == null && extras != null) {
 			mProgramsConnectorId = extras.getLong("programs_connector_id");
 		}
+		
+		mDateFormats = new DateFormats(this);
 
 		populateFields();
 
@@ -77,6 +82,9 @@ public class SessionEdit extends Activity {
 			mProgramsConnectorId = session
 					.getLong(session
 							.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_PROGRAMS_CONNECTORID));
+		}else{
+			Date date = new Date();
+			mTitleText.setText(mDateFormats.getWithYearFromDate(date));
 		}
 	}
 

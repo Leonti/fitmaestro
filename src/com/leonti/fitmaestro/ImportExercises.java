@@ -38,7 +38,7 @@ public class ImportExercises extends ExpandableListActivity {
 	private JSONArray exercisesData;
 	private ExpandableListAdapter mAdapter;
 	private List<Map<String, String>> groupData;
-	List<List<Map<String, String>>> childData;
+	private List<List<Map<String, String>>> childData;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

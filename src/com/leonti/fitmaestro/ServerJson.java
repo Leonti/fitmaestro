@@ -24,8 +24,8 @@ public class ServerJson {
 	public static final int ALREADY_EXISTS = 2;
 	public static final int INVALID = 3;
 
-	// public static final String address = "http://10.0.2.2/koh/remote";
-	public static final String address = "http://fitmaestro.com/remote";
+	 public static final String address = "http://10.0.2.2/koh/";
+	//public static final String address = "http://fitmaestro.com/";
 
 	public JSONObject getServerData(JSONObject jsonIn) throws JSONException,
 			ClientProtocolException, IOException {
@@ -33,7 +33,7 @@ public class ServerJson {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		ResponseHandler<String> resonseHandler = new BasicResponseHandler();
 
-		HttpPost postMethod = new HttpPost(address);
+		HttpPost postMethod = new HttpPost(address + "remote");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
 		nameValuePairs.add(new BasicNameValuePair("jsonString", jsonIn

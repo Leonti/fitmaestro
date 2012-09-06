@@ -1,5 +1,9 @@
 package com.leonti.fitmaestro;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +14,10 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
@@ -33,6 +40,8 @@ public class ExercisesList extends ExpandableListActivity {
 	private Cursor mGroupsCursor;
 	private int mGroupIdColumnIndex;
 	private ExpandableListAdapter mAdapter;
+	
+	private List<List<Map<String, String>>> mChildData;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,24 +62,25 @@ public class ExercisesList extends ExpandableListActivity {
 	private void fillData() {
 		mGroupsCursor = mDbHelper.fetchAllGroups();
 		startManagingCursor(mGroupsCursor);
+		
+		mChildData = new ArrayList<List<Map<String, String>>>();
 
 		// Cache the ID column index
 		mGroupIdColumnIndex = mGroupsCursor
 				.getColumnIndexOrThrow(ExcercisesDbAdapter.KEY_ROWID);
 
 		// Set up our adapter
-		mAdapter = new MyExpandableListAdapter(mGroupsCursor,
-				this,
+		mAdapter = new MyExpandableListAdapter(mGroupsCursor,this,
+				
 				android.R.layout.simple_expandable_list_item_1,
-				android.R.layout.simple_expandable_list_item_1,
-				new String[] { ExcercisesDbAdapter.KEY_TITLE }, // group title
-																// for group
-																// layouts
+				R.layout.exercise_list_row,
+
+				new String[] { ExcercisesDbAdapter.KEY_TITLE }, // group title for group layouts
 				new int[] { android.R.id.text1 },
-				new String[] { ExcercisesDbAdapter.KEY_TITLE }, // exercise
-																// title for
-																// child layouts
-				new int[] { android.R.id.text1 });
+				
+				new String[] { ExcercisesDbAdapter.KEY_TITLE }, // exercise title for child layouts
+				new int[] { R.id.exercise_title });
+		
 		setListAdapter(mAdapter);
 	}
 
@@ -145,14 +155,20 @@ public class ExercisesList extends ExpandableListActivity {
 		ExpandableListContextMenuInfo info;
 
 		info = (ExpandableListContextMenuInfo) menuInfo;
-		String title = ((TextView) info.targetView).getText().toString();
-		menu.setHeaderTitle(title);
+		
+
 		int type = ExpandableListView
 				.getPackedPositionType(info.packedPosition);
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+			TextView titleText = (TextView) info.targetView.findViewById(R.id.exercise_title);
+			String title = titleText.getText().toString();
+			menu.setHeaderTitle(title);
+			
 			menu.add(0, EDIT_ID, 0, R.string.edit_exercise);
 			menu.add(0, DELETE_ID, 1, R.string.delete_exercise);
 		} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+			String title = ((TextView) info.targetView).getText().toString();
+			menu.setHeaderTitle(title);
 			menu.add(0, EDIT_ID, 0, R.string.edit_group);
 			menu.add(0, DELETE_ID, 1, R.string.delete_group);
 		}
@@ -213,6 +229,36 @@ public class ExercisesList extends ExpandableListActivity {
 			startManagingCursor(exercisesCursor);
 			return exercisesCursor;
 		}
+		
+		public View getChildView(final int groupPosition,
+				final int childPosition, boolean isLastChild, View convertView,
+				ViewGroup parent) {
+			View rowView = super.getChildView(groupPosition, childPosition,
+					isLastChild, convertView, parent);
+			Log.d("Generating child view: ", "generating");
+
+			
+			Button details = (Button) rowView.findViewById(R.id.view_button);
+	
+			details.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					
+					Cursor exerciseCursor = getChild(groupPosition, childPosition);
+					
+					Long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExcercisesDbAdapter.KEY_ROWID));
+					Log.i("Exercise id is: ", String.valueOf(exerciseId));
+					
+					Intent i = new Intent(ExercisesList.this, ExerciseView.class);
+					i.putExtra(ExcercisesDbAdapter.KEY_ROWID, exerciseId);
+					startActivity(i);
+					
+				}
+			});
+
+			return rowView;
+		}
+		
+		
 	}
 
 	@Override

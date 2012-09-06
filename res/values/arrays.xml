@@ -49,4 +49,17 @@
 		<item>kg</item>
 		<item>lb</item>
 	</string-array>	
+	
+	<string-array name="entries_step">
+		<item>Round to full numbers</item>
+		<item>0.5 units step</item>
+		<item>0.25 units step</item>
+		<item>0.1 units step</item>
+	</string-array>
+	<string-array name="entries_values_step">
+		<item>0</item>
+		<item>0.5</item>
+		<item>0.25</item>
+		<item>0.1</item>
+	</string-array>	
 </resources>

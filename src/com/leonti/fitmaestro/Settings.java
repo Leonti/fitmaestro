@@ -35,6 +35,21 @@ public class Settings extends PreferenceActivity {
         listPref.setSummary(R.string.weight_units_desc);
         dialogBasedPrefCat.addPreference(listPref);       
         
+        // Dialog based preferences
+        PreferenceCategory dialogBasedPrefCatStep = new PreferenceCategory(this);
+        dialogBasedPrefCatStep.setTitle(R.string.step_category);
+        root.addPreference(dialogBasedPrefCatStep);
+        
+        // List preference
+        ListPreference listPrefStep = new ListPreference(this);
+        listPrefStep.setEntries(R.array.entries_step);
+        listPrefStep.setEntryValues(R.array.entries_values_step);
+        listPrefStep.setDialogTitle(R.string.select_step);
+        listPrefStep.setKey("step");
+        listPrefStep.setTitle(R.string.step_title);
+        listPrefStep.setSummary(R.string.step_desc);
+        dialogBasedPrefCatStep.addPreference(listPrefStep);    
+        
         return root;
     }
 }

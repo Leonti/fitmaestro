@@ -7,6 +7,7 @@
 <string name="sets">Workouts</string>
 <string name="programs">Programs</string>
 <string name="exercises">Exercises</string>
+<string name="statistics">Stats</string>
 <string name="excercise_log">Excercise Log</string>
 <string name="download_programs">Download Programs</string>
 <string name="download_excercises">Download Excercises</string>
@@ -56,6 +57,7 @@
 <string name="kg">kg</string>
 <string name="by_set">By Workout</string>
 <string name="by_exercise">By Exercise</string>
+<string name="or">OR</string>
 <string name="email">Email:</string>
 <string name="password">Password:</string>
 <string name="repeatpassword">Repeat Password:</string>
@@ -181,6 +183,7 @@
 <string name="step_desc">Select weight multiplicator for calculating weight.</string>
 <string name="default_step">0.5</string>
 <string name="details">Details</string>
+<string name="add_exercise">Add exercise</string>
 
 <dimen name="numeric_width">100dip</dimen>
 <color name="tables_header">#0000ff</color>

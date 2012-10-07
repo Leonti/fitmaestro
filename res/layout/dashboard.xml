@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/db1_root"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:padding="6dip">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <Button android:id="@+id/home_btn_sessions"
+            style="@style/DashboardButton"
+            android:onClick="onItemClick"
+            android:text="@string/sessions"
+            android:drawableTop="@drawable/sessions"/>
+        <Button android:id="@+id/home_btn_workouts"
+            style="@style/DashboardButton"
+            android:onClick="onItemClick"
+            android:text="@string/sets"
+            android:drawableTop="@drawable/workouts"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <Button android:id="@+id/home_btn_exercises"
+            style="@style/DashboardButton"
+            android:onClick="onItemClick"
+            android:text="@string/exercises"
+            android:drawableTop="@drawable/exercises"/>
+        <Button android:id="@+id/home_btn_programs"
+            style="@style/DashboardButton"
+            android:onClick="onItemClick"
+            android:text="@string/programs"
+            android:drawableTop="@drawable/programs"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <Button android:id="@+id/home_btn_measurements"
+            style="@style/DashboardButton"
+            android:onClick="onItemClick"
+            android:text="@string/measurements"
+            android:drawableTop="@drawable/measurements"/>
+        <Button android:id="@+id/home_btn_statistics"
+            style="@style/DashboardButton"
+            android:onClick="onItemClick"
+            android:text="@string/statistics"
+            android:drawableTop="@drawable/statistics"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+</LinearLayout>

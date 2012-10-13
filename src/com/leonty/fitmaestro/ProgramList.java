@@ -1,25 +1,28 @@
 package com.leonty.fitmaestro;
 
-import com.leonty.fitmaestro.domain.FitmaestroDb;
-import com.leonty.fitmaestro.domain.Program;
-
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProgramsList extends ListActivity {
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.leonty.fitmaestro.domain.FitmaestroDb;
+import com.leonty.fitmaestro.domain.Program;
+
+public class ProgramList extends SherlockActivity {
 
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
@@ -31,18 +34,47 @@ public class ProgramsList extends ListActivity {
 
 	private FitmaestroDb db;
 	private Program program;	
+
+	ListView lv;		
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.program_list);
 
 		db = new FitmaestroDb(this).open();
 		program = new Program(db);		
+	
+		setContentView(R.layout.program_list);	
+
+        lv = (ListView) findViewById(R.id.program_list);		
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> adapterView, View v, int position,
+					long id) {
+
+				Intent i = new Intent(getApplicationContext(), ProgramView.class);
+				i.putExtra(FitmaestroDb.KEY_ROWID, id);
+				startActivity(i);			
+			}			
+		});		
+
+		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+			public void onCreateContextMenu(ContextMenu menu, View view,
+					ContextMenuInfo menuInfo) {
+				AdapterView.AdapterContextMenuInfo info;
+				info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+				String title = ((TextView) info.targetView).getText().toString();
+
+				menu.setHeaderTitle(title);
+				menu.add(0, EDIT_ID, 0, R.string.edit_program);
+				menu.add(0, DELETE_ID, 1, R.string.delete_program);		
+			}
+		});			
 		
-		fillData();
-		registerForContextMenu(getListView());
+		fillData();		
+		
 	}
 	
 	@Override
@@ -58,27 +90,23 @@ public class ProgramsList extends ListActivity {
 		int[] to = new int[] { R.id.program_name };
 		SimpleCursorAdapter programs = new SimpleCursorAdapter(this,
 				R.layout.program_list_row, mProgramsCursor, from, to);
-		setListAdapter(programs);
+		lv.setAdapter(programs);
 	}
+	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem insert = menu.add(0, INSERT_ID, 0, R.string.add_program);
-		insert.setIcon(android.R.drawable.ic_menu_add);
-		return true;
-	}
+        menu.add(R.string.add).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		switch (item.getItemId()) {
-		case INSERT_ID:
-			createProgram();
-			return true;
-		}
-
-		return super.onMenuItemSelected(featureId, item);
-	}
+			public boolean onMenuItemClick(MenuItem item) {
+				createProgram();
+				return false;
+			}
+        	
+        }).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        
+        return true;
+    }	
 
 	private void createProgram() {
 		Intent i = new Intent(this, ProgramEdit.class);
@@ -106,20 +134,7 @@ public class ProgramsList extends ListActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View view,
-			ContextMenuInfo menuInfo) {
-		AdapterView.AdapterContextMenuInfo info;
-		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
-		String title = ((TextView) info.targetView).getText().toString();
-
-		menu.setHeaderTitle(title);
-		menu.add(0, EDIT_ID, 0, R.string.edit_program);
-		menu.add(0, DELETE_ID, 1, R.string.delete_program);
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(android.view.MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
@@ -137,13 +152,14 @@ public class ProgramsList extends ListActivity {
 		return super.onContextItemSelected(item);
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	    int itemId = item.getItemId();
+	    switch (itemId) {
+	    case android.R.id.home:
+	    	startActivity (new Intent(getApplicationContext(), Dashboard.class));
+	        break;
+	    }
 
-		Intent i = new Intent(this, ProgramView.class);
-		i.putExtra(FitmaestroDb.KEY_ROWID, id);
-		startActivity(i);
-	}
-
+	    return true;		
+	}		
 }

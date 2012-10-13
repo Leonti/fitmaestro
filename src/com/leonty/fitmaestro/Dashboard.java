@@ -41,16 +41,16 @@ public class Dashboard extends SherlockActivity {
 	           startActivity (new Intent(getApplicationContext(), SessionTabs.class));
 	           break;
 	      case R.id.home_btn_workouts :
-	           startActivity (new Intent(getApplicationContext(), WorkoutsList.class));
+	           startActivity (new Intent(getApplicationContext(), WorkoutList.class));
 	           break;
 	      case R.id.home_btn_exercises :
 	           startActivity (new Intent(getApplicationContext(), ExercisesList.class));
 	           break;
 	      case R.id.home_btn_programs :
-	           startActivity (new Intent(getApplicationContext(), ProgramsList.class));
+	           startActivity (new Intent(getApplicationContext(), ProgramList.class));
 	           break;
 	      case R.id.home_btn_measurements :
-	           startActivity (new Intent(getApplicationContext(), MeasurementsList.class));
+	           startActivity (new Intent(getApplicationContext(), MeasurementList.class));
 	           break;
 	      case R.id.home_btn_statistics :
 	           startActivity (new Intent(getApplicationContext(), Statistics.class));

@@ -23,10 +23,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.leonty.fitmaestro.domain.Exercise;
 import com.leonty.fitmaestro.domain.FitmaestroDb;
 
-public class Statistics extends Activity {
+public class Statistics extends SherlockActivity {
 
     private TextView mExerciseDisplay;
     private TextView mStartDateDisplay;
@@ -309,5 +311,15 @@ public class Statistics extends Activity {
 		startActivity(i);
 	}
 
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	    int itemId = item.getItemId();
+	    switch (itemId) {
+	    case android.R.id.home:
+	    	startActivity (new Intent(getApplicationContext(), Dashboard.class));
+	        break;
+	    }
+
+	    return true;		
+	}		
     
 }

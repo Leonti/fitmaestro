@@ -1,29 +1,31 @@
 package com.leonty.fitmaestro;
 
-import com.leonty.fitmaestro.domain.FitmaestroDb;
-import com.leonty.fitmaestro.domain.Measurement;
-
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MeasurementsList extends ListActivity {
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.leonty.fitmaestro.domain.FitmaestroDb;
+import com.leonty.fitmaestro.domain.Measurement;
+
+public class MeasurementList extends SherlockActivity {
 
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
-	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int EDIT_ID = Menu.FIRST + 2;
 
@@ -31,18 +33,46 @@ public class MeasurementsList extends ListActivity {
 
 	private FitmaestroDb db;
 	private Measurement measurement;	
+
+	ListView lv;		
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.meas_types_list);
 
 		db = new FitmaestroDb(this).open();
 		measurement = new Measurement(db);			
+	
+		setContentView(R.layout.measurement_list);	
+
+        lv = (ListView) findViewById(R.id.measurement_list);		
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> adapterView, View v, int position,
+					long id) {
+
+				Intent i = new Intent(getApplicationContext(), MeasLogEntries.class);
+				i.putExtra(FitmaestroDb.KEY_ROWID, id);
+				startActivity(i);			
+			}			
+		});		
+
+		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+			public void onCreateContextMenu(ContextMenu menu, View view,
+					ContextMenuInfo menuInfo) {
+				AdapterView.AdapterContextMenuInfo info;
+				info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+				String title = ((TextView) info.targetView).getText().toString();
+
+				menu.setHeaderTitle(title);
+				menu.add(0, EDIT_ID, 0, R.string.edit_measurement);
+				menu.add(0, DELETE_ID, 1, R.string.delete_measurement);		
+			}
+		});			
 		
 		fillData();
-		registerForContextMenu(getListView());
 	}
 	
 	@Override
@@ -58,27 +88,23 @@ public class MeasurementsList extends ListActivity {
 		int[] to = new int[] { R.id.measurement_name };
 		SimpleCursorAdapter measurements = new SimpleCursorAdapter(this,
 				R.layout.meas_types_list_row, mMeasurementsCursor, from, to);
-		setListAdapter(measurements);
+		lv.setAdapter(measurements);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem insert = menu.add(0, INSERT_ID, 0, R.string.add_measurement);
-		insert.setIcon(android.R.drawable.ic_menu_add);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		switch (item.getItemId()) {
-		case INSERT_ID:
-			createMeasurement();
-			return true;
-		}
+        menu.add(R.string.add).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-		return super.onMenuItemSelected(featureId, item);
-	}
+			public boolean onMenuItemClick(MenuItem item) {
+				createMeasurement();
+				return false;
+			}
+        	
+        }).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        
+        return true;
+    }	
 
 	private void createMeasurement() {
 		Intent i = new Intent(this, MeasurementEdit.class);
@@ -106,20 +132,7 @@ public class MeasurementsList extends ListActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View view,
-			ContextMenuInfo menuInfo) {
-		AdapterView.AdapterContextMenuInfo info;
-		info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
-		String title = ((TextView) info.targetView).getText().toString();
-
-		menu.setHeaderTitle(title);
-		menu.add(0, EDIT_ID, 0, R.string.edit_measurement);
-		menu.add(0, DELETE_ID, 1, R.string.delete_measurement);
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(android.view.MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
@@ -136,13 +149,15 @@ public class MeasurementsList extends ListActivity {
 
 		return super.onContextItemSelected(item);
 	}
+	
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	    int itemId = item.getItemId();
+	    switch (itemId) {
+	    case android.R.id.home:
+	    	startActivity (new Intent(getApplicationContext(), Dashboard.class));
+	        break;
+	    }
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-
-		Intent i = new Intent(this, MeasLogEntries.class);
-		i.putExtra(FitmaestroDb.KEY_ROWID, id);
-		startActivity(i);
-	}
+	    return true;		
+	}		
 }

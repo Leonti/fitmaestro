@@ -4,7 +4,7 @@
       android:versionCode="1"
       android:versionName="1.0">
       
-<application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@style/Theme.Sherlock.Light">
+<application android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/Theme.Sherlock.Light">
 
    	<activity android:name=".Dashboard"
               android:label="@string/app_name">
@@ -16,7 +16,7 @@
 
 	<activity android:label="@string/app_name" android:name=".GroupEdit"></activity>
 	<activity android:label="@string/app_name" android:name=".ExerciseEdit"></activity>
-	<activity android:label="@string/app_name" android:name=".WorkoutsList"></activity>
+	<activity android:label="@string/app_name" android:name=".WorkoutList"></activity>
 	<activity android:label="@string/app_name" android:name=".WorkoutEdit"></activity>
 	<activity android:label="@string/app_name" android:name=".ExercisesList"></activity>
 	<activity android:label="@string/app_name" android:name=".WorkoutView"></activity>
@@ -24,14 +24,13 @@
 	<activity android:label="@string/app_name" android:name=".Login"></activity>
 	<activity android:label="@string/app_name" android:name=".SynchronizationView" android:configChanges="keyboardHidden|orientation"></activity>
 	<activity android:label="@string/app_name" android:name=".RepsList"></activity>
-	<activity android:label="@string/app_name" android:name=".ProgramsList"></activity>
+	<activity android:label="@string/app_name" android:name=".ProgramList"></activity>
 	<activity android:label="@string/app_name" android:name=".ProgramEdit"></activity>
 	<activity android:label="@string/app_name" android:name=".ProgramView"></activity>   
-	<activity android:label="@string/app_name" android:name=".SessionsList"></activity>
 	<activity android:label="@string/app_name" android:name=".SessionEdit"></activity> 
 	<activity android:label="@string/app_name" android:name=".SessionView"></activity>
 	<activity android:label="@string/app_name" android:name=".SessionRepsList"></activity>
-	<activity android:label="@string/app_name" android:name=".MeasurementsList"></activity>
+	<activity android:label="@string/app_name" android:name=".MeasurementList"></activity>
 	<activity android:label="@string/app_name" android:name=".MeasurementEdit"></activity>
 	<activity android:label="@string/app_name" android:name=".MeasLogEntries"></activity>
 	<activity android:label="@string/app_name" android:name=".SessionTabs"></activity>
